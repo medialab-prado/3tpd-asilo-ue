@@ -1,0 +1,417 @@
+---
+title: "Asilo UE"
+output: html_document
+---
+
+**Gráficos exploratorios**
+
+```{r setwd, include = FALSE}
+setwd("~/Dropbox/projects/2015_tpd/3tpd-asilo-ue/")
+options(stringsAsFactors = F)
+
+library(tidyr)
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(reshape2)
+library(gridExtra)
+
+decisions <- read_csv('data/decisions_def.csv', col_names = T, col_types = 'iiiiiiicccccccccccc')
+```
+
+
+### 1. Evolución solicitudes de asilo a Europa
+**Absolutos**
+A todos los países de Europa.
+La suma de Accepted + Rejected es el número total de solicitudes
+
+
+```{r europe_abs, fig.width=8, fig.height=4, echo=FALSE, warning=FALSE, message=FALSE}
+
+europe_grouped <- aggregate(cbind(x2014, x2013, x2012, x2011, x2010, x2009, x2008) ~ decision_fin + destiny_europe, data = decisions, sum)
+europe_grouped <- melt(europe_grouped, variable.name = 'year')
+
+europe_grouped$year <- gsub('x', '', europe_grouped$year, fixed = T)
+
+absolutes <- ggplot() +
+  geom_bar(data=europe_grouped, aes(y = value, x = year, fill = decision_fin), stat="identity") +
+  scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
+  scale_x_discrete(limits=unique(europe_grouped$year)) +
+  scale_y_continuous(name="absolutes") + 
+  ggtitle("Absolutes") +
+  geom_text(data=europe_grouped, aes(x=year, y=value * 0.8, label=value), size=3) +
+  coord_flip() +
+  theme_bw() + 
+  theme(legend.position="none") + 
+  facet_grid( destiny_europe ~ decision_fin)
+
+```
+
+
+**Relativos por año**
+% de accepted/rejected para cada año. La suma de todos los valores de un mismo año es 100
+
+
+```{r europe_rel_year, fig.width=8, fig.height=4, echo=FALSE, warning=FALSE, message=FALSE}
+
+europe_grouped_per <- data_frame()
+
+for (y in unique(europe_grouped$year)) {
+  temp_year <- filter(europe_grouped, year == y)
+  temp_year$per <- NA
+  temp_year$cum_per <- NA
+  total_year <- sum(temp_year$value)
+  for (ue in unique(temp_year$destiny_europe)) {
+    temp_ue <- filter(temp_year, destiny_europe == ue)
+    total_ue_per <- sum(temp_ue$value)/total_year
+    cum_per = 0
+    for (dec in unique(temp_ue$decision_fin)) {
+      n_dec <- temp_ue$value[temp_ue$decision_fin == dec]
+      dec_per <- (n_dec * total_ue_per)/sum(temp_ue$value)
+      temp_year$per[temp_year$destiny_europe == ue & temp_year$decision_fin == dec] <- dec_per * 100
+      cum_per = cum_per + dec_per
+      temp_year$cum_per[temp_year$destiny_europe == ue & temp_year$decision_fin == dec] <- cum_per * 100
+    }
+  }
+  europe_grouped_per <- rbind(europe_grouped_per, temp_year)
+}
+
+rel_year <- ggplot() +
+  geom_bar(data=europe_grouped_per, aes(y = per, x = year, fill = decision_fin), stat="identity") +
+  scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
+  scale_x_discrete(limits=unique(europe_grouped_per$year)) +
+  scale_y_continuous(name="relatives per year") + 
+  ggtitle("Relatives per year") +
+  geom_text(data=europe_grouped_per, aes(x=year, y=per * 0.8, label=round(per, 2)), size=3) +
+  coord_flip() +
+  theme_bw() + 
+  theme(legend.position="none") + 
+  facet_grid(destiny_europe ~ decision_fin)
+
+```
+
+**Relativos por región**
+% de accepted/rejected por región. Del total de solicitudes que llegan para cada año para cada región, porcentage aceptados y rechazados.
+
+
+```{r europe_rel_region, fig.width=8, fig.height=4, echo=FALSE, warning=FALSE, message=FALSE}
+
+europe_grouped_per_reg <- data_frame()
+
+for (y in unique(europe_grouped$year)) {
+  temp_year <- filter(europe_grouped, year == y)
+  temp_year$per <- NA
+  temp_year$cum_per <- NA
+  total_year <- sum(temp_year$value)
+  for (ue in unique(temp_year$destiny_europe)) {
+    temp_ue <- filter(temp_year, destiny_europe == ue)
+    total_ue <- sum(temp_ue$value)
+    cum_per = 0
+    for (dec in unique(temp_ue$decision_fin)) {
+      n_dec <- temp_ue$value[temp_ue$decision_fin == dec]
+      dec_per <- (n_dec * 100)/total_ue
+      temp_year$per[temp_year$destiny_europe == ue & temp_year$decision_fin == dec] <- dec_per
+      cum_per = cum_per + dec_per
+      temp_year$cum_per[temp_year$destiny_europe == ue & temp_year$decision_fin == dec] <- cum_per
+    }
+  }
+  europe_grouped_per_reg <- rbind(europe_grouped_per_reg, temp_year)
+}
+
+rel_reg <- ggplot() +
+  geom_bar(data=europe_grouped_per_reg, aes(y = per, x = year, fill = decision_fin), stat="identity", position = 'stack') +
+  scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
+  scale_x_discrete(limits=unique(europe_grouped_per_reg$year)) +
+  scale_y_continuous(name="relatives per region") + 
+  ggtitle("Relatives per region") +
+  geom_text(data=europe_grouped_per_reg, aes(x=year, y=cum_per * 0.8, label=round(per, 2)), size=3) +
+  coord_flip() +
+  theme_bw() + 
+  facet_grid(destiny_europe ~ .)
+
+
+
+```
+
+
+```{r plot_europe, fig.width=12, fig.height=7, echo=FALSE, warning=FALSE, message=FALSE}
+grid.arrange(absolutes, rel_year, rel_reg, ncol=3)
+```
+
+
+**A partir de ahora, sólo se tienen en cuenta solicitudes a países de la UE**, que vienen representando el 90% del total como se ve en el siguiente gráfico
+
+```{r europe_ue_noue, fig.width=8, fig.height=3, echo=FALSE, warning=FALSE, message=FALSE}
+
+ue_noue <- aggregate(cbind(value, per) ~ destiny_europe + year, data = europe_grouped_per, sum)
+
+ue_noue$cum_per <- NULL
+
+ue <- ue_noue %>%
+  mutate(cum_per = per)  %>%
+  filter(destiny_europe == 'EU-28') 
+
+noue <- ue_noue %>%
+  filter(destiny_europe == 'Extra EU-28') %>%
+  mutate(cum_per = 100)
+
+ue_noue <- rbind(ue, noue)
+
+ggplot() +
+  geom_bar(data=ue_noue, aes(y = per, x = year, fill = destiny_europe), stat="identity", position = 'stack') +
+  scale_fill_manual(values = c("#0072B2", "#999999")) + 
+  scale_x_discrete(limits=unique(ue_noue$year)) +
+  scale_y_continuous(name="") + 
+  geom_text(data=ue_noue, aes(x=year, y=cum_per, label=round(per, 2)), size=3) +
+  coord_flip()
+
+```
+
+
+### 2. Solicitudes asilo UE por continente
+
+**Absolutos** 
+La suma de Accepted + Rejected es el número total de solicitudes   
+
+```{r continent_ue_abs, fig.width=8, fig.height=11, echo=FALSE, warning=FALSE, message=FALSE}
+
+ue <- filter(decisions, destiny_europe == 'EU-28')
+ue_grouped <- aggregate(cbind(x2014, x2013, x2012, x2011, x2010, x2009, x2008) ~ origin_continent + decision_fin, data = ue, sum)
+ue_grouped <- melt(ue_grouped, variable.name = 'year')
+
+ue_grouped$year <- gsub('x', '', ue_grouped$year, fixed = T)
+
+absolutes <- ggplot() +
+  geom_bar(data=ue_grouped, aes(y = value, x = year, fill = decision_fin), stat="identity") +
+  scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
+  scale_y_continuous(name="absolutes") + 
+  ggtitle("Absolutes") +
+  scale_x_discrete(limits=unique(ue_grouped$year)) +
+  geom_text(data=ue_grouped, aes(x=year, y=value * 0.8, label=value), size=3) +
+  coord_flip() +
+  theme_bw() + 
+  theme(legend.position="none") +
+  facet_grid( origin_continent ~ decision_fin)
+
+```
+
+
+**Relativos por año**
+Para cada año, procentaje de solicitudes procedente de cada continente; dentro de ese procentaje, peso de accepted vs. rejected.
+Es decir, todos los procentajes relativos a un mismo año, han de sumar 100
+
+
+```{r continent_ue_rel_year, fig.width=8, fig.height=11, echo=FALSE, warning=FALSE, message=FALSE}
+ue_grouped_per <- data_frame()
+
+for (y in unique(ue_grouped$year)) {
+  temp_year <- filter(ue_grouped, year == y)
+  temp_year$per <- NA
+  temp_year$cum_per <- NA
+  total_year <- sum(temp_year$value)
+  for (cont in unique(temp_year$origin_continent)) {
+    temp_cont <- filter(temp_year, origin_continent == cont)
+    total_cont_per <- sum(temp_cont$value)/total_year
+    cum_per = 0
+    for (dec in unique(temp_cont$decision_fin)) {
+      n_dec <- temp_cont$value[temp_cont$decision_fin == dec]
+      dec_per <- (n_dec * total_cont_per)/sum(temp_cont$value)
+      temp_year$per[temp_year$origin_continent == cont & temp_year$decision_fin == dec] <- dec_per * 100
+      cum_per = cum_per + dec_per
+      temp_year$cum_per[temp_year$origin_continent == cont & temp_year$decision_fin == dec] <- cum_per * 100
+    }
+  }
+  ue_grouped_per <- rbind(ue_grouped_per, temp_year)
+}
+
+
+rel_year <- ggplot() +
+  geom_bar(data = na.omit(ue_grouped_per), aes(y = per, x = year, fill = decision_fin), stat="identity") +
+  scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
+  scale_y_continuous(name="relatives per year") + 
+  ggtitle("Relatives per year") +
+  scale_x_discrete(limits=unique(ue_grouped_per$year)) +
+  geom_text(data=na.omit(ue_grouped_per), aes(x= year, y=cum_per * 0.8, label=round(per, 2)), size=3) +
+  coord_flip() +
+  theme_bw() + 
+  theme(legend.position="none") + 
+  facet_grid( origin_continent ~ decision_fin)
+
+```
+
+**Relativos por región**
+Del total de solicitudes que llegan para cada año para cada región (que se suponen el 100%), porcentage aceptados y rechazados.
+Hay que tener en cuenta los valores absolutos (algunos son 0) para analizarlo
+
+
+```{r continent_ue_rel_region, fig.width=8, fig.height=11, echo=FALSE, warning=FALSE, message=FALSE}
+ue_grouped_per <- data_frame()
+
+for (y in unique(ue_grouped$year)) {
+  temp_year <- filter(ue_grouped, year == y)
+  temp_year$per <- NA
+  temp_year$cum_per <- NA
+  total_year <- sum(temp_year$value)
+  for (cont in unique(temp_year$origin_continent)) {
+    temp_cont <- filter(temp_year, origin_continent == cont)
+    total_cont_per <- sum(temp_cont$value)
+    cum_per = 0
+    for (dec in unique(temp_cont$decision_fin)) {
+      n_dec <- temp_cont$value[temp_cont$decision_fin == dec]
+      dec_per <- (n_dec * 100)/sum(temp_cont$value)
+      temp_year$per[temp_year$origin_continent == cont & temp_year$decision_fin == dec] <- dec_per
+      cum_per = cum_per + dec_per
+      temp_year$cum_per[temp_year$origin_continent == cont & temp_year$decision_fin == dec] <- cum_per
+    }
+  }
+  ue_grouped_per <- rbind(ue_grouped_per, temp_year)
+}
+
+
+rel_reg <- ggplot() +
+  geom_bar(data = na.omit(ue_grouped_per), aes(y = per, x = year, fill = decision_fin), stat="identity", position = 'stack') +
+  scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
+  scale_y_continuous(name="relatives per region") + 
+  ggtitle("Relatives per region") +
+  scale_x_discrete(limits=unique(ue_grouped_per$year)) +
+  geom_text(data=na.omit(ue_grouped_per), aes(x= year, y=cum_per * 0.8, label=round(per, 2)), size=3) +
+  coord_flip() +
+  theme_bw() + 
+  facet_grid( origin_continent ~ .)
+
+```
+
+```{r plot_ue, fig.width=12, fig.height=20, echo=FALSE, warning=FALSE, message=FALSE}
+grid.arrange(absolutes, rel_year, rel_reg, ncol=3)
+```
+
+
+### 3. Solicitudes asilo UE por país (paises con alguna solicitud)
+**Absolutos**
+Sólo solicitudes a países de la UE
+
+
+```{r country_ue_abs, fig.width=8, fig.height=160, echo=FALSE, warning=FALSE, message=FALSE}
+
+country_grouped <- aggregate(cbind(x2014, x2013, x2012, x2011, x2010, x2009, x2008) ~ origin_label + decision_fin, data = ue, sum)
+country_grouped <- melt(country_grouped, variable.name = 'year')
+country_grouped <- arrange(country_grouped, desc(value))
+
+country_grouped$year <- gsub('x', '', country_grouped$year, fixed = T)
+
+country_grouped$origin_label_f <- factor(country_grouped$origin_label, levels = unique(country_grouped$origin_label))
+
+countries2remove <- c()
+
+for (country in unique(country_grouped$origin_label)) {
+  temp_country <- filter(country_grouped, origin_label == country)
+  if (sum(temp_country$value) == 0) {
+    countries2remove <- c(countries2remove, country)
+  }
+}
+
+country_grouped <- filter(country_grouped, !(origin_label %in% countries2remove))
+
+
+absolutes <- ggplot() +
+  geom_bar(data=country_grouped, aes(y = value, x = year, fill = decision_fin), stat="identity") +
+  scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
+  scale_y_continuous(name="Absolutes") + 
+  ggtitle("Absolutes") +
+  scale_x_discrete(limits=unique(country_grouped$year)) +
+  geom_text(data=country_grouped, aes(x=year, y=value, label=value), size=3) +
+  coord_flip() +
+  theme_bw() + 
+  theme(legend.position="none") + 
+  facet_grid(origin_label_f ~ decision_fin)
+
+```
+
+**Relativos por año**
+Para cada año, procentaje de solicitudes procedente de cada continente; dentro de ese procentaje, peso de accepted vs. rejected.
+Es decir, todos los procentajes relativos a un mismo año, han de sumar 100
+
+
+```{r country_rel_year, fig.width=8, fig.height=11, echo=FALSE, warning=FALSE, message=FALSE}
+country_grouped_per <- data_frame()
+
+for (y in unique(country_grouped$year)) {
+  temp_year <- filter(country_grouped, year == y)
+  temp_year$per <- NA
+  temp_year$cum_per <- NA
+  total_year <- sum(temp_year$value)
+  for (country in unique(temp_year$origin_label)) {
+    temp_country <- filter(temp_year, origin_label == country)
+    total_country_per <- sum(temp_country$value)/total_year
+    cum_per = 0
+    for (dec in unique(temp_country$decision_fin)) {
+      n_dec <- temp_country$value[temp_country$decision_fin == dec]
+      dec_per <- (n_dec * total_country_per)/sum(temp_country$value)
+      temp_year$per[temp_year$origin_label == country & temp_year$decision_fin == dec] <- dec_per * 100
+      cum_per = cum_per + dec_per
+      temp_year$cum_per[temp_year$origin_label == country & temp_year$decision_fin == dec] <- cum_per * 100
+    }
+  }
+  country_grouped_per <- rbind(country_grouped_per, temp_year)
+}
+
+
+rel_year <- ggplot() +
+  geom_bar(data = na.omit(country_grouped_per), aes(y = per, x = year, fill = decision_fin), stat="identity") +
+  scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
+  scale_y_continuous(name="relatives per year") + 
+  ggtitle("Relatives per year") +
+  scale_x_discrete(limits=unique(country_grouped_per$year)) +
+  geom_text(data=na.omit(country_grouped_per), aes(x= year, y=cum_per * 0.8, label=round(per, 2)), size=3) +
+  coord_flip() +
+  theme_bw() + 
+  theme(legend.position="none") + 
+  facet_grid( origin_label ~ decision_fin)
+
+```
+
+**Relativos por región**
+Del total de solicitudes que llegan para cada año para cada región (que se suponen el 100%), porcentage aceptados y rechazados.
+Hay que tener en cuenta los valores absolutos (algunos son 0) para analizarlo
+
+
+```{r country_rel_region, fig.width=8, fig.height=11, echo=FALSE, warning=FALSE, message=FALSE}
+country_grouped_per <- data_frame()
+
+for (y in unique(country_grouped$year)) {
+  temp_year <- filter(country_grouped, year == y)
+  temp_year$per <- NA
+  temp_year$cum_per <- NA
+  total_year <- sum(temp_year$value)
+  for (country in unique(temp_year$origin_label)) {
+    temp_country <- filter(temp_year, origin_label == country)
+    total_country_per <- sum(temp_country$value)
+    cum_per = 0
+    for (dec in unique(temp_country$decision_fin)) {
+      n_dec <- temp_country$value[temp_country$decision_fin == dec]
+      dec_per <- (n_dec * 100)/total_country_per
+      temp_year$per[temp_year$origin_label == country & temp_year$decision_fin == dec] <- dec_per
+      cum_per = cum_per + dec_per
+      temp_year$cum_per[temp_year$origin_label == country & temp_year$decision_fin == dec] <- cum_per
+    }
+  }
+  country_grouped_per <- rbind(country_grouped_per, temp_year)
+}
+
+
+rel_reg <- ggplot() +
+  geom_bar(data = na.omit(country_grouped_per), aes(y = per, x = year, fill = decision_fin), stat="identity", position = 'stack') +
+  scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
+  scale_y_continuous(name="relatives per region") + 
+  ggtitle("Relatives per region") +
+  scale_x_discrete(limits=unique(country_grouped_per$year)) +
+  geom_text(data=na.omit(country_grouped_per), aes(x= year, y=cum_per * 0.8, label=round(per, 2)), size=3) +
+  coord_flip() +
+  theme_bw() + 
+  facet_grid( origin_label ~ .)
+
+```
+
+```{r plot_country, fig.width=13, fig.height=200, echo=FALSE, warning=FALSE, message=FALSE}
+grid.arrange(absolutes, rel_year, rel_reg, ncol=3)
+```
