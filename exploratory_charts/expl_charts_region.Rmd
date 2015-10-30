@@ -17,6 +17,7 @@ library(reshape2)
 library(gridExtra)
 
 decisions <- read_csv('data/decisions_def.csv', col_names = T, col_types = 'iiiiiiicccccccccccc')
+decisions$decision_fin <- factor(decisions$decision_fin, levels = c("Accepted", "Rejected"))
 ```
 
 
@@ -28,22 +29,39 @@ La suma de Accepted + Rejected es el número total de solicitudes
 
 ```{r europe_abs, fig.width=8, fig.height=4, echo=FALSE, warning=FALSE, message=FALSE}
 
-europe_grouped <- aggregate(cbind(x2014, x2013, x2012, x2011, x2010, x2009, x2008) ~ decision_fin + destiny_europe, data = decisions, sum)
+europe_grouped <-aggregate(cbind(x2014, x2013, x2012, x2011, x2010, x2009, x2008) ~ decision_fin + destiny_europe, data = decisions, sum)
 europe_grouped <- melt(europe_grouped, variable.name = 'year')
 
 europe_grouped$year <- gsub('x', '', europe_grouped$year, fixed = T)
 
+europe_grouped$value_cum <- NA
+
+for (y in unique(europe_grouped$year)) {
+  temp_year <- filter(europe_grouped, year == y)
+  for (ue in unique(temp_year$destiny_europe)) {
+    temp_ue <- filter(temp_year, destiny_europe == ue)
+    value_cum = 0
+    for (dec in unique(temp_ue$decision_fin)) {
+      value <- temp_ue$value[temp_ue$decision_fin == dec]
+      value_cum = value_cum + value
+      europe_grouped$value_cum[europe_grouped$year == y & europe_grouped$destiny_europe == ue & europe_grouped$decision_fin == dec] <- value_cum
+    }
+  }
+}
+
+
 absolutes <- ggplot() +
-  geom_bar(data=europe_grouped, aes(y = value, x = year, fill = decision_fin), stat="identity") +
+   geom_bar(data=europe_grouped, aes(y = value, x = year, fill = decision_fin), stat="identity", position = "stack") +
   scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
   scale_x_discrete(limits=unique(europe_grouped$year)) +
   scale_y_continuous(name="absolutes") + 
   ggtitle("Absolutes") +
-  geom_text(data=europe_grouped, aes(x=year, y=value * 0.8, label=value), size=3) +
+  geom_text(data=europe_grouped, aes(x=year, y=value_cum, label=paste(round(value/1000, 1), 'M', sep = '')), size=3) +
   coord_flip() +
   theme_bw() + 
   theme(legend.position="none") + 
-  facet_grid( destiny_europe ~ decision_fin)
+  facet_grid( destiny_europe ~ .)
+
 
 ```
 
@@ -77,16 +95,16 @@ for (y in unique(europe_grouped$year)) {
 }
 
 rel_year <- ggplot() +
-  geom_bar(data=europe_grouped_per, aes(y = per, x = year, fill = decision_fin), stat="identity") +
+  geom_bar(data=europe_grouped_per, aes(y = per, x = year, fill = decision_fin), stat="identity", position = "stack") +
   scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
   scale_x_discrete(limits=unique(europe_grouped_per$year)) +
   scale_y_continuous(name="relatives per year") + 
   ggtitle("Relatives per year") +
-  geom_text(data=europe_grouped_per, aes(x=year, y=per * 0.8, label=round(per, 2)), size=3) +
+  geom_text(data=europe_grouped_per, aes(x=year, y=cum_per * 0.9, label=round(per, 2)), size=3) +
   coord_flip() +
   theme_bw() + 
   theme(legend.position="none") + 
-  facet_grid(destiny_europe ~ decision_fin)
+  facet_grid(destiny_europe ~ .)
 
 ```
 
@@ -181,17 +199,32 @@ ue_grouped <- melt(ue_grouped, variable.name = 'year')
 
 ue_grouped$year <- gsub('x', '', ue_grouped$year, fixed = T)
 
+ue_grouped$value_cum <- NA
+
+for (y in unique(ue_grouped$year)) {
+  temp_year <- filter(ue_grouped, year == y)
+  for (cont in unique(temp_year$origin_continent)) {
+    temp_cont <- filter(temp_year, origin_continent == cont)
+    value_cum = 0
+    for (dec in unique(temp_cont$decision_fin)) {
+      value <- temp_cont$value[temp_cont$decision_fin == dec]
+      value_cum = value_cum + value
+      ue_grouped$value_cum[ue_grouped$year == y & ue_grouped$origin_continent == cont & ue_grouped$decision_fin == dec] <- value_cum
+    }
+  }
+}
+
 absolutes <- ggplot() +
-  geom_bar(data=ue_grouped, aes(y = value, x = year, fill = decision_fin), stat="identity") +
+  geom_bar(data=ue_grouped, aes(y = value, x = year, fill = decision_fin), stat="identity", position = "stack") +
   scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
   scale_y_continuous(name="absolutes") + 
   ggtitle("Absolutes") +
   scale_x_discrete(limits=unique(ue_grouped$year)) +
-  geom_text(data=ue_grouped, aes(x=year, y=value * 0.8, label=value), size=3) +
+  geom_text(data=ue_grouped, aes(x=year, y=value_cum * 0.9, label=paste(round(value/1000, 1), 'M', sep = '')), size=3) +
   coord_flip() +
   theme_bw() + 
   theme(legend.position="none") +
-  facet_grid( origin_continent ~ decision_fin)
+  facet_grid( origin_continent ~ .)
 
 ```
 
@@ -226,16 +259,16 @@ for (y in unique(ue_grouped$year)) {
 
 
 rel_year <- ggplot() +
-  geom_bar(data = na.omit(ue_grouped_per), aes(y = per, x = year, fill = decision_fin), stat="identity") +
+  geom_bar(data = na.omit(ue_grouped_per), aes(y = per, x = year, fill = decision_fin), stat="identity", position = "stack") +
   scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
   scale_y_continuous(name="relatives per year") + 
   ggtitle("Relatives per year") +
   scale_x_discrete(limits=unique(ue_grouped_per$year)) +
-  geom_text(data=na.omit(ue_grouped_per), aes(x= year, y=cum_per * 0.8, label=round(per, 2)), size=3) +
+  geom_text(data=na.omit(ue_grouped_per), aes(x= year, y=cum_per * 0.9, label=round(per, 2)), size=3) +
   coord_flip() +
   theme_bw() + 
   theme(legend.position="none") + 
-  facet_grid( origin_continent ~ decision_fin)
+  facet_grid( origin_continent ~ .)
 
 ```
 
@@ -312,18 +345,30 @@ for (country in unique(country_grouped$origin_label)) {
 
 country_grouped <- filter(country_grouped, !(origin_label %in% countries2remove))
 
+for (y in unique(country_grouped$year)) {
+  temp_year <- filter(country_grouped, year == y)
+  for (country in unique(country_grouped$origin_label)) {
+    temp_country <- filter(temp_year, origin_label == country)
+    value_cum = 0
+    for (dec in unique(temp_country$decision_fin)) {
+      value <- temp_country$value[temp_country$decision_fin == dec]
+      value_cum = value_cum + value
+      country_grouped$value_cum[country_grouped$year == y & country_grouped$origin_label == country & country_grouped$decision_fin == dec] <- value_cum
+    }
+  }
+}
 
 absolutes <- ggplot() +
-  geom_bar(data=country_grouped, aes(y = value, x = year, fill = decision_fin), stat="identity") +
+  geom_bar(data=country_grouped, aes(y = value, x = year, fill = decision_fin), stat="identity", position = "stack") +
   scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
   scale_y_continuous(name="Absolutes") + 
   ggtitle("Absolutes") +
   scale_x_discrete(limits=unique(country_grouped$year)) +
-  geom_text(data=country_grouped, aes(x=year, y=value, label=value), size=3) +
+  geom_text(data=country_grouped, aes(x=year, y=value_cum, label=paste(round(value/1000, 1), 'M', sep = '')), size=3) +
   coord_flip() +
   theme_bw() + 
   theme(legend.position="none") + 
-  facet_grid(origin_label_f ~ decision_fin)
+  facet_grid(origin_label_f ~ .)
 
 ```
 
@@ -357,7 +402,7 @@ for (y in unique(country_grouped$year)) {
 
 
 rel_year <- ggplot() +
-  geom_bar(data = na.omit(country_grouped_per), aes(y = per, x = year, fill = decision_fin), stat="identity") +
+  geom_bar(data = na.omit(country_grouped_per), aes(y = per, x = year, fill = decision_fin), stat="identity", position = "stack") +
   scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
   scale_y_continuous(name="relatives per year") + 
   ggtitle("Relatives per year") +
@@ -366,7 +411,7 @@ rel_year <- ggplot() +
   coord_flip() +
   theme_bw() + 
   theme(legend.position="none") + 
-  facet_grid( origin_label ~ decision_fin)
+  facet_grid( origin_label_f ~ .)
 
 ```
 
@@ -405,10 +450,10 @@ rel_reg <- ggplot() +
   scale_y_continuous(name="relatives per region") + 
   ggtitle("Relatives per region") +
   scale_x_discrete(limits=unique(country_grouped_per$year)) +
-  geom_text(data=na.omit(country_grouped_per), aes(x= year, y=cum_per * 0.8, label=round(per, 2)), size=3) +
+  geom_text(data=na.omit(country_grouped_per), aes(x= year, y=cum_per * 0.9, label=round(per, 2)), size=3) +
   coord_flip() +
   theme_bw() + 
-  facet_grid( origin_label ~ .)
+  facet_grid( origin_label_f ~ .)
 
 ```
 
