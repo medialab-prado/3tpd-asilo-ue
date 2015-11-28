@@ -31,13 +31,14 @@ ue <- decisions %>%
 ue <- ue %>%
         mutate(total = accepted + rejected)
 
-rank <- aggregate(total ~ destiny, data = ue, sum)
-rank <- rank %>% arrange(-total)
+rank_dest <- aggregate(total ~ destiny, data = ue, sum)
+rank_dest <- rank_dest %>% arrange(-total)
 
-ue$destiny <- factor(ue$destiny, levels = rank$destiny)
+ue$destiny <- factor(ue$destiny, levels = rank_dest$destiny)
+
+ue$year <- as.Date(paste(as.character(ue$year), '-1-1', sep=''), "%Y-%m-%d")
 
 destiny <- aggregate(cbind(rejected, total, accepted) ~ destiny + year, data = ue, sum)
-destiny$year <- as.Date(paste(as.character(destiny$year), '-1-1', sep=''), "%Y-%m-%d")
 
 destinyPlot <- ggplot() +
   geom_bar(data=destiny, aes(x = year, y = total), stat="identity", fill="#D8A227") +
@@ -72,7 +73,7 @@ destiny_melt <- destiny_melt %>%
 destiny_melt$decision <- factor(destiny_melt$decision, levels = c('accepted_per', 'rejected_per'))
 
 countryPlot <- ggplot() +
-  geom_bar(data=destiny_melt, aes(y = per, x = year, fill = rev(factor(decision))), stat="identity", position = 'stack') +
+  geom_bar(data=destiny_melt, aes(y = per, x = year, fill = factor(decision)), stat="identity", position = 'stack') +
   scale_fill_manual(values = c("#53C480", "#F76163")) + 
   scale_y_continuous(name="relatives per country") + 
   geom_text(data=destiny_melt, aes(x=year, y=cum_per * 0.98, label=percent(per)), size=3) +
@@ -117,7 +118,7 @@ destiny_melt <- destiny_melt %>%
 destiny_melt$decision <- factor(destiny_melt$decision, levels = c('accepted_per', 'rejected_per'))
 
 genrePlot <- ggplot() +
-  geom_bar(data=destiny_melt, aes(y = per, x = year, fill = rev(factor(decision))), stat="identity", position = 'stack') +
+  geom_bar(data=destiny_melt, aes(y = per, x = year, fill = factor(decision)), stat="identity", position = 'stack') +
   scale_fill_manual(values = c("#53C480", "#F76163")) + 
   scale_y_continuous(name="relatives per country") + 
   geom_text(data=destiny_melt, aes(x=year, y=cum_per * 0.98, label=percent(per)), size=3) +
@@ -156,7 +157,7 @@ destiny_melt <- destiny_melt %>%
 destiny_melt$decision <- factor(destiny_melt$decision, levels = c('accepted_per', 'rejected_per'))
 destiny_melt$age <- factor(destiny_melt$age, levels = c("Less than 14", "14 to 17", "18 to 34", "35 to 64", "65 or over", "Unknown"))
 agePlot <- ggplot() +
-  geom_bar(data=destiny_melt, aes(y = per, x = year, fill = rev(factor(decision))), stat="identity", position = 'stack') +
+  geom_bar(data=destiny_melt, aes(y = per, x = year, fill = factor(decision)), stat="identity", position = 'stack') +
   scale_fill_manual(values = c("#53C480", "#F76163")) + 
   scale_y_continuous(name="relatives per country") + 
   geom_text(data=destiny_melt, aes(x=year, y=cum_per * 0.98, label=percent(per)), size=3) +
@@ -166,3 +167,61 @@ agePlot <- ggplot() +
 
 print(agePlot)
 ```
+
+
+### 4. Solicitudes concedidas/rechazadas por país de origen.
+
+**Del total de solicitudes recibidas en cada país, para cada país de origen (más de 90000 solicitudes en todos los años), % aceptadas vs % rechazadas**
+
+
+```{r destiny_origin, fig.width=16, fig.height=40, echo=FALSE, warning=FALSE, message=FALSE}
+rank_orig <- aggregate(total ~ origin + origin_code, data = ue, sum)
+
+orig_factor <- rank_orig %>% 
+                filter(total > 90000) %>%
+                arrange(-total)
+
+rank_orig <- rank_orig %>% 
+                arrange(-total) %>%
+                mutate(rank_orig = c(1:nrow(rank_orig))) %>%
+                select(origin_code, rank_orig)
+
+
+ue_ranked <- left_join(ue, rank_orig, by = 'origin_code')
+ue_ranked <- ue_ranked %>% filter(rank_orig <= 7)
+
+ue_ranked$origin <- factor(ue_ranked$origin, levels = orig_factor$origin)
+
+
+origin <- aggregate(cbind(rejected, total, accepted) ~ destiny + year + origin, data = ue_ranked, sum)
+
+
+destiny_orig <- origin %>%
+                group_by(destiny) %>%
+                group_by(year) %>%
+                group_by(origin) %>%
+                mutate(accepted_per = accepted/total,
+                       rejected_per = rejected/total) %>%
+                select(destiny, year, origin, rejected_per, accepted_per)
+
+destiny_melt <- melt(destiny_orig, id.vars = c('destiny', 'year', 'origin'), variable.name = 'decision', value.name = 'per')
+destiny_melt <- destiny_melt %>%
+                    mutate(per = ifelse(per == 'NaN', 0, per),
+                           cum_per = ifelse(decision == 'rejected_per', per, 0),
+                           cum_per = ifelse(decision == 'accepted_per', 1, cum_per))
+
+destiny_melt$decision <- factor(destiny_melt$decision, levels = c('accepted_per', 'rejected_per'))
+
+originPlot <- ggplot() +
+  geom_bar(data=destiny_melt, aes(y = per, x = year, fill = factor(decision)), stat="identity", position = 'stack') +
+  scale_fill_manual(values = c("#53C480", "#F76163")) + 
+  scale_y_continuous(name="relatives per country") + 
+  geom_text(data=destiny_melt, aes(x=year, y=cum_per * 0.98, label=percent(per)), size=3) +
+  coord_flip() +
+  theme_bw() +
+  facet_grid(destiny ~ origin)
+
+print(originPlot)
+```
+
+
