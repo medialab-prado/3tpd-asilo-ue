@@ -1,0 +1,168 @@
+---
+title: "Exploratry charts destiny"
+output: html_document
+---
+
+**Gráficos exploratorios**
+
+```{r setwd, include = FALSE}
+setwd("~/Dropbox/projects/2015_tpd/3tpd-asilo-ue/")
+options(stringsAsFactors = F)
+
+library(tidyr)
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(reshape2)
+library(gridExtra)
+library(scales)
+
+decisions <- read_csv('data/decisions_v2_comp_decod.csv', col_names = T)
+```
+
+### 1. Volumen de solicitudes por país.
+
+```{r destiny_apps, fig.width=8, fig.height=30, echo=FALSE, warning=FALSE, message=FALSE}
+# Filter the ue aplications 
+ue <- decisions %>%
+        filter(destiny_ue == "EU-28")
+
+## Los totals de la tabla no cuadran con la suma de accepted y rejected...
+ue <- ue %>%
+        mutate(total = accepted + rejected)
+
+rank <- aggregate(total ~ destiny, data = ue, sum)
+rank <- rank %>% arrange(-total)
+
+ue$destiny <- factor(ue$destiny, levels = rank$destiny)
+
+destiny <- aggregate(cbind(rejected, total, accepted) ~ destiny + year, data = ue, sum)
+destiny$year <- as.Date(paste(as.character(destiny$year), '-1-1', sep=''), "%Y-%m-%d")
+
+destinyPlot <- ggplot() +
+  geom_bar(data=destiny, aes(x = year, y = total), stat="identity", fill="#D8A227") +
+  scale_y_continuous(name="relatives per country") + 
+  geom_text(data=destiny, aes(x=year, y=total, label=total), size=3) +
+  coord_flip() +
+  theme_bw() +
+  facet_grid(destiny ~ .)
+
+print(destinyPlot)
+```
+
+### 2. Solicitudes concedidas/rechazadas en cada uno de los paises de la UE.
+
+**Del total de solicitudes recibidas en cada país, % aceptadas vs % rechazadas**
+
+
+```{r destiny_totals, fig.width=8, fig.height=30, echo=FALSE, warning=FALSE, message=FALSE}
+destiny_per <- destiny %>%
+                group_by(destiny) %>%
+                group_by(year) %>%
+                mutate(accepted_per = accepted/total,
+                       rejected_per = rejected/total) %>%
+                select(destiny, year, rejected_per, accepted_per)
+
+destiny_melt <- melt(destiny_per, id.vars = c('destiny', 'year'), variable.name = 'decision', value.name = 'per')
+destiny_melt <- destiny_melt %>%
+                    mutate(per = ifelse(per == 'NaN', 0, per),
+                           cum_per = ifelse(decision == 'rejected_per', per, 0),
+                           cum_per = ifelse(decision == 'accepted_per', 1, cum_per))
+
+destiny_melt$decision <- factor(destiny_melt$decision, levels = c('accepted_per', 'rejected_per'))
+
+countryPlot <- ggplot() +
+  geom_bar(data=destiny_melt, aes(y = per, x = year, fill = rev(factor(decision))), stat="identity", position = 'stack') +
+  scale_fill_manual(values = c("#53C480", "#F76163")) + 
+  scale_y_continuous(name="relatives per country") + 
+  geom_text(data=destiny_melt, aes(x=year, y=cum_per * 0.98, label=percent(per)), size=3) +
+  coord_flip() +
+  theme_bw() +
+  facet_grid(destiny ~ .)
+
+print(countryPlot)
+```
+
+**Estonia**: se pinta bien, en algun año no aprobaron ninguna porque no recibieron ninguna. En general solicitan muy pocas (15-30 al año).    
+**Greece**: recibe astantes solicitudes (15000 - 30000), pero acepta muy muy pocas, el último año 10.            
+**Portugal**: según los datos sí que acepta las solicitudes... eso si, recibe muy pocas (unas 100 al año).       
+**Denmark**: tenía la idea de que no acogía refugiados, pero por estos datos parece que sí...    
+
+
+
+### 3. Solicitudes concedidas/rechazadas por género.
+
+**Del total de solicitudes recibidas en cada país, para cada género, % aceptadas vs % rechazadas**
+
+
+```{r destiny_genre, fig.width=8, fig.height=30, echo=FALSE, warning=FALSE, message=FALSE}
+
+genre <- aggregate(cbind(rejected, total, accepted) ~ destiny + year + sex, data = ue, sum)
+
+
+destiny_genre <- genre %>%
+                group_by(destiny) %>%
+                group_by(year) %>%
+                group_by(sex) %>%
+                mutate(accepted_per = accepted/total,
+                       rejected_per = rejected/total) %>%
+                select(destiny, year, sex, rejected_per, accepted_per)
+
+destiny_melt <- melt(destiny_genre, id.vars = c('destiny', 'year', 'sex'), variable.name = 'decision', value.name = 'per')
+destiny_melt <- destiny_melt %>%
+                    mutate(per = ifelse(per == 'NaN', 0, per),
+                           cum_per = ifelse(decision == 'rejected_per', per, 0),
+                           cum_per = ifelse(decision == 'accepted_per', 1, cum_per))
+
+destiny_melt$decision <- factor(destiny_melt$decision, levels = c('accepted_per', 'rejected_per'))
+
+genrePlot <- ggplot() +
+  geom_bar(data=destiny_melt, aes(y = per, x = year, fill = rev(factor(decision))), stat="identity", position = 'stack') +
+  scale_fill_manual(values = c("#53C480", "#F76163")) + 
+  scale_y_continuous(name="relatives per country") + 
+  geom_text(data=destiny_melt, aes(x=year, y=cum_per * 0.98, label=percent(per)), size=3) +
+  coord_flip() +
+  theme_bw() +
+  facet_grid(destiny ~ sex)
+
+print(genrePlot)
+```
+
+
+### 4. Solicitudes concedidas/rechazadas por edad.
+
+**Del total de solicitudes recibidas en cada país, para cada tramo de edad, % aceptadas vs % rechazadas**
+
+
+```{r destiny_age, fig.width=16, fig.height=40, echo=FALSE, warning=FALSE, message=FALSE}
+
+age <- aggregate(cbind(rejected, total, accepted) ~ destiny + year + age, data = ue, sum)
+
+
+destiny_age <- age %>%
+                group_by(destiny) %>%
+                group_by(year) %>%
+                group_by(age) %>%
+                mutate(accepted_per = accepted/total,
+                       rejected_per = rejected/total) %>%
+                select(destiny, year, age, rejected_per, accepted_per)
+
+destiny_melt <- melt(destiny_age, id.vars = c('destiny', 'year', 'age'), variable.name = 'decision', value.name = 'per')
+destiny_melt <- destiny_melt %>%
+                    mutate(per = ifelse(per == 'NaN', 0, per),
+                           cum_per = ifelse(decision == 'rejected_per', per, 0),
+                           cum_per = ifelse(decision == 'accepted_per', 1, cum_per))
+
+destiny_melt$decision <- factor(destiny_melt$decision, levels = c('accepted_per', 'rejected_per'))
+destiny_melt$age <- factor(destiny_melt$age, levels = c("Less than 14", "14 to 17", "18 to 34", "35 to 64", "65 or over", "Unknown"))
+agePlot <- ggplot() +
+  geom_bar(data=destiny_melt, aes(y = per, x = year, fill = rev(factor(decision))), stat="identity", position = 'stack') +
+  scale_fill_manual(values = c("#53C480", "#F76163")) + 
+  scale_y_continuous(name="relatives per country") + 
+  geom_text(data=destiny_melt, aes(x=year, y=cum_per * 0.98, label=percent(per)), size=3) +
+  coord_flip() +
+  theme_bw() +
+  facet_grid(destiny ~ age)
+
+print(agePlot)
+```
