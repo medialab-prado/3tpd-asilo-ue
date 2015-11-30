@@ -13,14 +13,17 @@ library(ggplot2)
 # 
 # dec1 <- read_csv('rawData/dec1def.csv', col_names = T, col_types = 'cccccciiiiiii')
 # 
+# # To avoid consider Namibia code ('NA') as NA, switch to small letters character, 
+# dec1$citizen[is.na(dec1$citizen)] <- 'nNA'
 # 
-# # REMOVE THE TOTALS
+# # # REMOVE THE TOTALS 
 # citizenTotals <- c("EU28", "EXT_EU28", "TOTAL")
 # geoTotals <- c("EU28", "TOTAL")
 # decisionTotals <- c('TOTAL', 'TOTAL_POS', 'REJECTED')
 # 
 # dec1_no_totals <- dec1 %>%
-#   filter(!(citizen %in% citizenTotals), sex != 'T', age != 'TOTAL', decision %in% decisionTotals, !(geo %in% geoTotals))
+#   filter(!(citizen %in% citizenTotals), sex != 'T', age != 'TOTAL', decision %in% decisionTotals, !(geo %in% geoTotals)) 
+#   
 # 
 # dec_melt <- melt(dec1_no_totals, variable = 'year')
 # dec_melt$year <- gsub('x', '', dec_melt$year, fixed = T)
@@ -28,82 +31,26 @@ library(ggplot2)
 # 
 # colnames(dec) <- c("citizen", "sex", "age", "geo",  "year",  "rejected", "total", "accepted")
 # 
-# # To avoid consider Namibia code ('NA') as NA, switch to small letters character, 
+# dec <- dec %>%
+#   mutate(suma = ifelse((rejected + accepted) != total, 'mal', 'bien'))
 # 
-# dec$citizen[is.na(dec$citizen)] <- 'nNA'
+# # NOT RUN: test, run the transform bellow
+# # mal2 <- a %>% 
+# #         mutate(newTotal = ifelse(mal == 'mal',  rejected + accepted, NA),
+# #                difTotal = newTotal - total,
+# #                newRejected = ifelse(is.na(mal) & !is.na(total), total - accepted, NA),
+# #                difRej = newRejected - rejected)
 # 
-# new_df <- data_frame()
+# dec2 <- dec %>% 
+#         transform(total = ifelse(suma == 'mal',  rejected + accepted, total),
+#                   rejected = ifelse(is.na(suma) & !is.na(total), total - accepted, rejected)) %>%
+#         select(-suma)
 # 
-# # Calculate accepted/rejected based in totals
-# for (dest in unique(dec$geo)) {
-#   print(dest)
-#   temp_dest <- filter(dec, geo == dest)
-#   nas <- temp_dest[ is.na(temp_dest[,c(6:8)]), ]
-#   if (nrow(nas) == 0) {
-#     new_df <- rbind(temp_dest, new_df)
-#   } else {
-#     for (y in unique(temp_dest$year)) {
-#       temp_y <- filter(temp_dest, year == y)
-#       nas <- temp_y[is.na(temp_y[,c(6:8)]), ]
-#       if (nrow(nas) == 0) {
-#         new_df <- rbind(temp_y, new_df)
-#       } else if (nrow(nas) == nrow(temp_y)) {
-#         temp_y <- mutate(temp_y, rejected = 0, total = 0, accepted = 0)
-#         new_df <- rbind(temp_y, new_df)
-#       } else {
-#         for(ori in unique(temp_y$citizen)) {
-#           temp_ori <- filter(temp_y, citizen == ori)
-#           nas <- temp_ori[is.na(temp_ori[,c(6:8)]), ]
-#           if (nrow(nas) == 0) {
-#             new_df <- rbind(temp_ori, new_df)
-#           } else if (nrow(nas) == nrow(temp_y)) {
-#             temp_ori <- mutate(temp_ori, rejected = 0, total = 0, accepted = 0)
-#             new_df <- rbind(temp_ori, new_df)
-#           } else {
-#             for(a in unique(temp_ori$age)) {
-#               temp_a <- filter(temp_ori, age == a)
-#               nas <- temp_a[is.na(temp_a[,c(6:8)]), ]
-#               if (nrow(nas) == 0) {
-#                 new_df <- rbind(temp_a, new_df)
-#               } else {
-#                 for(s in unique(temp_a$sex)) {
-#                   temp_s <- filter(temp_a, sex == s)
-#                   nas <- temp_s[is.na(temp_s[,c(6:8)]), ]
-#                   if (nrow(nas) == 0) {
-#                     new_df <- rbind(temp_s, new_df)
-#                   } else{
-#                     if (is.na(temp_s$rejected) && is.na(temp_s$total) && is.na(temp_s$accepted)) {
-#                       temp_s <- temp_s %>% mutate(rejected = 0, total = 0, accepted = 0)
-#                       new_df <- rbind(temp_s, new_df)
-#                     } else if (is.na(temp_s$total)) {
-#                       
-#                       temp_s <- temp_s %>% mutate(total = rejected + accepted)
-#                       new_df <- rbind(temp_s, new_df)
-#                     } else if (is.na(temp_s$rejected)) {
-#                       temp_s <- temp_s %>% mutate(rejected = total - accepted)
-#                       new_df <- rbind(temp_s, new_df)
-#                     } else if (is.na(temp_s$accepted)) {
-#                       temp_s <- temp_s %>% mutate(accepted = total - rejected)
-#                       new_df <- rbind(temp_s, new_df)
-#                     } else {
-#                       print(temp_s)
-#                     }
-#                   }
-#                 }
-#               }              
-#             }
-#           }
-#         }
-#       }
-#     }
-#   }
-# }
-# 
-# write.csv(new_df, 'decisions_v2.csv', row.names = F)
+# write.csv(dec2, 'decisions_v2.csv', row.names = F)
 
 ################## --> END NOT RUN, READ CSV FILE
 
-dec_v2 <- read_csv('decisions_v2.csv')
+dec_v2 <- read_csv('decisions_v2.csv', col_names = T, col_types = 'ccccciii')
 
 
 # DECODIFY THE VARIABLES
@@ -118,7 +65,7 @@ for (i in codeFiles) {
 }
 
 
-# Assign the labels to each code
+# Rename the variables
 dec_decod <- dec_v2 %>%
                 rename(origin = citizen,
                        destiny = geo)
@@ -127,7 +74,7 @@ dec_decod <- dec_v2 %>%
 countries$Code[is.na(countries$Code)] <- 'nNA'
 countries[countries$Code == 'nNA', ]
 
-
+## DECODE THE VARIABLES
 # ORIGIN
 dec_decod_origin <- left_join(dec_decod, countries, by = c("origin" = "Code"))
 dec_decod_origin <- dec_decod_origin %>%
