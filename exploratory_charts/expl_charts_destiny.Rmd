@@ -27,10 +27,6 @@ decisions <- read_csv('data/decisions_v2_comp_decod.csv', col_names = T)
 ue <- decisions %>%
         filter(destiny_ue == "EU-28")
 
-## Los totals de la tabla no cuadran con la suma de accepted y rejected...
-ue <- ue %>%
-        mutate(total = accepted + rejected)
-
 rank_dest <- aggregate(total ~ destiny, data = ue, sum)
 rank_dest <- rank_dest %>% arrange(-total)
 
