@@ -1,0 +1,29 @@
+.application-input {
+  width: calc(50% - 1.5em);
+}
+
+.application-output {
+  width: calc(50% - 1.5em;
+  float: right;
+  overflow: hidden;
+}
+
+.select2-search__field {
+  color: black;
+}
+
+.select2-results__option {
+  color: black;
+}
+
+.select2-results__group strong {
+  color: #444 !important;
+}
+
+.select-origin select option {
+  color: black;
+}
+
+body {
+  color: green;
+}
