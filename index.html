@@ -152,7 +152,7 @@
 							<p>Cras mattis ante fermentum, malesuada neque vitae, eleifend erat. Phasellus non pulvinar erat. Fusce tincidunt, nisl eget mattis egestas, purus ipsum consequat orci, sit amet lobortis lorem lacus in tellus. Sed ac elementum arcu. Quisque placerat auctor laoreet.</p>
 							<div class="application-input">
 								<label for="origin">Origen</label>
-								<select class="select-origin">
+								<select class="select-origin" style="width: 50%">
 									<option></option>
 								</select>
 								<label for="sex">Sexo</label>
@@ -211,13 +211,37 @@
 		<!-- Scripts -->
 			<script src="web/assets/js/main.js"></script>
 			<script src="web/assets/js/form.js"></script>
+			<script src="web/assets/js/application.js"></script>
 
-			// <script>
-			// 	$(".js-example-placeholder-single").select2({
-			// 	  placeholder: "Select a state",
-			// 	  allowClear: true
-			// 	});
-			// </script>
+			<script type="text/javascript">
+		    var appTable = new AppTable('#application-output', null, null, null, null);
+		    appTable.render('web/data/predict2015_short.csv');
+
+		    
+			  $(".select-destiny").on("select2:select", function (e) {  
+			    appTable.destiny = $('.select-destiny :selected').text();
+			    console.log(appTable.destiny);
+			    appTable.updateRender();
+			  });
+
+		    d3.selectAll('.measure.button')
+		      .on('click', function(d) {
+		        d3.selectAll(".measure.button.buttonSelected").classed("buttonSelected", false);
+		        d3.select(this).classed("buttonSelected", true);
+		        visEvolution.measure = this.id;
+		        
+		        visEvolution.updateRender();
+		      });
+
+		    d3.selectAll('.context.button')
+		      .on('click', function(d) {
+		        d3.selectAll(".context.button.buttonSelected").classed("buttonSelected", false);
+		        d3.select(this).classed("buttonSelected", true);
+		        visEvolution.mean = this.id;
+
+		        visEvolution.updateRender();
+		      });
+		  </script>
 
 	</body>
 </html>

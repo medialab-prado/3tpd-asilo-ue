@@ -33,7 +33,4 @@ d3.json('/web/data/select_data.json', function(error, jsonData){
     dataType: 'json',
     data: destiny
   });
-
-  d3.select('.select-destiny').on('change', function(d) { console.log('change');return ; })
-
 });
