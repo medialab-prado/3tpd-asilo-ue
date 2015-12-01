@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Y_LT14",
+    "text": "Less than 14"
+  },
+  {
+    "id": "Y14-17",
+    "text": "14 to 17"
+  },
+  {
+    "id": "Y18-34",
+    "text": "18 to 34"
+  },
+  {
+    "id": "Y35-64",
+    "text": "35 to 64"
+  },
+  {
+    "id": "Y_GE65",
+    "text": "65 or over"
+  },
+  {
+    "id": "UNK",
+    "text": "Unknown"
+  }
+]

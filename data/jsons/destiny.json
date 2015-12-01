@@ -1,0 +1,114 @@
+[
+  {
+    "id": "AT",
+    "text": "Austria"
+  },
+  {
+    "id": "BE",
+    "text": "Belgium"
+  },
+  {
+    "id": "BG",
+    "text": "Bulgaria"
+  },
+  {
+    "id": "HR",
+    "text": "Croatia"
+  },
+  {
+    "id": "CY",
+    "text": "Cyprus"
+  },
+  {
+    "id": "CZ",
+    "text": "Czech Republic"
+  },
+  {
+    "id": "DK",
+    "text": "Denmark"
+  },
+  {
+    "id": "EE",
+    "text": "Estonia"
+  },
+  {
+    "id": "FI",
+    "text": "Finland"
+  },
+  {
+    "id": "FR",
+    "text": "France"
+  },
+  {
+    "id": "DE",
+    "text": "Germany"
+  },
+  {
+    "id": "EL",
+    "text": "Greece"
+  },
+  {
+    "id": "HU",
+    "text": "Hungary"
+  },
+  {
+    "id": "IE",
+    "text": "Ireland"
+  },
+  {
+    "id": "IT",
+    "text": "Italy"
+  },
+  {
+    "id": "LV",
+    "text": "Latvia"
+  },
+  {
+    "id": "LT",
+    "text": "Lithuania"
+  },
+  {
+    "id": "LU",
+    "text": "Luxembourg"
+  },
+  {
+    "id": "MT",
+    "text": "Malta"
+  },
+  {
+    "id": "NL",
+    "text": "Netherlands"
+  },
+  {
+    "id": "PL",
+    "text": "Poland"
+  },
+  {
+    "id": "PT",
+    "text": "Portugal"
+  },
+  {
+    "id": "RO",
+    "text": "Romania"
+  },
+  {
+    "id": "SK",
+    "text": "Slovakia"
+  },
+  {
+    "id": "SI",
+    "text": "Slovenia"
+  },
+  {
+    "id": "ES",
+    "text": "Spain"
+  },
+  {
+    "id": "SE",
+    "text": "Sweden"
+  },
+  {
+    "id": "UK",
+    "text": "United Kingdom"
+  }
+]
