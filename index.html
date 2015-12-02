@@ -22,6 +22,7 @@
 		<script src="web/assets/js/klass.js"></script>
 		<script src="web/assets/js/skel.min.js"></script>
 		<script src="web/assets/js/jquery.min.js"></script>
+		<script src="web/assets/js/thenBy.min.js"></script>
 		<script src="web/assets/js/jquery.scrollex.min.js"></script>
 		<script src="web/assets/js/util.js"></script>
 		<!--[if lte IE 8]><script src="web/assets/js/ie/respond.min.js"></script><![endif]-->
@@ -210,38 +211,87 @@
 
 		<!-- Scripts -->
 			<script src="web/assets/js/main.js"></script>
-			<script src="web/assets/js/form.js"></script>
+			<!--  <script src="web/assets/js/form.js"></script> -->
 			<script src="web/assets/js/application.js"></script>
 
 			<script type="text/javascript">
-		    var appTable = new AppTable('#application-output', null, null, null, null);
-		    appTable.render('web/data/predict2015_short.csv');
+		    var appTable = new AppTable('#application-output');
+		    appTable.loadData('web/data/predict2015_short.csv');
 
-		    
-			  $(".select-destiny").on("select2:select", function (e) {  
-			    appTable.destiny = $('.select-destiny :selected').text();
-			    console.log(appTable.destiny);
-			    appTable.updateRender();
+		    d3.json('/web/data/select_data.json', function(error, jsonData){
+				  if (error) throw error;
+
+				  var origin = jsonData.origin,
+				      sex = jsonData.sex.map(function(d) { d.disabled = true; return d; }),
+				      age = jsonData.age.map(function(d) { d.disabled = true; return d; }),
+				      destiny = jsonData.destiny.map(function(d) { d.disabled = true; return d; });
+
+				  appTable.originData = origin;
+				  appTable.sexData = sex;
+				  appTable.ageData = age;
+				  appTable.destinyData = destiny;
+
+				  appTable.originRenderSelect();
+				  appTable.sexRenderSelect();
+				  appTable.ageRenderSelect();
+				  appTable.destinyRenderSelect();
+
+				});
+
+		    $(".select-origin").on("select2:select", function (e) {  
+			    appTable.origin = $('.select-origin :selected').text();
+			    appTable.sex = null;
+					appTable.age = null;
+					appTable.destiny = null;
+
+		    	appTable.enable('sex');
+
+			    if (appTable.renderable()) {
+			    	appTable.render();
+			    }
 			  });
 
-		    d3.selectAll('.measure.button')
-		      .on('click', function(d) {
-		        d3.selectAll(".measure.button.buttonSelected").classed("buttonSelected", false);
-		        d3.select(this).classed("buttonSelected", true);
-		        visEvolution.measure = this.id;
-		        
-		        visEvolution.updateRender();
-		      });
+			  $(".select-sex").on("select2:select", function (e) {  
+			    appTable.sex = $('.select-sex :selected').text();
+			    appTable.age = null;
+					appTable.destiny = null;
+			    
+			    appTable.enable('age');
 
-		    d3.selectAll('.context.button')
-		      .on('click', function(d) {
-		        d3.selectAll(".context.button.buttonSelected").classed("buttonSelected", false);
-		        d3.select(this).classed("buttonSelected", true);
-		        visEvolution.mean = this.id;
+			    if (appTable.renderable()) {
+			    	appTable.render();
+			    }
+			  });
 
-		        visEvolution.updateRender();
-		      });
+			  $(".select-age").on("select2:select", function (e) {  
+			    appTable.age = $('.select-age :selected').text();
+			    appTable.destiny = null;
+			    
+			  	appTable.enable('destiny');
+
+			    if (appTable.renderable()) {
+			    	appTable.render();
+			    }
+			  });
+
+			  $(".select-destiny").on("select2:select", function (e) {  
+			    appTable.destiny = $('.select-destiny :selected').text();
+
+			    if (appTable.renderable()) {
+			    	appTable.render();
+			    }
+			  });
+
 		  </script>
 
 	</body>
 </html>
+
+
+
+
+
+
+
+
+

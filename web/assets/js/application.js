@@ -1,7 +1,7 @@
 'use strict';
 
 var AppTable = Class.extend({
-  init: function(divId, origin, sex, age, destiny) {
+  init: function(divId) {
     this.container = divId;
     
     // Chart dimensions
@@ -11,10 +11,10 @@ var AppTable = Class.extend({
     this.height = null;
     
     // Variable 
-    this.origin = origin;
-    this.sex = sex;
-    this.age = age;
-    this.destiny = destiny;
+    this.origin = null;
+    this.sex = null;
+    this.age = null;
+    this.destiny = null;
 
     // Scales
     this.xScale = d3.scale.ordinal();
@@ -30,10 +30,15 @@ var AppTable = Class.extend({
     this.data = null;
     this.dataChart = null;
     this.dataDestiny = null;
+    this.originData = null;
+    this.sexData = null;
+    this.ageData = null;
+    this.destinyData = null;
+    this.allSelects = ['origin', 'sex', 'age', 'destiny'];
+    this.filteredData = null;
 
     // Objects
-    this.tooltip = null;
-    this.formatPercent = this.measure == 'percentage' ? d3.format('%') : d3.format(".2f");
+    this.formatPercent = d3.format('%');
     this.parseDate = d3.time.format("%Y").parse;
     this.yearDate = d3.time.format("%Y");
     this.line = d3.svg.line();
@@ -52,18 +57,51 @@ var AppTable = Class.extend({
     this.niceCategory = null;
   },
 
-  render: function(urlData) {
+  originRenderSelect: function () {
+    $(".select-origin").select2({
+      placeholder: "Selecciona el país de origen",
+      allowClear: true,
+      dataType: 'json',
+      data: this.originData
+    });
+  },
+  sexRenderSelect: function () {
+    $(".select-sex").select2({
+      placeholder: "Selecciona el sexo",
+      allowClear: true,
+      dataType: 'json',
+      data: this.sexData
+    });
+  },
+  ageRenderSelect: function () {
+    $(".select-age").select2({
+      placeholder: "Selecciona la edad",
+      allowClear: true,
+      dataType: 'json',
+      data: this.ageData
+    });
+  },
+  destinyRenderSelect: function () {
+    $(".select-destiny").select2({
+      placeholder: "Selecciona el país de destino",
+      allowClear: true,
+      dataType: 'json',
+      data: this.destinyData,
+      sorter: function(results) {
+        return results.sort(
+          firstBy('disabled')
+          .thenBy('text')
+        );
+      }
+    });
+  },
+
+  loadData: function(urlData) {
 
     // Chart dimensions
     // this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
     // this.width = this.containerWidth - this.margin.left - this.margin.right;
     // this.height = (this.containerWidth / 1.9) - this.margin.top - this.margin.bottom;
-
-    // Append tooltip
-    this.tooltip = d3.select('body').append('div')
-      .attr('class', 'vis_evolution_tooltip')
-      .style('opacity', 0);
-
 
     // Append svg
     // this.svgEvolution = d3.select(this.container).append('svg')
@@ -94,7 +132,6 @@ var AppTable = Class.extend({
       if (error) throw error;
       
       this.data = csvData;
-      console.log(this.data.filter(function(d) { return d.destiny == this.destiny; }.bind(this)))
 
 
       // this.dataChart = this.data.budgets[this.measure];
@@ -201,10 +238,65 @@ var AppTable = Class.extend({
     }.bind(this)); // end load data
   }, // end render
 
-  updateRender: function () {
+  enable: function (variable) { 
+    // Reset nexts selects
+    var index = this.allSelects.indexOf(variable);
+    var selects2reset = this.allSelects.slice(index, this.allSelects.length);
+
+    selects2reset.forEach(function(d) { 
+      eval('this.' + d + 'RenderSelect()')
+    }.bind(this));
+
+    // Build an array with the selects != null
+    var selected = [];
+
+    this.allSelects.forEach(function(d) { 
+      if (this[d] != null) {
+        selected.push(d)
+      }
+    }.bind(this));
+
+    // Filter the data for each select
+    this.filteredData = this.data;
+
+    selected.forEach(function(d) {
+      this.filteredData = this.filteredData.filter(function(v) { return v[d] == this[d]; }.bind(this));
+    }.bind(this));
+    
+    // Get the unique values
+    var nest = d3.nest()
+        .key(function(d) { return d[variable];})
+        .entries(this.filteredData);
+
+    var able = nest.map(function(d) { return d.key; })
+
+    eval('this.' + variable + 'Data').map(function(d) { 
+      if (able.indexOf(d.text) != -1) {
+        return d.disabled = false; 
+      } else {
+        return d.disabled = true;
+      }
+    }.bind(this));
+
+    // if (variable == 'destiny') {
+    //   this.destinyData = this.destinyData.sort(function(a, b) { console.log('a', a);return a.id - b.id; })
+    // }
+
+    // console.log(this.destinyData)
+    eval('this.' + variable + 'RenderSelect()')
+    
+  },
+
+  renderable: function () { 
+   return this.origin != null && this.sex != null && this.age != null && this.destiny != null;
+
+  },
+
+  render: function () {
 
     // re-map the data
-    console.log(this.data.filter(function(d) { return d.destiny == this.destiny & d.origin == 'Afghanistan' & d.age == '18 to 34'; }.bind(this)))
+    this.filteredData = this.filteredData.filter(function(v) { return v.destiny == this.destiny; }.bind(this));
+    console.log(this.filteredData)
 
     // // dataDomain, to plot the min & max labels    
     //   this.dataDomain = ([

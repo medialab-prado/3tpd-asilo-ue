@@ -3,7 +3,7 @@
 }
 
 .application-output {
-  width: calc(50% - 1.5em;
+  width: calc(50% - 1.5em);
   float: right;
   overflow: hidden;
 }
@@ -16,14 +16,10 @@
   color: black;
 }
 
-.select2-results__group strong {
-  color: #444 !important;
+.select2-results strong {
+  color: black !important;
 }
 
 .select-origin select option {
   color: black;
-}
-
-body {
-  color: green;
 }
