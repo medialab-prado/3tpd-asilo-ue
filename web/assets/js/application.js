@@ -28,33 +28,29 @@ var AppTable = Class.extend({
 
     // Data
     this.data = null;
-    this.dataChart = null;
-    this.dataDestiny = null;
+    this.adicionalData = null;
     this.originData = null;
     this.sexData = null;
     this.ageData = null;
     this.destinyData = null;
     this.allSelects = ['origin', 'sex', 'age', 'destiny'];
     this.filteredData = null;
+    this.adicFiltData = null;
 
     // Objects
     this.formatPercent = d3.format('%');
     this.parseDate = d3.time.format("%Y").parse;
     this.yearDate = d3.time.format("%Y");
-    this.line = d3.svg.line();
 
     // Chart objects
-    this.svgEvolution = null;
-    this.chart = null;
+    this.svgOutput = null;
 
     // Constant values
-    this.radius = 5;
     this.opacity = .7;
     this.opacityLow = .4;
     this.duration = 1500;
     this.mainColor = '#F69C95';
     this.darkColor = '#B87570';
-    this.niceCategory = null;
   },
 
   originRenderSelect: function () {
@@ -96,147 +92,48 @@ var AppTable = Class.extend({
     });
   },
 
-  loadData: function(urlData) {
+  loadData: function() {
 
     // Chart dimensions
-    // this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
-    // this.width = this.containerWidth - this.margin.left - this.margin.right;
-    // this.height = (this.containerWidth / 1.9) - this.margin.top - this.margin.bottom;
+    this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
+    this.width = this.containerWidth - this.margin.left - this.margin.right;
+    this.height = (this.containerWidth) - this.margin.top - this.margin.bottom;
 
     // Append svg
-    // this.svgEvolution = d3.select(this.container).append('svg')
-    //     .attr('width', this.width + this.margin.left + this.margin.right)
-    //     .attr('height', this.height + this.margin.top + this.margin.bottom)
-    //     .attr('class', 'svg_distribution')
-    //   .append('g')
-    //     .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
-
-    // Set nice category
-    this.niceCategory = {
-      "Actuaciones de carácter general": "Actuaciones Generales",
-      "Actuaciones de carácter económico": "Actuaciones Económicas",
-      "Producción de bienes públicos de carácter preferente": "Bienes Públicos",
-      "Actuaciones de protección y promoción social": "Protección Social",
-      "Servicios públicos básicos": "Servicios Públicos",
-      "Deuda pública": "Deuda Pública",
-      "mean_national": "Media Nacional",
-      "mean_autonomy": "Media Autonómica",
-      "mean_province": "Media Provincial",
-      "G": "Gasto/habitante",
-      "I": "Ingreso/habitante",
-      "percentage": "% sobre el total"
-    }
+    this.svgOutput = d3.select(this.container).append('svg')
+        .attr('width', this.width + this.margin.left + this.margin.right)
+        .attr('height', this.height + this.margin.top + this.margin.bottom)
+        .attr('class', 'svg_output')
+      .append('g')
+        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
     // Load the data
-    d3.csv(urlData, function(error, csvData){
+    d3.csv('web/data/predict2015_short.csv', function(error, predictData){
       if (error) throw error;
       
-      this.data = csvData;
+      this.data = predictData;
+      this.data.forEach(function(d) {
+        d.accepted_total = +d.accepted_total;
+        d.predict2015 = +d.predict2015;
+        d.rejected_total = +d.rejected_total;
+        d.total = +d.total;
+      });
 
-
-      // this.dataChart = this.data.budgets[this.measure];
-      // this.kind = this.data.kind;
-
-      // var values = [];
-      // var municipalities = [];
-      // this.dataChart.forEach(function(d) { 
-      //   d.values.forEach(function(v) { 
-      //     v.date = this.yearDate(this.parseDate(v.date));
-      //     values.push(v.value)
-      //   }.bind(this));
-      //   municipalities.push(d.name)
-      // }.bind(this));
-      
-
-      // // Define the line
-      // this.line
-      //   .interpolate("cardinal")
-      //   .x(function(d) { return this.xScale(d.date); }.bind(this))
-      //   .y(function(d) { return this.yScale(d.value); }.bind(this));
-
-
-      // // Set the scales
-      // this.xScale
-      //   .domain(this.dataChart[0].values.map(function(d) { return d.date; }))
-      //   .rangePoints([this.margin.left, this.width], 0.5);
-
-      // this.yScale
-      //   .domain([d3.min(values) * .3, d3.max(values) * 1.2])
-      //   .range([this.height, this.margin.top]);
-      
-      // this.colorScale
-      //   .domain(municipalities);
-
-
-      // // Define the axis 
-      // this.xAxis
-      //     .scale(this.xScale)
-      //     // .tickValues(this._tickValues(this.xScale))
-      //     .orient("bottom");  
-
-
-      // this.yAxis
-      //     .scale(this.yScale)
-      //     .tickValues(this._tickValues(this.yScale))
-      //     .orient("left");
-      
-      // // --> DRAW THE AXIS
-      // this.svgEvolution.append("g")
-      //     .attr("class", "x axis")
-      //     .attr("transform", "translate(" + 0 + "," + this.height + ")")
-      //     .call(this.xAxis);
-
-      // this.svgEvolution.append("g")
-      //     .attr("class", "y axis")
-      //     .attr("transform", "translate(" + this.margin.left + ",0)")
-      //     .call(this.yAxis);
-
-      // // Change ticks color
-      // d3.selectAll('.axis').selectAll('text')
-      //   .attr('fill', this.darkColor);
-
-      // d3.selectAll('.axis').selectAll('path')
-      //   .attr('stroke', this.darkColor);
-
-
-      // // --> DRAW THE LINES  
-      // this.chart = this.svgEvolution.append('g')
-      //     .attr('class', 'evolution_chart');
-
-      // this.chart.append('g')
-      //     .attr('class', 'lines')
-      //   .selectAll('path')
-      //     .data(this.dataChart)
-      //     .enter()
-      //   .append('path')
-      //     .attr('class', function(d) { return 'evolution ' + this._normalize(d.name); }.bind(this))
-      //     .attr('d', function(d) { return this.line(d.values); }.bind(this))
-      //     .style('stroke', function(d) { return this.colorScale(d.name); }.bind(this));
-
-
-      // // Si queremos puntos en los vértices, añadir dotPoints    
-
-
-
-      // // --> DRAW THE Legend 
-      // var svg = d3.select("svg");
-
-      // svg.append("g")
-      //   .attr("class", "legend_evolution")
-      //   .attr("transform", "translate(" + (this.width - (this.margin.right * 3)) + ",20)");
-
-      // var legendEvolution = d3.legend.color()
-      //   .shape('path', d3.svg.symbol().type('circle').size(80)())
-      //   .shapeWidth(14)
-      //   .shapePadding(this.radius)
-      //   .scale(this.colorScale);
-
-      // svg.select(".legend_evolution")
-      //   .call(legendEvolution);
-
-
-    }.bind(this)); // end load data
-  }, // end render
+      d3.csv('web/data/info_adicional.csv', function(error, auxData){
+        if (error) throw error;
+        
+        this.adicionalData = auxData;
+        this.adicionalData.forEach(function(d) {
+          d.pib_capita = +d.pib_capita;
+          d.population = +d.population;
+          d.rank_pib = +d.rank_pib;
+          d.rank_unemployment = +d.rank_unemployment;
+          d.unemployment = +d.unemployment; 
+        });
+        console.log(this.adicionalData)
+      }.bind(this));   
+    }.bind(this)); 
+  }, // end load data
 
   enable: function (variable) { 
     // Reset nexts selects
@@ -295,76 +192,66 @@ var AppTable = Class.extend({
   render: function () {
 
     // re-map the data
-    this.filteredData = this.filteredData.filter(function(v) { return v.destiny == this.destiny; }.bind(this));
-    console.log(this.filteredData)
+    this.filteredData = this.data.filter(function(d) { return d.destiny == this.destiny & d.sex == this.sex & d.origin == this.origin & d.age == this.age; }.bind(this));
+    this.adicFiltData = this.adicionalData.filter(function(d) { return d.country == this.destiny; }.bind(this));
 
-    // // dataDomain, to plot the min & max labels    
-    //   this.dataDomain = ([
-    //     d3.min(this.dataChart, function(d) { return d.value; }),
-    //     d3.max(this.dataChart, function(d) { return d.value; })
-    //         ]);
+    // Get the country where the asylum is more likely.
+
+    var likely = this.data.filter(function(d) { return d.sex == this.sex & d.origin == this.origin & d.age == this.age; }.bind(this));
+    var max = d3.max(likely, function(d) { return d.predict2015; });
     
-    // // Update the frequencies for every cut
-    // this.dataFreq = d3.nest()
-    //       .key(function(d) { return d.cut; }).sortKeys(function(a,b) { return a - b; })
-    //       .rollup(function(v) { return v.length; })
-    //       .entries(this.dataChart);
-
-    // // Update the scales
-    // this.xScale.domain(this.dataFreq.map(function(d) { return d.key; }));
-    // this.xMinMaxScale.domain(this.dataDomain);
-    // this.yScale.domain([0, d3.max(this.dataFreq, function(d) { return d.values; })]);
-
-    // // Update the axis
-    // this.xMinMaxAxis 
-    //       .scale(this.xMinMaxScale)
-    //       .tickValues(this.dataDomain);
-
-    // if (this.measure != 'percentage') {
-    //   this.xMinMaxAxis
-    //     .tickFormat(d3.format('.f'));
-    // } else {
-    //   this.xMinMaxAxis
-    //     .tickFormat(d3.format('%'));
-    // }
-
-    // this.svgEvolution.select(".x.axis")
-    //   .transition()
-    //   .duration(this.duration)
-    //   .delay(this.duration/2)
-    //   .ease("sin-in-out") 
-    //   .call(this.xMinMaxAxis);
-
-    // // Change ticks color
-    // d3.selectAll('.x.axis').selectAll('text')
-    //   .attr('fill', this.mainColor);
-
-    // this.svgEvolution.selectAll('.bar_distribution')
-    //   .data(this.dataChart)
-    //   .transition()
-    //   .duration(this.duration)
-    //   .attr('y', function(d) { return this.yScale(d.values); }.bind(this))
-    //   .attr('height', function(d) { return this.height - this.yScale(d.values); }.bind(this))
+    likely = likely.filter(function(d) { return d.predict2015 == max; })
+    console.log(this.adicFiltData)
+    console.log('likely', likely)
 
 
-    // // --> HIGHLIGHT THE MEAN CUT 
+    var accepted;
 
-    // var prevMeanCut = this.meanCut;
-    // this.meanCut = this.dataMeans
-    //                 .filter(function(d) { return d.name == this.mean; }.bind(this))
-    //                 .map(function(d) { return d.cut; });
+    if (this.filteredData[0].accepted_total == this.filteredData[0].total) {
+      accepted = 'todas ellas fueron aceptadas';
+    } else if (this.filteredData[0].accepted_total == 0) {
+      accepted = 'ninguna de ellas fue aceptada'
+    } else {
+      accepted = this.filteredData[0].accepted_total + ' fueron aceptadas'
+    }
 
-    // if (this.meanCut != prevMeanCut) {
-    //   this.svgEvolution.selectAll('.bar_distribution')
-    //     .transition()
-    //     .duration(this.duration / 2)
-    //     .attr('fill', this.mainColor);
+    var time_waiting;
 
-    //   this.svgEvolution.selectAll('.bar_distribution.x' + this.meanCut[0])
-    //     .transition()
-    //     .duration(this.duration)
-    //     .attr('fill', d3.rgb(this.mainColor).darker(1));
-    // }
+    if (this.adicFiltData[0].time_waiting == 0) {
+      time_waiting = ' no se han encontrado datos';
+    } else {
+      time_waiting = ' es de ' + this.adicFiltData[0].time_waiting;
+    }
+    // Add text
+    var prob = 'La probabilidad de que recibas asilo en <span class="big">' + this.destiny + '</span> es del <span class="big">' + this.formatPercent(this.filteredData[0].predict2015) + '</span>.<br>'
+    var absolutes = '<span class="small">En los últimos 7 años, ' + this.destiny + ' ha recibido ' + this.filteredData[0].total + ' solicitudes de ' + this.filteredData[0].sex + ' de ' + this.filteredData[0].age + ' procedentes de ' + this.origin + ', ' + accepted + '.</span><br>'
+    var info_adicional_sol =  '<span class="bullet fa-envelope"></span>' + 'Podrás presentar la solicitud en ' + this.adicFiltData[0].organism + '.<br>'
+    var info_adicional_time = '<span class="bullet fa-clock-o"></span>' + 'En cuanto al tiempo aproximado de espera, ' + time_waiting + '.<br>'
+
+    var max_prob = 'Las predicciones dicen que'
+    
+    var text = prob + absolutes + '<span class="big">Datos de interés</span><br>' + info_adicional_sol + info_adicional_time + max_prob
+
+    this.svgOutput.selectAll('.output')
+        .transition()
+        .duration(this.duration/5)
+        .style('opacity', 0)
+        .remove();
+
+   this.svgOutput.append('foreignObject')
+        .attr('class', 'output')
+        .attr('width', this.width)
+        .attr('height', this.height)
+        .attr('transform', 'translate(' + 0 + ',' + this.margin.top + ')')
+        .style('fill', '#fff')
+        .style('font-size', '28px')
+        .style('opacity', 0)
+        .html(text)
+      .transition()
+        .delay(this.duration/5)
+        .duration(this.duration/5)
+        .style('opacity', 1)
+    
   },
   //PRIVATE
   _tickValues:  function (scale) {

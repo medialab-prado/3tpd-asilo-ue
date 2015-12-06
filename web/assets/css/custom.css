@@ -1,8 +1,8 @@
-.application-input {
+#application-input {
   width: calc(50% - 1.5em);
 }
 
-.application-output {
+#application-output {
   width: calc(50% - 1.5em);
   float: right;
   overflow: hidden;
@@ -22,4 +22,20 @@
 
 .select-origin select option {
   color: black;
+}
+
+.big {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.small {
+  font-size: 0.7em;
+  display: block;
+}
+
+.bullet {
+  font-family: FontAwesome;
+  padding: 10px;
+  color: red;
 }
