@@ -1,29 +1,29 @@
 country,country,pib_capita,rank_pib,population,unemployment,rank_unemployment,organism,time_waiting
-Austria,Austria,46892.90512,6,8506889,0.05,1,los centros federales de primera acogida,
+Austria,Austria,46892.90512,6,8506889,0.05,1,Centros Federales de Primera Acogida,
 Germany,Germany,43683.0399,8,80767463,0.05,1,Federal Office for Migration and Refugees (Bundesamt für Migration und Flüchtlinge / BAMF),5 a 7 meses
 Poland,Poland,13228.34645,24,38017856,0.056,2,,
 Malta,Malta,20889.94262,16,425384,0.059,3,,
 Luxembourg,Luxembourg,101499.8693,1,549680,0.06,4,,
 Czech Republic,Czech Republic,17934.50396,20,10512419,0.061,5,,
-United Kingdom,United Kingdom,41826.56986,10,64351155,0.063,6,Refugee council (refugeecouncil.org.uk),6 meses
+United Kingdom,United Kingdom,41826.56986,10,64351155,0.063,6,Refugee Council (refugeecouncil.org.uk),6 meses
 Denmark,Denmark,55612.83871,2,5617345,0.066,7,,
 Romania,Romania,9168.802936,27,19947311,0.068,8,,
-Netherlands,Netherlands,47317.46911,5,16829289,0.07,9,"cuatro centros de registro (Aanmeldcentrum): DenBosch, Zevenaar, Ter Apel y Schiphol.",
+Netherlands,Netherlands,47317.46911,5,16829289,0.07,9,"Aanmeldcentrum: DenBosch, Zevenaar, Ter Apel y Schiphol.",
 Estonia,Estonia,18086.66461,19,1315819,0.074,10,Police and Border Guard Board (PBGP),4 meses
 Hungary,Hungary,12751.31959,25,9877365,0.077,11,,
 Sweden,Sweden,54010.42836,3,9644864,0.079,12,Swedish Migration Agency (Migrationsverket),7 meses
 Belgium,Belgium,43581.32431,9,11203992,0.085,13,Federal Agency for the Reception of Asylum Seekers (FEDASIL),3 a 6 meses
-Finland,Finland,45438.43637,7,5451270,0.087,14,"The Finnish Immigration Service (Migri), subordinate to the Ministry of the Interior",
+Finland,Finland,45438.43637,7,5451270,0.087,14,"The Finnish Immigration Service (Migri)",
 Slovenia,Slovenia,21978.08849,15,2061085,0.097,15,,
-France,France,39193.61273,11,65835579,0.102,16,OFPRA (Office français de protection des réfugiés et apatrides).,15 dias a 6 meses (en función de la urgencia)
+France,France,39193.61273,11,65835579,0.102,16,OFPRA (Office français de protection des réfugiés et apatrides),15 dias a 6 meses (en función de la urgencia)
 Lithuania,Lithuania,15082.89041,22,2943472,0.107,17,,
 Latvia,Latvia,14709.59694,23,2001468,0.108,18,,
-Ireland,Ireland,48898.32567,4,4605501,0.113,19,"tres centros: Office of the Refugee Applications Commissioner (ORAC), Garda National Immigration Bureau y Prison Service.",
+Ireland,Ireland,48898.32567,4,4605501,0.113,19,"Office of the Refugee Applications Commissioner (ORAC), Garda National Immigration Bureau, Prison Service.",
 Bulgaria,Bulgaria,7074.048765,28,7245677,0.114,20,Agencia Estatal para los Refugiados,
 Italy,Italy,32064.99158,12,60782668,0.127,21,Polizia di Frontiera o Ufficio di Immigrazione della Questura (si ya estás en Italia),más de un año
-Slovakia,Slovakia,16891.30006,21,5415949,0.132,22,Migration Office of the Ministry of Interior of the Slovak Republic,24 meses
+Slovakia,Slovakia,16891.30006,21,5415949,0.132,22,Migration Office of the Ministry of Interior,24 meses
 Portugal,Portugal,20252.22531,17,10427301,0.141,23,Immigration and Borders Service (SEF),2 meses y medio
 Cyprus,Cyprus,24942.2404,14,858000,0.161,24,"Asylum Service, of Ministry of Interior",
 Croatia,Croatia,12388.75717,26,4246809,0.173,25,Ministry of Interior/Reception Centre for Asylum Seekers' administration,unos pocos meses a un año y medio
-Spain,Spain,27755.97429,13,46512199,0.245,26,"cinco centros: Oficina de Asilo y Refugio, Puestos fronterizos de entrada al territorio español, Oficinas de Extranjeros, Comisarías de Policía autorizadas y Centros de Internamiento de Extranjeros.",
+Spain,Spain,27755.97429,13,46512199,0.245,26,"Oficina de Asilo y Refugio, Puestos fronterizos de entrada, Oficinas de Extranjeros, Comisarías de Policía autorizadas y Centros de Internamiento de Extranjeros.",
 Greece,Greece,19886.91134,18,10926807,0.265,27,,
