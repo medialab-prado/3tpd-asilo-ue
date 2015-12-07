@@ -1,27 +1,15 @@
-#application-input {
-  width: calc(50% - 1.5em);
-}
-
-#application-output {
-  width: calc(50% - 1.5em);
-  float: right;
+#application {
   overflow: hidden;
 }
 
-.select2-search__field {
-  color: black;
+#application-input {
+  width: calc(40% - 1.5em);
+  float: left;
 }
 
-.select2-results__option {
-  color: black;
-}
-
-.select2-results strong {
-  color: black !important;
-}
-
-.select-origin select option {
-  color: black;
+#application-output {
+  width: calc(60% - 1.5em);
+  overflow: hidden;
 }
 
 .big {
@@ -37,5 +25,74 @@
 .bullet {
   font-family: FontAwesome;
   padding: 10px;
-  color: red;
+  color: #4c5c96;
+}
+
+/*General*/
+
+.wrapper:after {
+    height: 6.6em;
+}
+
+/* Selects */
+
+.select-title {
+  padding-top: 1.75em
+}
+
+.select2-container--default .select2-selection--single {
+  height: 2.75em;
+  background: rgba(255, 255, 255, 0.025);
+  border-radius: 5px;
+  border: solid 2px rgba(255, 255, 255, 0.125);
+  display: block;
+  font-size: 13pt;
+  font-weight: 300;
+  line-height: 1.65;
+  font-family: "Source Sans Pro", Helvetica, sans-serif;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #fff;
+  line-height: 42px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+  border-color: #fff transparent transparent transparent;
+  border-style: solid;
+  border-width: 8px 6px 0 6px;
+  margin-left: -12px;
+  margin-top: 8px;
+}
+
+.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+  border-color: #fff transparent transparent transparent;
+  border-width: 0 6px 8px 6px;
+}
+
+.select2-selection__clear {
+    padding-right: 10px;
+    line-height: 48px;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #CDD0E1;
+    color: #2E3141;
+}
+
+
+.select2-search__field {
+  color: #2E3141;
+}
+
+.select2-results__option {
+  color: #2E3141;
+}
+
+.select2-results strong {
+  color: #2E3141 !important;
+}
+
+.select-origin select option {
+  color: #2E3141;
 }

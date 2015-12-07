@@ -6,7 +6,7 @@ var AppTable = Class.extend({
     
     // Chart dimensions
     this.containerWidth = null;
-    this.margin = {top: 20, right: 20, bottom: 40, left: 40};
+    this.margin = {top: 20, right: 0, bottom: 20, left: 40};
     this.width = null;
     this.height = null;
     
@@ -233,12 +233,21 @@ var AppTable = Class.extend({
     // Add text
     var prob = 'La probabilidad de que recibas asilo en <span class="big">' + this.destiny + '</span> es del <span class="big">' + this.formatPercent(this.filteredData[0].predict2015) + '</span>.<br>'
     var absolutes = '<span class="small">En los últimos 7 años, ' + this.destiny + ' ha recibido ' + this.filteredData[0].total + ' solicitudes de ' + this.filteredData[0].sex + ' de ' + this.filteredData[0].age + ' procedentes de ' + this.origin + ', ' + accepted + '.</span><br>'
-    var info_adicional_sol =  '<span class="bullet fa-envelope"></span>' + 'Podrás presentar la solicitud en ' + this.adicFiltData[0].organism + '.<br>'
+    var info_adicional_sol =  '<span class="bullet fa-envelope"></span>' + 'Podrás presentar la solicitud en "' + this.adicFiltData[0].organism + '".<br>'
     var info_adicional_time = '<span class="bullet fa-calendar-check-o"></span>' + 'En cuanto al tiempo aproximado de espera, ' + time_waiting + '.<br>'
     var unemployment = '<span class="bullet fa-user-plus"></span>' + 'La tasa de desempleo es del ' + this.formatPercent(this.adicFiltData[0].unemployment) + rank_unemployment + '.<br>'
     var rent = '<span class="bullet fa-eur"></span>' + 'La renta per cápita asciende a ' + d3.round(this.adicFiltData[0].pib_capita) + ' €, situándose en el puesto número ' + this.adicFiltData[0].rank_pib + ' de la UE.<br>'
 
-    var max_prob = '<br>¡¡ Las predicciones dicen que tu solicitud tiene más probabilidad de ser aceptada en <span class="big">' + likely[0].destiny + '</span> con un <span class="big">' + this.formatPercent(likely[0].predict2015) + '</span> de probabilidades de éxito !!<br>'
+    var max_prob;
+
+    if (this.destiny != likely[0].destiny) {
+      max_prob = '<br>¡¡ Las predicciones dicen que tu solicitud tiene más probabilidad de ser aceptada en <span class="big">' + likely[0].destiny + '</span> con un <span class="big">' + this.formatPercent(likely[0].predict2015) + '</span> de probabilidades de éxito !!<br>'
+    } else if (likely[0].predict2015 == 0) {
+      max_prob = '<br> No hay ningún país en el que las prediciones digan que tu solicitud tiene mayor probabilidad de éxito.'
+    } else {
+      max_prob = '<br>¡¡ Las predicciones dicen que <span class="big">' + likely[0].destiny + '</span> es el país donde tu solicitud tiene <span class="big">más probabilidades de éxito</span> !!<br>'
+    }
+     
     
     var text = prob + absolutes + '<span class="big">Datos de interés</span><br>' + info_adicional_sol + info_adicional_time + unemployment + rent + max_prob
 
@@ -254,7 +263,7 @@ var AppTable = Class.extend({
         .attr('height', this.height)
         .attr('transform', 'translate(' + 0 + ',' + this.margin.top + ')')
         .style('fill', '#fff')
-        .style('font-size', '28px')
+        .style('font-size', '20px')
         .style('opacity', 0)
         .html(text)
       .transition()
