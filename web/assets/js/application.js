@@ -222,15 +222,25 @@ var AppTable = Class.extend({
     } else {
       time_waiting = ' es de ' + this.adicFiltData[0].time_waiting;
     }
+
+    var rank_unemployment;
+
+    if (this.adicFiltData[0].rank_unemployment == 1) {
+      rank_unemployment = ' siendo el país con menor tasa de paro de la UE'
+    } else {
+      rank_unemployment = ' ocupando el puesto número ' + this.adicFiltData[0].rank_unemployment + ' de la UE'
+    }
     // Add text
     var prob = 'La probabilidad de que recibas asilo en <span class="big">' + this.destiny + '</span> es del <span class="big">' + this.formatPercent(this.filteredData[0].predict2015) + '</span>.<br>'
     var absolutes = '<span class="small">En los últimos 7 años, ' + this.destiny + ' ha recibido ' + this.filteredData[0].total + ' solicitudes de ' + this.filteredData[0].sex + ' de ' + this.filteredData[0].age + ' procedentes de ' + this.origin + ', ' + accepted + '.</span><br>'
     var info_adicional_sol =  '<span class="bullet fa-envelope"></span>' + 'Podrás presentar la solicitud en ' + this.adicFiltData[0].organism + '.<br>'
-    var info_adicional_time = '<span class="bullet fa-clock-o"></span>' + 'En cuanto al tiempo aproximado de espera, ' + time_waiting + '.<br>'
+    var info_adicional_time = '<span class="bullet fa-calendar-check-o"></span>' + 'En cuanto al tiempo aproximado de espera, ' + time_waiting + '.<br>'
+    var unemployment = '<span class="bullet fa-user-plus"></span>' + 'La tasa de desempleo es del ' + this.formatPercent(this.adicFiltData[0].unemployment) + rank_unemployment + '.<br>'
+    var rent = '<span class="bullet fa-eur"></span>' + 'La renta per cápita asciende a ' + d3.round(this.adicFiltData[0].pib_capita) + ' €, situándose en el puesto número ' + this.adicFiltData[0].rank_pib + ' de la UE.<br>'
 
-    var max_prob = 'Las predicciones dicen que'
+    var max_prob = '<br>¡¡ Las predicciones dicen que tu solicitud tiene más probabilidad de ser aceptada en <span class="big">' + likely[0].destiny + '</span> con un <span class="big">' + this.formatPercent(likely[0].predict2015) + '</span> de probabilidades de éxito !!<br>'
     
-    var text = prob + absolutes + '<span class="big">Datos de interés</span><br>' + info_adicional_sol + info_adicional_time + max_prob
+    var text = prob + absolutes + '<span class="big">Datos de interés</span><br>' + info_adicional_sol + info_adicional_time + unemployment + rent + max_prob
 
     this.svgOutput.selectAll('.output')
         .transition()
@@ -252,146 +262,7 @@ var AppTable = Class.extend({
         .duration(this.duration/5)
         .style('opacity', 1)
     
-  },
-  //PRIVATE
-  _tickValues:  function (scale) {
-    var range = scale.domain()[1] - scale.domain()[0];
-    var a = range/4;
-    return [scale.domain()[0], scale.domain()[0] + a, scale.domain()[0] + (a * 2), scale.domain()[1] - a, scale.domain()[1]];
-  },
-
-  _mouseover: function () {
-    var selected = d3.event.target,
-        selectedClass = selected.classList,
-        selectedData = d3.select(selected).data()[0],
-        selectedCx = d3.select(selected).attr('cx'),
-        selectedCy = d3.select(selected).attr('cy'),
-        labelsOn = d3.select('#myonoffswitch-labels').property('checked');
-  
-    if (selectedData.name == 'influence') {
-      var text = '<strong>' + formatPercent(selectedData.percentage) + '</strong> of respondents<br> are influenced<br>by <strong> ' + selectedData.tpClass + ' media</strong>'
-    } else {
-      var text = '<strong>' + formatPercent(selectedData.percentage) + '</strong> of respondents<br>associates<strong> ' + selectedData.tpClass + ' media</strong> to <strong>' + this.subindustry + '</strong>'
-    }
-    
-    d3.selectAll('.marker.' + selectedClass[1])
-      .filter(function(d) { return d.represent == selectedClass[2]; })
-      .transition()
-      .duration(this.duration / 4)
-      .attr('markerWidth', this.markerSize * 2)
-      .attr('markerHeight', this.markerSize * 2)
-      .style('fill', customGrey)
-      .attr('stroke-width', .3);
-
-    var xMouseoverLine = this.xScale(selectedData.percentage),
-        yMouseoverLine = this.yScale(selectedData.tpClass) + this.ySecondaryScale(selectedData.name);
-  
-     d3.select(selected.parentNode).selectAll('mouseover_line')
-        .data([xMouseoverLine, yMouseoverLine])
-        .enter()
-        .append('line')
-        .attr('class', 'mouseover_line')
-        .attr('x1', xMouseoverLine)
-        .attr('y1', yMouseoverLine)
-        .attr('x2', xMouseoverLine)
-        .attr('y2', yMouseoverLine)
-        .attr('stroke-width', 1)
-        .style('stroke', this.colorScale(selectedData.tpClass))
-        .transition()
-        .duration(this.duration)
-        .attr('y1', function(d, i) { return i == 0 ? this.margin.top : yMouseoverLine; }.bind(this))
-        .attr('y2', function(d, i) { return i == 1 ? (this.height - this.margin.top) : yMouseoverLine; }.bind(this));
-
-   
-    d3.selectAll('.legend_line').selectAll('text.' + selectedData.name)
-      .attr('font-size', '1.5em');
-
-
-    this.svgEvolution.selectAll('.barLine')
-      .filter(function(d) { return d.name != selectedClass[2]; })
-      .transition()
-      .duration(this.duration / 4)
-      .style('stroke', function(d) { return this.brighterColorScale(d.tpClass); }.bind(this));
-
-    var toBright = this.ySecondaryScale.domain().filter(function(d) { return d != selectedClass[2]; })  
-    this.chart.selectAll('.' + toBright)
-      .transition()
-      .duration(this.duration / 4)
-      .style('stroke', function(d) { return this.brighterColorScale(d.tpClass); }.bind(this))
-      .attr('fill', function(d) { return this.brighterColorScale(d.tpClass); }.bind(this));
-    
-    this.tooltip
-        .transition()
-        .duration(this.duration / 4)
-        .style('opacity', this.opacity);
-
-    this.tooltip
-        .html(text)
-        .style('left', (d3.event.pageX + 50) + 'px')
-        .style('top', (d3.event.pageY - 25) + 'px');
-
-  },
-
-  _mouseout: function () {
-    var selected = d3.event.target,
-        selectedClass = selected.classList,
-        selectedData = d3.select(selected).data()[0],
-        labelsOn = d3.select('#myonoffswitch-labels').property('checked');
-
-    d3.selectAll('.marker.' + selectedClass[1])
-      .filter(function(d) { return d.represent == selectedClass[2]; })
-      .transition()
-      .duration(this.duration / 4)
-      .attr('markerWidth', this.markerSize)
-      .attr('markerHeight', this.markerSize)
-      .style('fill', this.colorScale(selectedClass[1]))
-      .attr('stroke-width', 0);
-
-    var yMouseoverLine = this.yScale(selectedData.tpClass) + this.ySecondaryScale(selectedData.name);
-
-    d3.selectAll('.mouseover_line')
-      .transition()
-      .duration(this.duration / 2)
-      .attr('y2', yMouseoverLine)
-      .attr('y1', yMouseoverLine)
-      .remove();
-    
-    var toBright = this.ySecondaryScale.domain().filter(function(d) { return d != selectedClass[2]; })  
-    this.chart.selectAll('.' + toBright)
-      .transition()
-      .duration(this.duration / 4)
-      .style('stroke', function(d) { return this.colorScale(d.tpClass); }.bind(this))
-      .attr('fill', function(d) { return this.colorScale(d.tpClass); }.bind(this));
-
-    d3.selectAll('.legend_line').selectAll('text.' + selectedData.name)
-      .attr('font-size', '1.1em');
-
-    this.tooltip.transition()
-        .duration(this.duration / 4)
-        .style("opacity", 0);
-  },
-
-  _normalize: (function() {
-    var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç ", 
-        to   = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc_",
-        mapping = {};
-   
-    for(var i = 0, j = from.length; i < j; i++ )
-        mapping[ from.charAt( i ) ] = to.charAt( i );
-   
-    return function( str ) {
-        var ret = [];
-        for( var i = 0, j = str.length; i < j; i++ ) {
-            var c = str.charAt( i );
-            if( mapping.hasOwnProperty( str.charAt( i ) ) )
-                ret.push( mapping[ c ] );
-            else
-                ret.push( c );
-        }      
-        return ret.join( '' ).toLowerCase();
-    }
- 
-  })()
+  }
 
 }); // End object
 
