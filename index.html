@@ -152,26 +152,7 @@
 						<div class="inner">
 							<h2 class="major">Get in touch</h2>
 							<p>Cras mattis ante fermentum, malesuada neque vitae, eleifend erat. Phasellus non pulvinar erat. Fusce tincidunt, nisl eget mattis egestas, purus ipsum consequat orci, sit amet lobortis lorem lacus in tellus. Sed ac elementum arcu. Quisque placerat auctor laoreet.</p>
-							<div id="application-input">
-								<label for="origin">Origen</label>
-								<select class="select-origin" style="width: 50%">
-									<option></option>
-								</select>
-								<label for="sex">Sexo</label>
-								<select class="select-sex">
-									<option></option>
-								</select>
-								<label for="age">Edad</label>
-								<select class="select-age">
-									<option></option>
-								</select>
-								<label for="destiny">Destino</label>
-								<select class="select-destiny">
-									<option></option>
-								</select>
-							</div>
-							<div id="application-output">
-							</div>
+							
 
 							<form method="post" action="#">
 								<div class="field">
@@ -214,76 +195,6 @@
 			<script src="web/assets/js/main.js"></script>
 			<!--  <script src="web/assets/js/form.js"></script> -->
 			<script src="web/assets/js/application.js"></script>
-
-			<script type="text/javascript">
-		    var appTable = new AppTable('#application-output');
-		    appTable.loadData();
-
-		    d3.json('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/select_data.json', function(error, jsonData){
-				  if (error) throw error;
-
-				  var origin = jsonData.origin,
-				      sex = jsonData.sex.map(function(d) { d.disabled = true; return d; }),
-				      age = jsonData.age.map(function(d) { d.disabled = true; return d; }),
-				      destiny = jsonData.destiny.map(function(d) { d.disabled = true; return d; });
-
-				  appTable.originData = origin;
-				  appTable.sexData = sex;
-				  appTable.ageData = age;
-				  appTable.destinyData = destiny;
-
-				  appTable.originRenderSelect();
-				  appTable.sexRenderSelect();
-				  appTable.ageRenderSelect();
-				  appTable.destinyRenderSelect();
-
-				});
-
-		    $(".select-origin").on("select2:select", function (e) {  
-			    appTable.origin = $('.select-origin :selected').text();
-			    appTable.sex = null;
-					appTable.age = null;
-					appTable.destiny = null;
-
-		    	appTable.enable('sex');
-
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
-
-			  $(".select-sex").on("select2:select", function (e) {  
-			    appTable.sex = $('.select-sex :selected').text();
-			    appTable.age = null;
-					appTable.destiny = null;
-			    
-			    appTable.enable('age');
-
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
-
-			  $(".select-age").on("select2:select", function (e) {  
-			    appTable.age = $('.select-age :selected').text();
-			    appTable.destiny = null;
-			    
-			  	appTable.enable('destiny');
-
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
-
-			  $(".select-destiny").on("select2:select", function (e) {  
-			    appTable.destiny = $('.select-destiny :selected').text();
-
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
-
-		  </script>
 
 	</body>
 </html>
