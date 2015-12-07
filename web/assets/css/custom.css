@@ -1,5 +1,6 @@
 #application {
   overflow: hidden;
+  height: 600px;
 }
 
 #application-input {
@@ -10,6 +11,7 @@
 #application-output {
   width: calc(60% - 1.5em);
   overflow: hidden;
+  float: right;
 }
 
 .big {
@@ -26,6 +28,15 @@
   font-family: FontAwesome;
   padding: 10px;
   color: #4c5c96;
+}
+
+.probability {
+  padding: 1em 0;
+}
+
+.td_right {
+  text-align: right;
+  width: 50%;
 }
 
 /*General*/

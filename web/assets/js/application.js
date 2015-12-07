@@ -99,16 +99,8 @@ var AppTable = Class.extend({
     this.width = this.containerWidth - this.margin.left - this.margin.right;
     this.height = (this.containerWidth) - this.margin.top - this.margin.bottom;
 
-    // Append svg
-    this.svgOutput = d3.select(this.container).append('svg')
-        .attr('width', this.width + this.margin.left + this.margin.right)
-        .attr('height', this.height + this.margin.top + this.margin.bottom)
-        .attr('class', 'svg_output')
-      .append('g')
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
-
     // Load the data
-    d3.csv('/web/data/predict2015_short.csv', function(error, predictData){
+    d3.csv('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/predict2015_short.csv', function(error, predictData){
       if (error) throw error;
       
       this.data = predictData;
@@ -119,7 +111,7 @@ var AppTable = Class.extend({
         d.total = +d.total;
       });
 
-      d3.csv('/web/data/info_adicional.csv', function(error, auxData){
+      d3.csv('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/info_adicional.csv', function(error, auxData){
         if (error) throw error;
         
         this.adicionalData = auxData;
@@ -174,11 +166,6 @@ var AppTable = Class.extend({
       }
     }.bind(this));
 
-    // if (variable == 'destiny') {
-    //   this.destinyData = this.destinyData.sort(function(a, b) { console.log('a', a);return a.id - b.id; })
-    // }
-
-    // console.log(this.destinyData)
     eval('this.' + variable + 'RenderSelect()')
     
   },
@@ -200,9 +187,8 @@ var AppTable = Class.extend({
     var max = d3.max(likely, function(d) { return d.predict2015; });
     
     likely = likely.filter(function(d) { return d.predict2015 == max; })
-    console.log(this.adicFiltData)
-    console.log('likely', likely)
 
+    // Texts
 
     var accepted;
 
@@ -217,60 +203,107 @@ var AppTable = Class.extend({
     var time_waiting;
 
     if (this.adicFiltData[0].time_waiting == 0) {
-      time_waiting = ' no se han encontrado datos';
+      time_waiting = ' no se han encontrado datos :(';
     } else {
-      time_waiting = ' es de ' + this.adicFiltData[0].time_waiting;
+      time_waiting = this.adicFiltData[0].time_waiting;
     }
 
-    var rank_unemployment;
-
-    if (this.adicFiltData[0].rank_unemployment == 1) {
-      rank_unemployment = ' siendo el país con menor tasa de paro de la UE'
-    } else {
-      rank_unemployment = ' ocupando el puesto número ' + this.adicFiltData[0].rank_unemployment + ' de la UE'
-    }
-    // Add text
+    // Add texts
     var prob = 'La probabilidad de que recibas asilo en <span class="big">' + this.destiny + '</span> es del <span class="big">' + this.formatPercent(this.filteredData[0].predict2015) + '</span>.<br>'
-    var absolutes = '<span class="small">En los últimos 7 años, ' + this.destiny + ' ha recibido ' + this.filteredData[0].total + ' solicitudes de ' + this.filteredData[0].sex + ' de ' + this.filteredData[0].age + ' procedentes de ' + this.origin + ', ' + accepted + '.</span><br>'
-    var info_adicional_sol =  '<span class="bullet fa-envelope"></span>' + 'Podrás presentar la solicitud en "' + this.adicFiltData[0].organism + '".<br>'
-    var info_adicional_time = '<span class="bullet fa-calendar-check-o"></span>' + 'En cuanto al tiempo aproximado de espera, ' + time_waiting + '.<br>'
-    var unemployment = '<span class="bullet fa-user-plus"></span>' + 'La tasa de desempleo es del ' + this.formatPercent(this.adicFiltData[0].unemployment) + rank_unemployment + '.<br>'
-    var rent = '<span class="bullet fa-eur"></span>' + 'La renta per cápita asciende a ' + d3.round(this.adicFiltData[0].pib_capita) + ' €, situándose en el puesto número ' + this.adicFiltData[0].rank_pib + ' de la UE.<br>'
+    var absolutes = '<br><span class="small">En los últimos 7 años, ' + this.destiny + ' ha recibido ' + this.filteredData[0].total + ' solicitudes de ' + this.filteredData[0].sex + ' de ' + this.filteredData[0].age + ' procedentes de ' + this.origin + ', ' + accepted + '.</span>'
+    var unemployment = this.formatPercent(this.adicFiltData[0].unemployment) + '  (puesto #' + this.adicFiltData[0].rank_unemployment + ' de la UE)'
+    var rent = d3.round(this.adicFiltData[0].pib_capita) + ' €  (puesto #' + this.adicFiltData[0].rank_pib + ' de la UE)'
 
     var max_prob;
 
     if (this.destiny != likely[0].destiny) {
-      max_prob = '<br>¡¡ Las predicciones dicen que tu solicitud tiene más probabilidad de ser aceptada en <span class="big">' + likely[0].destiny + '</span> con un <span class="big">' + this.formatPercent(likely[0].predict2015) + '</span> de probabilidades de éxito !!<br>'
+      max_prob = '¡¡ Las predicciones dicen que tu solicitud tiene más probabilidad de ser aceptada en <span class="big">' + likely[0].destiny + '</span> con un <span class="big">' + this.formatPercent(likely[0].predict2015) + '</span> de probabilidades de éxito !!<br>'
     } else if (likely[0].predict2015 == 0) {
-      max_prob = '<br> No hay ningún país en el que las prediciones digan que tu solicitud tiene mayor probabilidad de éxito.'
+      max_prob = 'No hay ningún país en el que las prediciones digan que tu solicitud tiene mayor probabilidad de éxito.'
     } else {
-      max_prob = '<br>¡¡ Las predicciones dicen que <span class="big">' + likely[0].destiny + '</span> es el país donde tu solicitud tiene <span class="big">más probabilidades de éxito</span> !!<br>'
+      max_prob = '¡¡ Las predicciones dicen que <span class="big">' + likely[0].destiny + '</span> es el país donde tu solicitud tiene <span class="big">más probabilidades de éxito</span> !!<br>'
     }
-     
-    
-    var text = prob + absolutes + '<span class="big">Datos de interés</span><br>' + info_adicional_sol + info_adicional_time + unemployment + rent + max_prob
 
-    this.svgOutput.selectAll('.output')
-        .transition()
-        .duration(this.duration/5)
-        .style('opacity', 0)
-        .remove();
+    // Map the data
 
-   this.svgOutput.append('foreignObject')
-        .attr('class', 'output')
-        .attr('width', this.width)
-        .attr('height', this.height)
-        .attr('transform', 'translate(' + 0 + ',' + this.margin.top + ')')
-        .style('fill', '#fff')
-        .style('font-size', '20px')
-        .style('opacity', 0)
-        .html(text)
+    var tableData = [
+      { name: "Lugar de presentación", value: this.adicFiltData[0].organism },
+      { name: "Tiempo aproximado de espera", value: time_waiting },
+      { name: "Renta per cápita", value: rent },
+      { name: "Tasa de paro", value: unemployment }
+    ]
+
+    // remove previous elements.
+
+    d3.selectAll('.rm')
       .transition()
-        .delay(this.duration/5)
-        .duration(this.duration/5)
-        .style('opacity', 1)
+      .duration(this.duration/4)
+      .style('opacity', 0)
+      .remove();
+
+    // Build new ones
+
+    var timeOut = this.duration/3
+
+    setTimeout(function(){ 
+
+    d3.select(this.container)
+      .append('h3')
+      .attr('class', 'probability rm')
+      .style('border-bottom', 'solid 2px #4c5c96')
+      .style('border-top', 'solid 2px #4c5c96')
+      .style('opacity', 0)
+      .html(prob + absolutes)
+    .transition()
+      .duration(this.duration/4)
+      .style('opacity', 1);
+
+    d3.select(this.container)
+      .append('h4')
+      .attr('class', 'interes rm')
+      .style('opacity', 0)
+      .html('Datos de interés')
+    .transition()
+      .duration(this.duration/4)
+      .style('opacity', 1);
+
+    var table = d3.select(this.container)
+      .append('table')
+      .attr('class', 'output_table rm')
+      .append('tbody');
+
+    var tr = table.selectAll('tr')
+        .data(tableData).enter()
+        .append('tr');
+
+    tr.append('td')
+      .style('opacity', 0)
+      .html(function(m) { return m.name; })
+    .transition()
+      .duration(this.duration/4)
+      .style('opacity', 1)
     
-  }
+    tr.append('td')
+      .attr('class', 'td_right')
+      .style('opacity', 0)
+      .html(function(m) { return m.value; })
+    .transition()
+      .duration(this.duration/4)
+      .style('opacity', 1)
+
+    d3.select(this.container)
+      .append('h3')
+      .attr('class', 'probability rm')
+      .style('border-bottom', 'solid 2px #4c5c96')
+      .style('border-top', 'solid 2px #4c5c96')
+      .style('opacity', 0)
+      .html(max_prob)
+    .transition()
+      .duration(this.duration/4)
+      .style('opacity', 1);
+
+    }.bind(this), timeOut);
+  } // end
 
 }); // End object
 
