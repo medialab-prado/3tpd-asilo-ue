@@ -130,7 +130,6 @@ var AppTable = Class.extend({
           d.rank_unemployment = +d.rank_unemployment;
           d.unemployment = +d.unemployment; 
         });
-        console.log(this.adicionalData)
       }.bind(this));   
     }.bind(this)); 
   }, // end load data
