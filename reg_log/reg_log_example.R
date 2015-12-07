@@ -6,7 +6,121 @@ library(dplyr)
 
 
 # Load the data
-decisions <- read_csv('data/decisions_def.csv', col_names = T, col_types = 'iiiiiiicccccccccccc')
+# decisions <- read_csv('data/decisions_def.csv', col_names = T, col_types = 'iiiiiiicccccccccccc')
+
+dec2 <- read_csv('data/decisions_v2_comp_decod.csv', col_names = T, col_types = 'ccccciiicccccccccc')
+
+# ALL
+# Subset the UE-28 applications
+df <- dec2 %>% 
+  filter(destiny_ue == 'EU-28') %>%
+  select(year, origin, destiny, sex, age, rejected, accepted)
+
+names(df) <- gsub('_label', '', colnames(df), fixed = T)
+df <- aggregate(cbind(x2014, x2013, x2012, x2011, x2010, x2009, x2008) ~ decision_fin + origin + destiny + sex + age, data = df, sum)
+
+df_melt <- melt(df, variable.name = 'year')
+df_melt$year <- gsub('x', '', df_melt$year, fixed = T)
+
+df_dcast <- dcast(df_melt, year + origin + destiny + sex + age ~ decision_fin)
+
+names(df_dcast) <- tolower(names(df_dcast))
+
+
+write.csv(df_dcast, 'reg_log/ue_desaggregated.csv', row.names = F)
+
+
+# Remove NAs and accepted & rejected == 0
+df_logit <- df_dcast %>%
+  filter(!is.na(rejected)) %>%
+  mutate(sum = rejected + accepted) %>%
+  filter(sum != 0)
+
+no_data_rejected <- df_dcast %>%
+  filter(is.na(rejected))
+
+no_applications <- df_dcast %>%
+  mutate(sum = rejected + accepted) %>%
+  filter(sum == 0)
+no_applications$sum <- NULL
+
+nrow(df_logit) + nrow(no_data_rejected) + nrow(no_applications) == nrow(df_dcast)
+
+### Get the proportion of applications to each country, given a origin. 
+df_per_applications <- data_frame()
+
+for (ori in unique(df_logit$origin)) {
+  print(ori)
+  temp_ori <- filter(df_logit, origin == ori)
+  
+  for (y in unique(temp_ori$year)) {
+    temp_ori_y <- filter(temp_ori, year == y)
+    print(unique(temp_ori_y$sex))
+    for (s in unique(temp_ori_y$sex)) {
+      temp_ori_y_s <- filter(temp_ori_y, sex == s)
+      
+      for (edad in unique(temp_ori_y_s$age)) {
+        temp_final <- filter(temp_ori_y_s, age == edad)
+        
+        total <- sum(temp_final$sum)
+        temp_final <- mutate(temp_final, per_applications = sum / total)
+        df_per_applications <- rbind(df_per_applications, temp_final) 
+    
+      }
+    }
+  }
+}
+
+nrow(df_logit) == nrow(df_per_applications)
+
+
+
+####################### Add new columns
+df_per_applications <- mutate (df_per_applications, 
+              proportion_accepted = accepted / sum)
+
+df_melt <- melt(df_per_applications)
+
+## Plot relation between percentage of applications and proportion of accepted
+
+for(ori in unique(df_per_applications$origin)) {
+  temp_ori <- filter(df_per_applications, origin == ori)
+  for (dest in unique(temp_ori$destiny)) {
+    temp <- filter(temp_ori, destiny == dest)
+    
+    
+    pdf(file="~/Dropbox/projects/2015_tpd/3tpd-asilo-ue/exploratory_charts/images/prueba2.pdf")
+        
+    ggplot(data = temp, aes(group = destiny)) +
+      geom_line(aes(x = year, y = per_applications, colour = '% applications to that country')) + 
+      geom_line(aes(x = year, y = proportion_accepted, colour = '% accepted over all apps received')) +
+      guides(fill=guide_legend(title=NULL)) +
+      theme(legend.title = element_text(size=4)) + 
+      ggtitle(paste(ori, '->', dest)) +
+      facet_grid(age ~ sex)
+  
+    dev.off()
+  }
+}
+
+
+
+# Plot
+
+ggplot(data = df_logit, aes(x=year, y=proportion_accepted)) + geom_line(aes(group=destiny, colour = destiny))
+
+ggplot(data = df_logit, aes(x=year, y=proportion_accepted, group=sex)) +
+  geom_line(aes(colour = sex)) +
+
+#   scale_fill_manual(values = c("#00BEC4", "#F8766D")) + 
+#   scale_x_discrete(limits=unique(europe_grouped$year)) +
+#   scale_y_continuous(name="absolutes") + 
+#   ggtitle("Absolutes") +
+#   geom_text(data=europe_grouped, aes(x=year, y=value_cum, label=paste(round(value/1000, 1), 'M', sep = '')), size=3) +
+#   coord_flip() +
+#   theme_bw() + 
+#   theme(legend.position="none") + 
+  facet_grid( origin ~ destiny)
 
 # Subset the UE-28 applications
 df <- decisions %>% 
@@ -44,6 +158,7 @@ write.csv(df_destiny_countries, 'reg_log/destiny_country.csv', row.names = F)
 df_ue <- read_csv('reg_log/ue_totals.csv')
 
 df_destiny_countries <- read_csv('reg_log/destiny_country.csv')
+
 # Remove NAs and accepted & rejected == 0
 df_destiny_countries <- df_destiny_countries %>%
                   filter(!is.na(rejected)) %>%
@@ -64,16 +179,11 @@ title("Relación año y aceptación de asilo (UE)",col.main="grey")
 ggplot(data = df, aes(x=year, y=prop_accepted)) + geom_line(aes(group=destiny_label, colour = destiny_label))
 
 # Logit
-# Store the year as factor as is a categorical variable
-# df$year <- factor(df$year)
-
-# Create the logit
-
-# quitar 2014, rehacer el modelo, y sacar predicción para ese año.
-# volver a hacerlo con el año 2014 y comparar real y estimado
 
 logit <- glm(prop_accepted ~ year + destiny_label, weights = total, family='binomial',data=df) 
 summary(logit)
+
+
 
 # Success probability for every year, equal to prop_accepted( so, proportion of accepted == probability to be accepted)
 df$real2014 <- predict(logit, type = "response")
