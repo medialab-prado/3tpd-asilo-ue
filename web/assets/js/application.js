@@ -108,7 +108,7 @@ var AppTable = Class.extend({
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
     // Load the data
-    d3.csv('web/data/predict2015_short.csv', function(error, predictData){
+    d3.csv('/web/data/predict2015_short.csv', function(error, predictData){
       if (error) throw error;
       
       this.data = predictData;
@@ -119,7 +119,7 @@ var AppTable = Class.extend({
         d.total = +d.total;
       });
 
-      d3.csv('web/data/info_adicional.csv', function(error, auxData){
+      d3.csv('/web/data/info_adicional.csv', function(error, auxData){
         if (error) throw error;
         
         this.adicionalData = auxData;
