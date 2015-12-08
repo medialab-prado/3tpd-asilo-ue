@@ -75,7 +75,7 @@
 										<a href="#" class="image"><img src="web/images/pic01.jpg" alt="" /></a>
 										<div class="content">
 											<h2 class="major headline">La UE trabaja desde 1999 en la creación de un Sistema Europeo Común de Asilo (SECA).<br>Sin embargo, la persistencia de las diferencias entre los sistemas nacionales de asilo "origina que las personas refugiadas reciban un tratamiento diferente en función del estado donde presentan su solicitud".</h2>
-											<a href="#" class="special">Descubre más</a>
+											<a href="#experts" class="special scrolly">Descubre más</a>
 										</div>
 									</div>
 
@@ -83,7 +83,7 @@
 										<a href="#" class="image"><img src="web/images/pic01.jpg" alt="" /></a>
 										<div class="content">
 											<h2 class="major headline">En el año 2014, el porcentaje de solicitudes aceptadas oscila entre el <strong>95%</strong> de las aceptadas en <strong>Bulgaria</strong> y el <strong>5%</strong> resueltas positivamente en <strong>Croacia</strong></h2>
-											<a href="#" class="special">Descubre más</a>
+											<a href="#datos" class="special scrolly">Descubre más</a>
 										</div>
 									</div>
 
@@ -133,7 +133,7 @@
 										<!-- <h2 class="major">Tempus adipiscing</h2> -->
 										<p>El reflejo más claro de esta diversidad en la gestión de las solicitudes se ve plasmado en las cifras oficiales, disponibles en las bases de datos públicas de la Oficina Europea de Estadística (Eurostat), que muestran porcentajes muy dispares de aceptación y rechazo de solicitudes por parte de los Estados miembros.</p>
 										
-										<section class="features">
+										<!-- <section class="features">
 											<article class="datos-article">
 												<a href="#" class="image"><img src="web/images/pic04.jpg" alt="" /></a>
 												<h3 class="major headline">Las mujeres son aceptadas un 15% menos que los hombres. Destaca Landia como el país en el que se detectan más desigualdades.</h3>
@@ -149,7 +149,39 @@
 												<h3 class="major headline">Si el solicitante está en edad laboral, tiene entre 25 y 65 años, tiene más probabilidades de que su solicitud sea aceptada</h3>
 												<a href="#" class="special">Descubre más</a>
 											</article>
-										</section>
+										</section> -->
+
+										<div class="inner">
+											<a href="#" class="image"><img src="web/images/pic01.jpg" alt="" /></a>
+											<div class="content">
+												<h2 class="major headline2">A pesar de los aparentes esfuerzos por homogeneizar las políticas de asilo en la UE, <strong>en ningún caso se detecta una convergencia</strong> en los porcentajes de solicitudes de asilo concedidas.</h2>
+												<a href="#" class="special">Descubre más</a>
+											</div>
+										</div>
+
+										<div class="inner">
+											<a href="#" class="image"><img src="web/images/pic01.jpg" alt="" /></a>
+											<div class="content">
+												<h2 class="major headline2">xxxxxxxxxxxxx</h2>
+												<a href="#" class="special">Descubre más</a>
+											</div>
+										</div>
+
+										<div class="inner">
+											<a href="#" class="image"><img src="web/images/pic01.jpg" alt="" /></a>
+											<div class="content">
+												<h2 class="major headline2">Lorem ipsum dolor sit amet, etiam lorem adipiscing elit. Cras turpis ante, nullam sit amet turpis non, sollicitudin posuere urna. Mauris id tellus arcu. Nunc vehi</h2>
+												<a href="#" class="special">Descubre más</a>
+											</div>
+										</div>
+
+										<div class="inner">
+											<a href="#" class="image"><img src="web/images/pic01.jpg" alt="" /></a>
+											<div class="content">
+												<h2 class="major headline2">ula id nulla dignissim dapibus. Nullam ultrices, neque et faucibus viverra, ex nul</h2>
+												<a href="#" class="special">Descubre más</a>
+											</div>
+										</div>
 
 									</div>
 								</div>
@@ -344,6 +376,7 @@
 			<script src="web/assets/js/application.js"></script>
 
 			<script type="text/javascript">
+				// Carousel
 				$(document).ready(function(){
 				  $('#carousel-container').slick({
 				  	dots: true,
@@ -352,6 +385,14 @@
 				  	autoplay: true,
 				  	autoplaySpeed: 5000
 				  });
+				});
+
+				// Scrolly
+				$(".scrolly").click(function() {
+					var goTo = $(this).attr('href');
+			    $('html, body').animate({
+			        scrollTop: $(goTo).offset().top
+			    }, 1000);
 				});
 
 			</script>

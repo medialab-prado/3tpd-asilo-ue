@@ -207,6 +207,11 @@ h1 {
   margin-bottom: 3em;
 }
 
+.headline2 {
+  font-weight: 300;
+  margin-bottom: 1em;
+}
+
 /* Selects */
 
 .select-title {
