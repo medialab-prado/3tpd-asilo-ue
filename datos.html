@@ -6,16 +6,19 @@
 -->
 <html>
 	<head>
-		<title>Predict - ¿Y tú?</title>
+		<title>Generic - Solid State by HTML5 UP</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="web/assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="web/assets/css/main.css" />
-		<!--[if lte IE 9]><link rel="stylesheet" href="web/assets/css/ie9.css" /><![endif]-->
-		<!--[if lte IE 8]><link rel="stylesheet" href="web/assets/css/ie8.css" /><![endif]-->
 		<link rel="stylesheet" href="web/assets/css/select2.min.css" />
+		<!--[if lte IE 9]><link rel="web/stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="web/stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<link rel="stylesheet" href="web/assets/css/slick.css" />
+		<link rel="stylesheet" href="web/assets/css/slick-theme.css" />
 		<link rel="stylesheet" href="web/assets/css/custom.css" />
 
+		
 		<!-- Libraries -->
 		<script src="web/assets/js/d3.v3.min.js"></script>
 		<script src="web/assets/js/d3-legend.min.js"></script>
@@ -27,6 +30,7 @@
 		<script src="web/assets/js/util.js"></script>
 		<!--[if lte IE 8]><script src="web/assets/js/ie/respond.min.js"></script><![endif]-->
 		<script src="web/assets/js/select2.min.js"></script>
+		<script src="web/assets/js/slick.min.js"></script>
 	</head>
 	<body>
 
@@ -59,48 +63,50 @@
 					</nav>
 
 				<!-- Wrapper -->
-					<section id="wrapper" class="secondary-page">
+					<section id="wrapper">
 						<header>
 							<div class="inner">
-								<h2>¿Y tú?</h2>
-								<p>Averigua la probabilidad de que tu solicitud de asilo sea aceptada.</p>
+								<h2>Lo que dicen los datos</h2>
+								<p>Phasellus non pulvinar erat. Fusce tincidunt nisl eget ipsum.</p>
 							</div>
 						</header>
 
 						<!-- Content -->
-							<div class="wrapper">
-								<div class="inner">
-									
-									<section id="application">
-										
-										<!-- <h3 class="major">Form</h3> -->
-										<div id="application-input">
-											<label class="select-title" for="origin">Origen</label>
-											<select class="select-origin">
-												<option></option>
-											</select>
-											<label class="select-title" for="sex">Sexo</label>
-											<select class="select-sex">
-												<option></option>
-											</select>
-											<label class="select-title" for="age">Edad</label>
-											<select class="select-age">
-												<option></option>
-											</select>
-											<label class="select-title" for="destiny">Destino</label>
-											<select class="select-destiny">
-												<option></option>
-											</select>
-										</div>
-										
-										<div id="application-output">
-											<h3 class="probability rm"></h3>
-											<h4 class="interes rm"></h4>
-											<div class="table-wrapper">
-											</div>
-										</div>
+							<div class="wrapper datos-page">
+								<div class="inner sex-data">
 
-									</section>
+									<h2 class="major">General</h2>
+									<p>Morbi mattis mi consectetur tortor elementum, varius pellentesque velit convallis. Aenean tincidunt lectus auctor mauris maximus, ac scelerisque ipsum tempor. Duis vulputate ex et ex tincidunt, quis lacinia velit aliquet. Duis non efficitur nisi, id malesuada justo. Maecenas sagittis felis ac sagittis semper. Curabitur purus leo donec vel dolor at arcu tincidunt bibendum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce ut aliquet justo. Donec id neque ipsum. Integer eget ultricies odio. Nam vel ex a orci fringilla tincidunt. Aliquam eleifend ligula non velit accumsan cursus. Etiam ut gravida sapien.</p>
+
+									<p>Vestibulum ultrices risus velit, sit amet blandit massa auctor sit amet. Sed eu lectus sem. Phasellus in odio at ipsum porttitor mollis id vel diam. Praesent sit amet posuere risus, eu faucibus lectus. Vivamus ex ligula, tempus pulvinar ipsum in, auctor porta quam. Proin nec commodo, vel scelerisque nisi scelerisque. Suspendisse id quam vel tortor tincidunt suscipit. Nullam auctor orci eu dolor consectetur, interdum ullamcorper ante tincidunt. Mauris felis nec felis elementum varius.</p>
+
+									<h2 class="major">Género</h2>
+									<p>Las diferencias de género son muy peuqueñas, pero predominan los casos en los que se favorece a la mujer.
+										En países con menores índices de aceptación, las diferencias son más acusadas.</p>
+									<p>En todo caso, las diferencias existentes entre países hacen evidente que los países de la Unión Europea <bold> se rigen fundamentalmente por políticas individuales</bold>, y que, por tanto, los esfuerzos por asoptar una política común de asilo aún no se hacen visibles.</p>
+									<p>En el siguiente gráfico se ilustran el valor de la diferencia entre géneros (en %) y hacia cuál se inclina la balanza</p>
+									
+									<div id="sex_chart">
+										<div id="sex_chart_axis"></div>
+										<div id="sex_chart_bars"></div>
+									</div>
+									
+
+									<!-- <section class="features">
+										<article>
+											<a href="#" class="image"><img src="web/images/pic04.jpg" alt="" /></a>
+											<h3 class="major">Sed feugiat lorem</h3>
+											<p>Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
+											<a href="#" class="special">Learn more</a>
+										</article>
+										<article>
+											<a href="#" class="image"><img src="web/images/pic05.jpg" alt="" /></a>
+											<h3 class="major">Nisl placerat</h3>
+											<p>Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
+											<a href="#" class="special">Learn more</a>
+										</article>
+									</section> -->
+
 								</div>
 							</div>
 
@@ -149,80 +155,16 @@
 			</div>
 
 		<!-- Scripts -->
-			<script src="web/assets/js/main.js"></script>
-			<!--  <script src="web/assets/js/form.js"></script> -->
-			<script src="web/assets/js/application.js"></script>
+		<script src="web/assets/js/vis_sex.js"></script>
 
-			<script type="text/javascript">
-		    var appTable = new AppTable('#application-output');
-		    appTable.loadData();
+		<script type="text/javascript">
+		
+			var visSex = new VisSex('#sex_chart_bars');
+		  visSex.render();
+		
+		</script>
 
-		    d3.json('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/select_data.json', function(error, jsonData){
-				  if (error) throw error;
 
-				  var origin = jsonData.origin,
-				      sex = jsonData.sex.map(function(d) { d.disabled = true; return d; }),
-				      age = jsonData.age.map(function(d) { d.disabled = true; return d; }),
-				      destiny = jsonData.destiny.map(function(d) { d.disabled = true; return d; });
-
-				  appTable.originData = origin;
-				  appTable.sexData = sex;
-				  appTable.ageData = age;
-				  appTable.destinyData = destiny;
-
-				  appTable.originRenderSelect();
-				  appTable.sexRenderSelect();
-				  appTable.ageRenderSelect();
-				  appTable.destinyRenderSelect();
-
-				});
-
-		    $(".select-origin").on("select2:select", function (e) {  
-			    appTable.origin = $('.select-origin :selected').text();
-			    appTable.sex = null;
-					appTable.age = null;
-					appTable.destiny = null;
-
-		    	appTable.enable('sex');
-
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
-
-			  $(".select-sex").on("select2:select", function (e) {  
-			    appTable.sex = $('.select-sex :selected').text();
-			    appTable.age = null;
-					appTable.destiny = null;
-			    
-			    appTable.enable('age');
-
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
-
-			  $(".select-age").on("select2:select", function (e) {  
-			    appTable.age = $('.select-age :selected').text();
-			    appTable.destiny = null;
-			    
-			  	appTable.enable('destiny');
-
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
-
-			  $(".select-destiny").on("select2:select", function (e) {  
-			    appTable.destiny = $('.select-destiny :selected').text();
-
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
-
-		  </script>
-			
 
 	</body>
 </html>

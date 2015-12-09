@@ -212,6 +212,39 @@ h1 {
   margin-bottom: 1em;
 }
 
+.datos-page {
+  background-color: #D7D9DC;
+  color: #36394A;
+}
+
+.datos-page:before, .datos-page:after {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,100 100,0 100,100' style='fill:#D7D9DC;' /%3E%3C/svg%3E");
+}
+
+.datos-page h2 {
+  color: #36394A;
+  padding-bottom: 1em;
+  border-bottom: solid 2px rgba(54, 57, 74, 0.125);
+}
+
+#sex_chart {
+  overflow: hidden;
+  position: relative;
+  width: 100vw;
+  left: calc(-50vw + 50%);
+}
+
+#sex_chart_axis {
+  width: 10%;
+  float: left;
+}
+
+#sex_chart_bars {
+  overflow: scroll;
+  overflow-y: hidden;
+  width: 90%;
+  float: right;
+}
 /* Selects */
 
 .select-title {
@@ -273,4 +306,28 @@ h1 {
 
 .select-origin select option {
   color: #2E3141;
+}
+
+/* sex vis */
+.x.axis {
+  text-anchor: 'start';
+}
+
+
+/*Tooltip*/
+
+.vis_evolution_tooltip {
+  top: 0;
+  right: 0;
+  position: absolute;
+  padding: 5px;
+  line-height: 140%;
+  width: 150px;
+  height: 50px;
+  font-size: 12px;
+  background: #FAF7F5;
+  border: 1px solid #424242;
+  border-radius: 5px;
+  pointer-events: none;
+  text-align: right;
 }
