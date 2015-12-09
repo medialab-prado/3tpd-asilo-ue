@@ -100,7 +100,7 @@ var AppTable = Class.extend({
     this.height = (this.containerWidth) - this.margin.top - this.margin.bottom;
 
     // Load the data
-    d3.csv('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/predict2015_short.csv', function(error, predictData){
+    d3.csv('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/predict2015_short_esp.csv', function(error, predictData){
       if (error) throw error;
       
       this.data = predictData;

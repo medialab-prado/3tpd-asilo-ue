@@ -29,15 +29,15 @@
         },
         {
           "id": "CM",
-          "text": "Cameroon"
+          "text": "Camerún"
         },
         {
           "id": "CV",
-          "text": "Cape Verde"
+          "text": "Cabo Verde"
         },
         {
           "id": "CF",
-          "text": "Central African Republic"
+          "text": "República Centroafricana"
         },
         {
           "id": "TD",
@@ -45,7 +45,7 @@
         },
         {
           "id": "KM",
-          "text": "Comoros"
+          "text": "Comoras"
         },
         {
           "id": "CG",
@@ -53,11 +53,11 @@
         },
         {
           "id": "CI",
-          "text": "Côte d'Ivoire"
+          "text": "Costa de Marfil"
         },
         {
           "id": "CD",
-          "text": "Dem. Rep. Congo"
+          "text": "Rep. Dem. Congo"
         },
         {
           "id": "DJ",
@@ -65,11 +65,11 @@
         },
         {
           "id": "EG",
-          "text": "Egypt"
+          "text": "Egipto"
         },
         {
           "id": "GQ",
-          "text": "Equatorial Guinea"
+          "text": "Guinea Ecuatorial"
         },
         {
           "id": "ER",
@@ -77,15 +77,15 @@
         },
         {
           "id": "ET",
-          "text": "Ethiopia"
+          "text": "Etiopía"
         },
         {
           "id": "GA",
-          "text": "Gabon"
+          "text": "Gabón"
         },
         {
           "id": "GM",
-          "text": "Gambia, The"
+          "text": "Gambia"
         },
         {
           "id": "GH",
@@ -109,7 +109,7 @@
         },
         {
           "id": "LY",
-          "text": "Libya"
+          "text": "Libia"
         },
         {
           "id": "MG",
@@ -129,11 +129,11 @@
         },
         {
           "id": "MU",
-          "text": "Mauritius"
+          "text": "Mauricio"
         },
         {
           "id": "MA",
-          "text": "Morocco"
+          "text": "Marruecos"
         },
         {
           "id": "MZ",
@@ -145,7 +145,7 @@
         },
         {
           "id": "NE",
-          "text": "Niger"
+          "text": "Níger"
         },
         {
           "id": "NG",
@@ -153,11 +153,11 @@
         },
         {
           "id": "RW",
-          "text": "Rwanda"
+          "text": "Ruanda"
         },
         {
           "id": "ST",
-          "text": "São Tomé and Príncipe"
+          "text": "Santo Tomé y Príncipe"
         },
         {
           "id": "SN",
@@ -169,7 +169,7 @@
         },
         {
           "id": "SL",
-          "text": "Sierra Leone"
+          "text": "Sierra Leona"
         },
         {
           "id": "SO",
@@ -177,19 +177,19 @@
         },
         {
           "id": "ZA",
-          "text": "South Africa"
+          "text": "Sudáfrica"
         },
         {
           "id": "SS",
-          "text": "South Sudan"
+          "text": "Sudán del Sur"
         },
         {
           "id": "SD",
-          "text": "Sudan"
+          "text": "Sudán"
         },
         {
           "id": "SZ",
-          "text": "Swaziland"
+          "text": "Suazilandia"
         },
         {
           "id": "TZ",
@@ -201,7 +201,7 @@
         },
         {
           "id": "TN",
-          "text": "Tunisia"
+          "text": "Túnez"
         },
         {
           "id": "UG",
@@ -209,7 +209,7 @@
         },
         {
           "id": "EH",
-          "text": "Western Sahara"
+          "text": "Sahara Occidental"
         },
         {
           "id": "ZM",
@@ -226,11 +226,11 @@
       "children": [
         {
           "id": "CA",
-          "text": "Canada"
+          "text": "Canadá"
         },
         {
           "id": "US",
-          "text": "United States"
+          "text": "Estados Unidos"
         }
       ]
     },
@@ -271,7 +271,7 @@
         },
         {
           "id": "DO",
-          "text": "Dominican Republic"
+          "text": "República Dominicana"
         },
         {
           "id": "EC",
@@ -283,7 +283,7 @@
         },
         {
           "id": "GD",
-          "text": "Grenada"
+          "text": "Granada"
         },
         {
           "id": "GT",
@@ -295,7 +295,7 @@
         },
         {
           "id": "HT",
-          "text": "Haiti"
+          "text": "Haití"
         },
         {
           "id": "HN",
@@ -306,12 +306,8 @@
           "text": "Jamaica"
         },
         {
-          "id": "KZ",
-          "text": "Kazakhstan"
-        },
-        {
           "id": "MX",
-          "text": "Mexico"
+          "text": "México"
         },
         {
           "id": "NI",
@@ -319,7 +315,7 @@
         },
         {
           "id": "PA",
-          "text": "Panama"
+          "text": "Panamá"
         },
         {
           "id": "PY",
@@ -327,15 +323,15 @@
         },
         {
           "id": "PE",
-          "text": "Peru"
+          "text": "Perú"
         },
         {
           "id": "LC",
-          "text": "Saint Lucia"
+          "text": "Santa Lucía"
         },
         {
           "id": "VC",
-          "text": "Saint Vincent and the Grenadines"
+          "text": "San Vicente y las Granadinas"
         },
         {
           "id": "SR",
@@ -343,7 +339,7 @@
         },
         {
           "id": "TT",
-          "text": "Trinidad and Tobago"
+          "text": "Trinidad y Tobago"
         },
         {
           "id": "VE",
@@ -356,7 +352,7 @@
       "children": [
         {
           "id": "AF",
-          "text": "Afghanistan"
+          "text": "Afganistán"
         },
         {
           "id": "AM",
@@ -368,7 +364,7 @@
         },
         {
           "id": "BH",
-          "text": "Bahrain"
+          "text": "Bahréin"
         },
         {
           "id": "BD",
@@ -380,11 +376,11 @@
         },
         {
           "id": "KH",
-          "text": "Cambodia"
+          "text": "Camboya"
         },
         {
           "id": "CN",
-          "text": "China (including Hong Kong)"
+          "text": "China (incluye Hong Kong)"
         },
         {
           "id": "GE",
@@ -400,7 +396,7 @@
         },
         {
           "id": "IR",
-          "text": "Iran"
+          "text": "Irán"
         },
         {
           "id": "IQ",
@@ -412,11 +408,11 @@
         },
         {
           "id": "JP",
-          "text": "Japan"
+          "text": "Japón"
         },
         {
           "id": "JO",
-          "text": "Jordan"
+          "text": "Jordán"
         },
         {
           "id": "KW",
@@ -427,16 +423,20 @@
           "text": "Kyrgyzstan"
         },
         {
+          "id": "KZ",
+          "text": "Kazakhstan"
+        },
+        {
           "id": "LA",
           "text": "Laos"
         },
         {
           "id": "LB",
-          "text": "Lebanon"
+          "text": "Líbano"
         },
         {
           "id": "MY",
-          "text": "Malaysia"
+          "text": "Malasia"
         },
         {
           "id": "MN",
@@ -452,7 +452,7 @@
         },
         {
           "id": "KP",
-          "text": "North Korea"
+          "text": "Corea del Norte"
         },
         {
           "id": "OM",
@@ -460,15 +460,15 @@
         },
         {
           "id": "PK",
-          "text": "Pakistan"
+          "text": "Pakistán"
         },
         {
           "id": "PS",
-          "text": "Palestine"
+          "text": "Palestina"
         },
         {
           "id": "PH",
-          "text": "Philippines"
+          "text": "Filipinas"
         },
         {
           "id": "QA",
@@ -476,11 +476,11 @@
         },
         {
           "id": "SA",
-          "text": "Saudi Arabia"
+          "text": "Arabia Saudi"
         },
         {
           "id": "KR",
-          "text": "South Korea"
+          "text": "Corea del Sur"
         },
         {
           "id": "LK",
@@ -488,7 +488,7 @@
         },
         {
           "id": "SY",
-          "text": "Syria"
+          "text": "Siria"
         },
         {
           "id": "TW",
@@ -496,11 +496,11 @@
         },
         {
           "id": "TJ",
-          "text": "Tajikistan"
+          "text": "Tajikistán"
         },
         {
           "id": "TH",
-          "text": "Thailand"
+          "text": "Tailandia"
         },
         {
           "id": "TL",
@@ -508,19 +508,19 @@
         },
         {
           "id": "TR",
-          "text": "Turkey"
+          "text": "Turquía"
         },
         {
           "id": "TM",
-          "text": "Turkmenistan"
+          "text": "Turkmenistán"
         },
         {
           "id": "AE",
-          "text": "United Arab Emirates"
+          "text": "Emiratos Árabes Unidos"
         },
         {
           "id": "UZ",
-          "text": "Uzbekistan"
+          "text": "Uzbekistán"
         },
         {
           "id": "VN",
@@ -545,11 +545,11 @@
         },
         {
           "id": "BY",
-          "text": "Belarus"
+          "text": "Bielorrusia"
         },
         {
           "id": "BA",
-          "text": "Bosnia and Herzegovina"
+          "text": "Bosnia y Herzegovina"
         },
         {
           "id": "BG",
@@ -557,11 +557,11 @@
         },
         {
           "id": "HR",
-          "text": "Croatia"
+          "text": "Croacia"
         },
         {
           "id": "CZ",
-          "text": "Czech Republic"
+          "text": "República Checa"
         },
         {
           "id": "EE",
@@ -569,23 +569,23 @@
         },
         {
           "id": "DE",
-          "text": "Germany"
+          "text": "Alemania"
         },
         {
           "id": "EL",
-          "text": "Greece"
+          "text": "Grecia"
         },
         {
           "id": "HU",
-          "text": "Hungary"
+          "text": "Hungría"
         },
         {
           "id": "IE",
-          "text": "Ireland"
+          "text": "Irlanda"
         },
         {
           "id": "IT",
-          "text": "Italy"
+          "text": "Italia"
         },
         {
           "id": "XK",
@@ -593,11 +593,11 @@
         },
         {
           "id": "LV",
-          "text": "Latvia"
+          "text": "Letonia"
         },
         {
           "id": "LT",
-          "text": "Lithuania"
+          "text": "Lituania"
         },
         {
           "id": "MK",
@@ -609,7 +609,7 @@
         },
         {
           "id": "MD",
-          "text": "Moldova"
+          "text": "Moldavia"
         },
         {
           "id": "ME",
@@ -617,19 +617,19 @@
         },
         {
           "id": "NL",
-          "text": "Netherlands"
+          "text": "Holanda"
         },
         {
           "id": "PL",
-          "text": "Poland"
+          "text": "Polonia"
         },
         {
           "id": "RO",
-          "text": "Romania"
+          "text": "Rumanía"
         },
         {
           "id": "RU",
-          "text": "Russia"
+          "text": "Rusia"
         },
         {
           "id": "RS",
@@ -637,15 +637,15 @@
         },
         {
           "id": "SK",
-          "text": "Slovakia"
+          "text": "Eslovaquia"
         },
         {
           "id": "ES",
-          "text": "Spain"
+          "text": "España"
         },
         {
           "id": "UA",
-          "text": "Ukraine"
+          "text": "Ucrania"
         }
       ]
     },
@@ -658,11 +658,11 @@
         },
         {
           "id": "STLS",
-          "text": "Stateless"
+          "text": "Apátrida"
         },
         {
           "id": "UNK",
-          "text": "Unknown"
+          "text": "Desconocido"
         }
       ]
     }
@@ -674,7 +674,7 @@
     },
     {
       "id": "BE",
-      "text": "Belgium"
+      "text": "Bélgica"
     },
     {
       "id": "BG",
@@ -682,19 +682,19 @@
     },
     {
       "id": "HR",
-      "text": "Croatia"
+      "text": "Croacia"
     },
     {
       "id": "CY",
-      "text": "Cyprus"
+      "text": "Chipre"
     },
     {
       "id": "CZ",
-      "text": "Czech Republic"
+      "text": "República Checa"
     },
     {
       "id": "DK",
-      "text": "Denmark"
+      "text": "Dinamarca"
     },
     {
       "id": "EE",
@@ -702,35 +702,35 @@
     },
     {
       "id": "FI",
-      "text": "Finland"
+      "text": "Finlandia"
     },
     {
       "id": "FR",
-      "text": "France"
+      "text": "Francia"
     },
     {
       "id": "DE",
-      "text": "Germany"
+      "text": "Alemania"
     },
     {
       "id": "EL",
-      "text": "Greece"
+      "text": "Grecia"
     },
     {
       "id": "HU",
-      "text": "Hungary"
+      "text": "Hungría"
     },
     {
       "id": "IE",
-      "text": "Ireland"
+      "text": "Irlanda"
     },
     {
       "id": "IT",
-      "text": "Italy"
+      "text": "Italia"
     },
     {
       "id": "LV",
-      "text": "Latvia"
+      "text": "Letonia"
     },
     {
       "id": "LT",
@@ -738,7 +738,7 @@
     },
     {
       "id": "LU",
-      "text": "Luxembourg"
+      "text": "Lituania"
     },
     {
       "id": "MT",
@@ -746,11 +746,11 @@
     },
     {
       "id": "NL",
-      "text": "Netherlands"
+      "text": "Holanda"
     },
     {
       "id": "PL",
-      "text": "Poland"
+      "text": "Polonia"
     },
     {
       "id": "PT",
@@ -758,67 +758,67 @@
     },
     {
       "id": "RO",
-      "text": "Romania"
+      "text": "Rumanía"
     },
     {
       "id": "SK",
-      "text": "Slovakia"
+      "text": "Eslovaquia"
     },
     {
       "id": "SI",
-      "text": "Slovenia"
+      "text": "Eslovenia"
     },
     {
       "id": "ES",
-      "text": "Spain"
+      "text": "España"
     },
     {
       "id": "SE",
-      "text": "Sweden"
+      "text": "Suecia"
     },
     {
       "id": "UK",
-      "text": "United Kingdom"
+      "text": "Reino Unido"
     }
   ],
   "sex":[
     {
       "id": "F",
-      "text": "Females"
+      "text": "Mujeres"
     },
     {
       "id": "M",
-      "text": "Males"
+      "text": "Hombres"
     },
     {
       "id": "UNK",
-      "text": "Unknown"
+      "text": "Desconocido"
     }
   ],
   "age":[
     {
       "id": "Y_LT14",
-      "text": "Less than 14"
+      "text": "menos de 14"
     },
     {
       "id": "Y14-17",
-      "text": "14 to 17"
+      "text": "14 a 17"
     },
     {
       "id": "Y18-34",
-      "text": "18 to 34"
+      "text": "18 a 34"
     },
     {
       "id": "Y35-64",
-      "text": "35 to 64"
+      "text": "35 a 64"
     },
     {
       "id": "Y_GE65",
-      "text": "65 or over"
+      "text": "65 o más"
     },
     {
       "id": "UNK",
-      "text": "Unknown"
+      "text": "Desconocido"
     }
   ]
 }

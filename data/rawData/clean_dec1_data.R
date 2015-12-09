@@ -64,6 +64,9 @@ for (i in codeFiles) {
   assign(objectName, temp)
 }
 
+countries$Label <- iconv(countries$Label, from="latin1", to='UTF8')
+age$Label <- iconv(age$Label, from="latin1", to='UTF8')
+
 
 # Rename the variables
 dec_decod <- dec_v2 %>%
@@ -105,7 +108,6 @@ dec_decod_age <- dec_decod_age %>%
   rename(age_code = age,
          age = Label)
 
-
 # WRITE FILE
-write.csv(dec_decod_age, 'decisions_v2_comp_decod.csv', row.names = F)
+write.csv(dec_decod_age, 'decisions_v2_decod_esp.csv', row.names = F)
 

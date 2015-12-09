@@ -10,7 +10,7 @@ library(jsonlite)
 # Load the data
 # decisions <- read_csv('data/decisions_def.csv', col_names = T, col_types = 'iiiiiiicccccccccccc')
 
-dec2 <- read_csv('data/decisions_v2_comp_decod.csv', col_names = T, col_types = 'cccciiiicccccccccc')
+dec2 <- read_csv('data/decisions_v2_decod_esp.csv', col_names = T, col_types = 'cccciiiicccccccccc')
 
 
 # Subset the UE-28 applications
@@ -74,86 +74,22 @@ df_2015$year <- NULL
 df_2015 <- df_2015 %>%
     transform(predict2015 = ifelse(total == 0, NA, round(predict2015, 4)))
 
+unique(df_2015$age)
+
+df_2015 <- df_2015 %>%
+    transform(age=ifelse(age == '65 o mÃ¡s', '65 o más', age))
+
+df_2015 <- df_2015 %>%
+  transform(origin=ifelse(origin == 'Santa Lucía Lucia', 'Santa Lucía', 
+                          ifelse(origin == 'Turquia', 'Turquía',
+                                 ifelse(origin == 'Gambia, The', 'Gambia', origin))))
+
 # Write the csv
-write.csv(df_2015, 'data/predict2015.csv', row.names = F)
+write.csv(df_2015, 'data/predict2015_esp.csv', row.names = F)
 
 # Write the short version, filtering those values that are not NAs
 df_2015_short <- df_2015 %>% filter(!is.na(predict2015))
-write.csv(df_2015_short, 'data/predict2015_short.csv', row.names = F)
-
-
-## Get JSONs to develop the form
-
-# Origin
-df_form_origin <- dec2 %>% 
-  filter(origin %in% df_2015$origin) %>%
-  select(origin_code, origin, origin_continent) %>%
-  distinct() %>%
-  transform(origin = ifelse(origin_code == 'CI', "Côte d'Ivoire", 
-                            ifelse(origin_code == 'ST', "São Tomé and Príncipe", origin)),
-            origin_continent = ifelse(origin_continent == 'Europe', 'Europa',
-                                      ifelse(origin_continent == 'Latin America', 'América Latina', 
-                                             ifelse(origin_continent == 'Africa', 'África', 
-                                                    ifelse(origin_continent == 'Northern America', 'América del Norte',
-                                                           ifelse(origin_continent == '', 'Otros', origin_continent))))))
-
-df_form_origin <- df_form_origin[order(df_form_origin$origin_continent, df_form_origin$origin), ] 
-
-myList <- c()
-for (cont in unique(df_form_origin$origin_continent)) {
-  temp <- df_form_origin %>%
-      filter(origin_continent == cont) %>%
-      select(origin_code, origin) %>%
-      rename(id = origin_code,
-             text = origin)
-  tempList <- list(text = cont, children = temp)
-  myList <- c(myList, tempList)
-}
-
-myJsonOrigin <- toJSON(myList, pretty = T)
-
-# write(myJson, '~/Dropbox/projects/2015_tpd/3tpd-asilo-ue/web/data/origin.json')
-write(myJsonOrigin, 'data/jsons/origin.json')
-
-# Destiny
-df_form_destiny <- dec2 %>% 
-  filter(destiny %in% df_2015$destiny) %>%
-  select(destiny_code, destiny) %>%
-  distinct() %>%
-  arrange(destiny) %>%
-  rename(id = destiny_code,
-         text = destiny)
-
-myJsonDestiny <- toJSON(df_form_destiny, pretty = T)
-write(myJsonDestiny, 'data/jsons/destiny.json')
-
-
-# Sex
-df_form_sex <- dec2 %>% 
-  filter(sex %in% df_2015$sex) %>%
-  select(sex_code, sex) %>%
-  distinct() %>%
-  arrange(sex) %>%
-  rename(id = sex_code,
-         text = sex)
-
-myJsonSex <- toJSON(df_form_sex, pretty = T)
-write(myJsonSex, 'data/jsons/sex.json')
-
-# Age
-df_form_age <- dec2 %>% 
-  filter(age %in% df_2015$age) %>%
-  select(age_code, age) %>%
-  distinct() %>%
-  transform(age = ifelse(age_code == 'Y_LT14', '0Less than 14', age)) %>%
-  arrange(age) %>%
-  transform(age = ifelse(age_code == 'Y_LT14', 'Less than 14', age)) %>%
-  rename(id = age_code,
-         text = age)
-  
-
-myJsonAge <- toJSON(df_form_age, pretty = T)
-write(myJsonAge, 'data/jsons/age.json')
+write.csv(df_2015_short, 'data/predict2015_short_esp.csv', row.names = F)
 
 
 
