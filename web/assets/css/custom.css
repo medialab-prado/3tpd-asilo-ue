@@ -232,17 +232,22 @@ h1 {
   position: relative;
   width: 100vw;
   left: calc(-50vw + 50%);
+  font-size: 13px;
+}
+
+#sex_chart text {
+  fill: #7C8388;
 }
 
 #sex_chart_axis {
-  width: 10%;
+  width: 15%;
   float: left;
 }
 
 #sex_chart_bars {
   overflow: scroll;
   overflow-y: hidden;
-  width: 90%;
+  width: 85%;
   float: right;
 }
 /* Selects */
@@ -326,7 +331,7 @@ h1 {
   position: absolute;
   padding: 5px;
   line-height: 140%;
-  width: 180px;
+  width: 170px;
   height: 60px;
   font-size: 12px;
   background: #FAF7F5;
