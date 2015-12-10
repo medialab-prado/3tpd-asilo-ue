@@ -263,6 +263,20 @@ var VisGeneral = Class.extend({
                 .on('mouseover', this._mouseover.bind(this))
                 .on('mouseout', this._mouseout.bind(this));
 
+        // Total labels
+      this.svgGeneralLegend.selectAll('.total-label')
+        .data(this.dataTotals)
+        .enter()
+      .append('text')
+        .attr('class', function(d) { return this._normalize(d.destiny) + ' total-bar total-label'; }.bind(this))
+        .attr('x', this.legendWidth)
+        .attr('y', function(d) { return this.yScaleLegend(d.destiny) + this.yScaleLegend.rangeBand(); }.bind(this))
+        .text(function(d) { return d.total_country.toLocaleString(); })
+        .attr('text-anchor', 'end')
+        .style('fill', d3.rgb(this.grey).darker())
+        .style('font-size', '0.7em')
+        .style('opacity', 0)
+
         // Bars title
         this.svgGeneralLegend
         .append('foreignObject')
@@ -403,34 +417,39 @@ var VisGeneral = Class.extend({
       .style('fill', d3.rgb(this.grey).darker())
       .style('font-weight', 'bold');
 
-
-
-    this.selectedColor = d3.select(selected).style('fill')
-
-    if (selectedClass[0].indexOf('total-bar') == -1) {
-      var text = '% Mujeres aceptadas: <strong>' + this.formatPercent(selectedData.Mujeres) + '</strong><br>' +
-              '% Hombres aceptados: <strong>' + this.formatPercent(selectedData.Hombres)  + '</strong><br>' + 
-              '% Diferencia: <strong>' + this.formatPercent(selectedData.dif)  + ' más ' + selectedData.win.toLowerCase() + '</strong>';
-    } else {
-      var text = '<strong>' + selectedData.destiny + '</strong><br>' + 
-            'Total solicitudes: <strong>' + selectedData.total_country.toLocaleString() + '</strong>';
-    }
-   
-    // Hightlight selected
-    d3.select(selected)
+    d3.selectAll('.total-label.' + selectedClass[0])
       .transition()
-      .duration(this.duration / 2)
-      .style('fill', d3.rgb(this.selectedColor).darker());
-    
-    this.tooltip
-        .transition()
-        .duration(this.duration / 4)
-        .style('opacity', this.opacity);
+      .duration(this.duration/3)
+      .style('opacity', 1)
 
-    this.tooltip
-        .html(text)
-        .style('left', (d3.event.pageX + 25) + 'px')
-        .style('top', (d3.event.pageY - 25) + 'px');
+
+
+    // this.selectedColor = d3.select(selected).style('fill')
+
+    // if (selectedClass[0].indexOf('total-bar') == -1) {
+    //   var text = '% Mujeres aceptadas: <strong>' + this.formatPercent(selectedData.Mujeres) + '</strong><br>' +
+    //           '% Hombres aceptados: <strong>' + this.formatPercent(selectedData.Hombres)  + '</strong><br>' + 
+    //           '% Diferencia: <strong>' + this.formatPercent(selectedData.dif)  + ' más ' + selectedData.win.toLowerCase() + '</strong>';
+    // } else {
+    //   var text = '<strong>' + selectedData.destiny + '</strong><br>' + 
+    //         'Total solicitudes: <strong>' + selectedData.total_country.toLocaleString() + '</strong>';
+    // }
+   
+    // // Hightlight selected
+    // d3.select(selected)
+    //   .transition()
+    //   .duration(this.duration / 2)
+    //   .style('fill', d3.rgb(this.selectedColor).darker());
+    
+    // this.tooltip
+    //     .transition()
+    //     .duration(this.duration / 4)
+    //     .style('opacity', this.opacity);
+
+    // this.tooltip
+    //     .html(text)
+    //     .style('left', (d3.event.pageX + 25) + 'px')
+    //     .style('top', (d3.event.pageY - 25) + 'px');
 
   },
 
@@ -456,11 +475,16 @@ var VisGeneral = Class.extend({
       .duration(this.duration/3)
       .style('fill', this.grey)
       .style('font-weight', '300');
+
+    d3.selectAll('.total-label.' + selectedClass[0])
+      .transition()
+      .duration(this.duration/3)
+      .style('opacity', 0)
     
-    this.tooltip
-        .transition()
-        .duration(this.duration / 4)
-        .style('opacity', 0);
+    // this.tooltip
+    //     .transition()
+    //     .duration(this.duration / 4)
+    //     .style('opacity', 0);
   },
 
   _normalize: (function() {
