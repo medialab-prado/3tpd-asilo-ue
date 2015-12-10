@@ -7,7 +7,7 @@ var VisSex = Class.extend({
     // Chart dimensions
     this.containerWidth = null;
     this.axisWidth = null;
-    this.margin = {top: 20, right: 20, bottom: 20, left: 20};
+    this.margin = {top: 40, right: 20, bottom: 60, left: 20};
     this.width = null;
     this.height = null;
 
@@ -16,7 +16,7 @@ var VisSex = Class.extend({
     this.xScaleSecondary = d3.scale.linear();
     this.yScale = d3.scale.ordinal();
     this.yScaleSecondary = d3.scale.ordinal();
-    this.colorScale = d3.scale.ordinal().range(['#D55B50', '#3C3F4F']);
+    this.colorScale = d3.scale.ordinal().range(['#3C3F4F', '#D55B50']);
 
     // Axis
     this.xAxis = d3.svg.axis();
@@ -30,7 +30,8 @@ var VisSex = Class.extend({
     this.sexs = null;
 
     // Legend
-    this.legendEvolution = d3.legend.color();
+    this.legendDif = d3.legend.color();
+    this.legendSex = d3.legend.color();
 
     // Objects
     this.tooltip = null;
@@ -40,6 +41,7 @@ var VisSex = Class.extend({
     // Chart objects
     this.svgSex = null;
     this.svgSexAxis = null;
+    this.svgSexLegend = null;
     this.chart = null;
     this.line = d3.svg.line();
     
@@ -79,13 +81,13 @@ var VisSex = Class.extend({
         .attr('height', this.height + this.margin.top + this.margin.bottom)
         .attr('class', 'svg_sex')
       .append('g')
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+        .attr('transform', 'translate(' + 0 + ',' + this.margin.top + ')');
 
     this.svgSexAxis = d3.select('#sex_chart_axis').append('svg')
         .attr('width', this.axisWidth)
         .attr('height', this.height + this.margin.top + this.margin.bottom)
       .append('g')
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+        .attr('transform', 'translate(' + (this.margin.left / 2)+ ',' + this.margin.top + ')');
 
     // Set nice category
     this.niceCategory = {
@@ -126,7 +128,7 @@ var VisSex = Class.extend({
 
       this.dataChart = this.dataChart.sort(
           firstBy('total_country', -1)
-          .thenBy('year')
+          .thenBy('year', -1)
           .thenBy('sex')
       );
 
@@ -160,7 +162,7 @@ var VisSex = Class.extend({
       
       this.yScale
         .domain(this.years)
-        .rangeRoundBands([this.height - (this.margin.bottom / 2), this.margin.top], .5);
+        .rangeRoundBands([this.height, 0], .3);
 
       this.yScaleSecondary
         .domain(this.sexs)
@@ -195,83 +197,94 @@ var VisSex = Class.extend({
           .call(this.yAxis);
 
 
-      // --> DRAW THE DOTS  
+      // --> DRAW THE BARS  
       this.chart = this.svgSex.append('g')
           .attr('class', 'sex_chart');
 
-      // this.chart.selectAll('.sex-dot')
-      //     .data(this.dataChart)
-      //     .enter()
-      //   .append('circle')
-      //     .attr('class', function(d) { return 'sex-dot ' + this._normalize(d.sex); }.bind(this))
-      //     .attr('cx', function(d) { return this.xScale(d.destiny) + this.xScaleSecondary(d.accepted_per); }.bind(this))
-      //     .attr('cy', function(d) { return this.yScale(d.year); }.bind(this))
-      //     .attr('r', this.radius)
-      //     .style('fill', function(d) { return this.colorScale(d.sex); }.bind(this))
-      //     .style('opacity', this.opacity)
-      //   // .on('mouseover', this._mouseover.bind(this))
-      //   // .on('mouseout', this._mouseout.bind(this)); 
-      
-        
-        this.chart.selectAll('.bar')
-          .data(this.dataChart)
-          .enter()
-        .append('rect')
-          .attr('class', function(d) { return 'sex ' + this._normalize(d.win); }.bind(this))
-          .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
-          .attr('y', 0)
-          .attr('width', this.xScale.rangeBand())
-          .attr('height', this.height)
-          .attr('r', this.radius)
-          .style('fill', '#ccc')
-          .style('opacity', this.opacityLow)
+      // Background
+      this.chart.selectAll('.sex-bar-bg')
+        .data(this.dataChart)
+        .enter()
+      .append('rect')
+        .attr('class', function(d) { return 'sex-bar-bg ' + this._normalize(d.win); }.bind(this))
+        .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
+        .attr('y', 0)
+        .attr('width', this.xScale.rangeBand())
+        .attr('height', this.height)
+        .attr('r', this.radius)
+        .style('fill', '#ccc')
+        .style('opacity', this.opacityLow)
 
-
-        this.chart.selectAll('.sex-bar')
-          .data(this.dataChart)
-          .enter()
-        .append('rect')
-          .attr('class', function(d) { return 'sex-bar ' + this._normalize(d.win); }.bind(this))
-          .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
-          .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
-          .attr('width', function(d) { return this.xScaleSecondary(d.dif); }.bind(this))
-          .attr('height', this.yScale.rangeBand())
-          .attr('r', this.radius)
-          .style('fill', function(d) { return this.colorScale(d.win); }.bind(this))
+      // Foreground bar
+      this.chart.selectAll('.sex-bar')
+        .data(this.dataChart)
+        .enter()
+      .append('rect')
+        .attr('class', function(d) { return 'sex-bar ' + this._normalize(d.win); }.bind(this))
+        .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
+        .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
+        .attr('width', function(d) { return this.xScaleSecondary(d.dif); }.bind(this))
+        .attr('height', this.yScale.rangeBand())
+        .attr('r', this.radius)
+        .style('fill', function(d) { return this.colorScale(d.win); }.bind(this))
           // .style('opacity', this.opacityLow)
 
-      // --> DRAW THE Legend 
-      var svgLegend = d3.select('.svg_lines');
+      
+      // --> DRAW THE LEGEND 
+      
+      this.svgSexLegend = d3.select('#sex_chart_legend').append('svg')
+        .attr('width', this.width)
+        .attr('height', (this.height / 2))
+        .attr('class', 'svg_sex_legend')
+      .append('g')
+        .attr('transform', 'translate(' + (-this.margin.left * 8) + ',' + this.margin.top + ')');
+
       
       var series = this.colorScale.domain();
       
-      var labels = [];
-      for (var i = 0; i < series.length; i++) {
-        if (this.niceCategory[series[i]] != undefined) {
-          labels.push(this.niceCategory[series[i]])
-        } else {
-          labels.push(series[i])
-        }
-      }
+      // var labels = [];
+      // for (var i = 0; i < series.length; i++) {
+      //   if (this.niceCategory[series[i]] != undefined) {
+      //     labels.push(this.niceCategory[series[i]])
+      //   } else {
+      //     labels.push(series[i])
+      //   }
+      // }
+      var difScale = d3.scale.ordinal().domain(['Valor de la diferencia (%)']).range(['#686868']);
     
-      svgLegend.append("g")
-        .attr("class", "legend_evolution")
-        .attr("transform", "translate(" + this.width + "," + (this.height/2) + ")");
+      this.svgSexLegend.append("g")
+        .attr("class", "legend_dif")
+        .attr("transform", "translate(" + (this.width / 3) + "," + (this.height / 8) + ")");
 
-      this.legendEvolution
-        .shape('path', d3.svg.symbol().type('circle').size(80)())
-        .shapeWidth(14)
+      this.svgSexLegend.append("g")
+        .attr("class", "legend_sex")
+        .attr("transform", "translate(" + (this.width / 2.4) + "," + 0 + ")");
+
+      this.legendDif
+        .shapeWidth(this.xScaleSecondary(0.05))
+        .shapeHeight(this.yScale.rangeBand())
         .shapePadding(10)
         .ascending(true)
+        .scale(difScale);
+
+      this.legendSex
+        .shape('path', d3.svg.symbol().type('circle').size(80)())
+        .shapeWidth(14)
+        .shapePadding(70)
+        .ascending(true)
+        .orient('horizontal')
         .scale(this.colorScale)
-        .labels(labels);
+        .title('Diferencia a favor de...');
 
-      d3.select(".legend_evolution")
-        .call(this.legendEvolution);
+      d3.select(".legend_dif")
+        .call(this.legendDif);
 
-      svgLegend.selectAll('.label')
-        .attr('fill', this.darkColor)
+      d3.select(".legend_sex")
+        .call(this.legendSex);
+
+      this.svgSexLegend.selectAll('.legendTitle')
         .attr('font-size', '14px')
+        .style('font-weight', 600)
 
 
     }.bind(this)); // end load data

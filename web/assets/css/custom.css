@@ -313,6 +313,10 @@ h1 {
   text-anchor: 'start';
 }
 
+.axis path {
+  fill: none;
+}
+
 
 /*Tooltip*/
 
