@@ -227,16 +227,32 @@ h1 {
   border-bottom: solid 2px rgba(54, 57, 74, 0.125);
 }
 
+
+.chart {
+  overflow: hidden;
+}
+
+.chart text {
+  fill: #7C8388;
+  font-size: 13px;
+}
+
+#general_chart_lines {
+  width: 80%;
+  float: left;
+}
+
+#general_chart_legend {
+  width: 20%;
+  float: right;
+}
+
 #sex_chart {
   overflow: hidden;
   position: relative;
   width: 100vw;
   left: calc(-50vw + 50%);
-  font-size: 13px;
-}
-
-#sex_chart text {
-  fill: #7C8388;
+  
 }
 
 #sex_chart_axis {
@@ -313,12 +329,16 @@ h1 {
   color: #2E3141;
 }
 
-/* sex vis */
+/* vis */
 .x.axis {
   text-anchor: 'start';
 }
 
 .axis path {
+  fill: none;
+}
+
+.general-line {
   fill: none;
 }
 

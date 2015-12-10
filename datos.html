@@ -77,7 +77,14 @@
 								<div class="inner sex-data">
 
 									<h2 class="major">General</h2>
-									<p>Morbi mattis mi consectetur tortor elementum, varius pellentesque velit convallis. Aenean tincidunt lectus auctor mauris maximus, ac scelerisque ipsum tempor. Duis vulputate ex et ex tincidunt, quis lacinia velit aliquet. Duis non efficitur nisi, id malesuada justo. Maecenas sagittis felis ac sagittis semper. Curabitur purus leo donec vel dolor at arcu tincidunt bibendum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce ut aliquet justo. Donec id neque ipsum. Integer eget ultricies odio. Nam vel ex a orci fringilla tincidunt. Aliquam eleifend ligula non velit accumsan cursus. Etiam ut gravida sapien.</p>
+									<p>[Texto de Sergio]</p>
+									<p>Si pensamos que la política Europea instaura cuotas, vemos que la cosa tampoco funciona, ya que algunos de los países menos demandados por los refugiados, tienen un % de aceptación muy bajo. (En la entrevista de Portugal por ejemplo, le han puesto una cuota de 4000 y no llega a esas solicitudes en todo el año.</p>
+									<p>Si la mayoría de rechazos son porque no se cumplen las condiciones de 'refugiado' ¿por qué los porcentajes son tan dispares entre los diferentes países de destino?</p>
+
+									<div id="general_chart" class="chart">
+										<div id="general_chart_lines"></div>
+										<div id="general_chart_legend"></div>
+									</div>
 
 									<p>Vestibulum ultrices risus velit, sit amet blandit massa auctor sit amet. Sed eu lectus sem. Phasellus in odio at ipsum porttitor mollis id vel diam. Praesent sit amet posuere risus, eu faucibus lectus. Vivamus ex ligula, tempus pulvinar ipsum in, auctor porta quam. Proin nec commodo, vel scelerisque nisi scelerisque. Suspendisse id quam vel tortor tincidunt suscipit. Nullam auctor orci eu dolor consectetur, interdum ullamcorper ante tincidunt. Mauris felis nec felis elementum varius.</p>
 
@@ -87,7 +94,7 @@
 									<p>En todo caso, las diferencias existentes entre países hacen evidente que los países de la Unión Europea <bold> se rigen fundamentalmente por políticas individuales</bold>, y que, por tanto, los esfuerzos por asoptar una política común de asilo aún no se hacen visibles.</p>
 									<p>En el siguiente gráfico se ilustran el valor de la diferencia entre géneros (en %) y hacia cuál se inclina la balanza</p>
 									
-									<div id="sex_chart">
+									<div id="sex_chart" class="chart">
 										<div id="sex_chart_legend"></div>
 										<div id="sex_chart_axis"></div>
 										<div id="sex_chart_bars"></div>
@@ -157,10 +164,13 @@
 			</div>
 
 		<!-- Scripts -->
+		<script src="web/assets/js/vis_general.js"></script>
 		<script src="web/assets/js/vis_sex.js"></script>
 
 		<script type="text/javascript">
-		
+			var visGeneral = new VisGeneral('#general_chart_lines');
+		  visGeneral.render();
+
 			var visSex = new VisSex('#sex_chart_bars');
 		  visSex.render();
 		
