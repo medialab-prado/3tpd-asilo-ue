@@ -99,6 +99,23 @@
 										<div id="sex_chart_axis"></div>
 										<div id="sex_chart_bars"></div>
 									</div>
+
+									<h2 class="major">Edad</h2>
+									<p>Las diferencias de género son muy peuqueñas, pero predominan los casos en los que se favorece a la mujer.
+										En países con menores índices de aceptación, las diferencias son más acusadas.</p>
+									<p>En todo caso, las diferencias existentes entre países hacen evidente que los países de la Unión Europea <bold> se rigen fundamentalmente por políticas individuales</bold>, y que, por tanto, los esfuerzos por asoptar una política común de asilo aún no se hacen visibles.</p>
+									<p>En el siguiente gráfico se ilustran el valor de la diferencia entre géneros (en %) y hacia cuál se inclina la balanza</p>
+									
+									<ul id="measure_selector" class="measure buttons">
+					           <li><a href="javascript:void(null)" id="pais" class ="measure button buttonSelected">Por año ~ país</a></li><!--
+					        --><li><a href="javascript:void(null)" id="total" class ="measure button">Totales</a></li>
+					        </ul>
+
+									<div id="age_chart" class="chart">
+<!-- 										<div id="sex_chart_legend"></div>
+										<div id="sex_chart_axis"></div>
+										<div id="sex_chart_bars"></div> -->
+									</div>
 									
 
 									<!-- <section class="features">
@@ -166,6 +183,7 @@
 		<!-- Scripts -->
 		<script src="web/assets/js/vis_general.js"></script>
 		<script src="web/assets/js/vis_sex.js"></script>
+		<script src="web/assets/js/vis_age.js"></script>
 
 		<script type="text/javascript">
 			var visGeneral = new VisGeneral('#general_chart_lines');
@@ -173,6 +191,38 @@
 
 			var visSex = new VisSex('#sex_chart_bars');
 		  visSex.render();
+
+		  var visAge = new VisAge('#age_chart');
+		  visAge.loadData();
+		  visAge.render();
+		  // visAge.renderTotals();
+
+		  d3.selectAll('.measure.button')
+      .on('click', function(d) {
+        d3.selectAll(".measure.button.buttonSelected").classed("buttonSelected", false);
+        d3.select(this).classed("buttonSelected", true);
+        var selectedId = this.id;
+
+      	visAge.svgAge
+	        .append('g:rect')
+	        .attr('x', 0)
+	        .attr('y', 0)
+	        .attr('width', visAge.width + visAge.margin.right + visAge.margin.left)
+	        .attr('height', visAge.height + visAge.margin.bottom)
+	        .style('fill', '#D7D9DC')
+	        .style('opacity', 0)
+	      .transition()
+	        .duration(visAge.duration/2)
+	        .style('opacity', 1)
+	        .each('end', function(d) { 
+	          visAge.svgAge
+	              .selectAll('g')
+	          .transition()
+	          .remove()
+	          
+	          selectedId == 'pais' ? visAge.render() : visAge.renderTotals()
+	        }.bind(visAge));
+      });
 		
 		</script>
 

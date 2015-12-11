@@ -1,0 +1,534 @@
+'use strict';
+
+var VisAge = Class.extend({
+  init: function(divId) {
+    this.container = divId;
+    
+    // Chart dimensions
+    this.containerWidth = null;
+    this.axisWidth = null;
+    this.margin = {top: 10, right: 60, bottom: 40, left: 40};
+    this.width = null;
+    this.height = null;
+
+    // Scales
+    this.xScale = d3.scale.ordinal();
+    this.xScaleTotals = d3.scale.ordinal();
+    this.yScaleTotals = d3.scale.ordinal();
+    this.yScale = d3.scale.ordinal();
+    // this.colorScale = d3.scale.ordinal().range(['#ECD078', '#D95B43', '#C02942', '#542437', '#53777A', '#686868']);
+    this.colorScale = d3.scale.ordinal().range(['#92E98E', '#5CBF88', '#34937A', '#1D6963', '#14474A', '#686868']);
+
+    // Axis
+    this.xAxis = d3.svg.axis();
+    this.yAxis = d3.svg.axis();
+    this.yAxisTotals = d3.svg.axis();
+
+    // Data
+    this.dataChart = null;
+    this.dataTotals = null;
+    this.dataCountryTotals = null;
+    this.years = null;
+    this.countries = null;
+    this.ages = null;
+
+    // Legend
+    this.legendAge = d3.legend.color();
+    // this.legendSex = d3.legend.color();
+
+    // Objects
+    this.tooltip = null;
+    this.formatPercent = d3.format('%');
+    this.parseDate = d3.time.format("%Y").parse;
+
+    // Chart objects
+    this.svgAge = null;
+    this.svgAgeAxis = null;
+    this.svgAgeLegend = null;
+    this.chart = null;
+    
+    // Constant values
+    this.radius = 6;
+    this.opacity = .7;
+    this.opacityLow = .02;
+    this.duration = 1500;
+    this.niceCategory = null;
+    this.heavyLine = 5;
+    this.lightLine = 2;
+    this.grey = '#686868';
+    this.yellow = '#E2AF3F'
+
+    // Variable values
+    this.selectedColor = null;
+  },
+  loadData: function() {
+    // Chart dimensions
+    this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
+    this.width = (this.containerWidth) - this.margin.left - this.margin.right;
+    this.height = (this.containerWidth / 3.7) - this.margin.top - this.margin.bottom;
+
+
+    // Append tooltip
+    this.tooltip = d3.select('body').append('div')
+      .attr('class', 'vis_age_tooltip')
+      .style('opacity', 0);
+
+
+    // Append svg
+    this.svgAge = d3.select(this.container).append('svg')
+        .attr('width', this.width + this.margin.left + this.margin.right)
+        .attr('height', this.height + this.margin.top + this.margin.bottom)
+        .attr('class', 'svg_age')
+      .append('g')
+        .attr('transform', 'translate(' + 0 + ',' + this.margin.top + ')');
+
+
+    // Set nice category
+    this.niceCategory = {
+      "menos14": "menos de 14",
+      "x14a17": "14 a 17",
+      "x18a34": "18 a 34",
+      "x35a64": "35 a 64",
+      "x65mas": "65 o más",
+      "Desconocido": "Desconocido"
+    }
+  }, 
+
+  render: function(urlData) {
+
+    // // Chart dimensions
+    // this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
+    // this.width = (this.containerWidth) - this.margin.left - this.margin.right;
+    // this.height = (this.containerWidth / 3.7) - this.margin.top - this.margin.bottom;
+
+    // // this.axisWidth = parseInt(d3.select('#sex_chart_axis').style('width'), 10);
+
+    // // this.margin.left = d3.select(this.container)[0][0].getBoundingClientRect().left;
+
+    // // Append tooltip
+    // this.tooltip = d3.select('body').append('div')
+    //   .attr('class', 'vis_age_tooltip')
+    //   .style('opacity', 0);
+
+
+    // // Append svg
+    // this.svgAge = d3.select(this.container).append('svg')
+    //     .attr('width', this.width + this.margin.left + this.margin.right)
+    //     .attr('height', this.height + this.margin.top + this.margin.bottom)
+    //     .attr('class', 'svg_age')
+    //   .append('g')
+    //     .attr('transform', 'translate(' + 0 + ',' + this.margin.top + ')');
+
+    // // this.svgAgeAxis = d3.select('#sex_chart_axis').append('svg')
+    // //     .attr('width', this.axisWidth)
+    // //     .attr('height', this.height + this.margin.top + this.margin.bottom)
+    // //   .append('g')
+    // //     .attr('transform', 'translate(' + (this.margin.left / 2)+ ',' + this.margin.top + ')');
+
+    // // Set nice category
+    // this.niceCategory = {
+    //   "menos14": "menos de 14",
+    //   "x14a17": "14 a 17",
+    //   "x18a34": "18 a 34",
+    //   "x35a64": "35 a 64",
+    //   "x65mas": "65 o más",
+    //   "Desconocido": "Desconocido"
+    // }
+
+    // Load the data
+    d3.csv('web/data/vis_age_data.csv', function(error, csvData){
+      if (error) throw error;
+      
+      // Map the data
+      this.dataChart = csvData;
+
+      // Filter the accepted_per != NaN
+      this.dataChart = this.dataChart.filter(function(d) { return d.win != "NA"; })
+
+      this.dataChart.forEach(function(d) { 
+        // d.year = this.parseDate(d.year);
+        d.menos14 = +d.menos14;
+        d.x14a17 = +d.x14a17;
+        d.x18a34 = +d.x18a34;
+        d.x35a64 = +d.x35a64;
+        d.x65mas = +d.x65mas;
+        d.Desconocido = +d.Desconocido;
+        d.total_country = +d.total_country;
+        d.dif = +d.dif;
+      }.bind(this));
+
+      
+
+      this.dataCountryTotals = d3.nest()
+        .key(function(d) { return d.destiny;})
+        .entries(this.dataChart)
+        .map(function(d) { return {'destiny': d.key, 'total_country': d.values[0].total_country}; });
+
+      // Sort the data
+
+      this.dataChart = this.dataChart.sort(
+          firstBy('total_country', -1)
+          .thenBy('year', -1)
+      );
+
+      // Get the unique countries and unique sex
+      
+      this.countries = d3.nest()
+        .key(function(d) { return d.destiny_code;})
+        .entries(this.dataChart)
+        .map(function(d) { return d.key; });
+
+      this.ages = ["menos14", "x14a17", "x18a34", "x35a64", "x65mas", "Desconocido"]
+      
+      this.years = d3.nest()
+        .key(function(d) { return d.year;})
+        .entries(this.dataChart)
+        .map(function(d) { return d.key; });
+
+
+      // Set the scales
+      this.xScale
+        .domain(this.countries)
+        .rangeRoundBands([this.margin.left, (this.width - this.margin.right)], .2);
+      
+      this.yScale
+        .domain(this.years)
+        .rangeRoundBands([this.height, 0], .2);
+      
+      this.colorScale
+        .domain(this.ages);
+      
+      // Define the axis 
+      this.xAxis
+          .scale(this.xScale)
+          .orient("bottom");  
+
+      this.yAxis
+          .scale(this.yScale)
+          .orient("left");
+
+
+      // --> DRAW THE BARS  
+      this.chart = this.svgAge.append('g')
+          .attr('class', 'age_chart');
+
+      this.chart.selectAll('.age-bar')
+        .data(this.dataChart)
+        .enter()
+      .append('rect')
+        .attr('class', function(d) { return 'age-bar ' + this._normalize(d.win); }.bind(this))
+        .attr('x', function(d) { return this.xScale(d.destiny_code); }.bind(this))
+        .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
+        .attr('width', this.xScale.rangeBand())
+        .attr('height', this.yScale.rangeBand())
+        .style('fill', function(d) { return this.colorScale(d.win); }.bind(this))
+        .on('mouseover', this._mouseover.bind(this))
+        .on('mouseout', this._mouseout.bind(this));
+
+      // --> DRAW THE AXIS
+      this.svgAge.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(" + 0 + "," + this.height + ")")
+          .call(this.xAxis);
+
+      this.svgAge.append("g")
+          .attr("class", "y axis")
+          .attr("transform", "translate(" + this.margin.left + ",0)")
+          .call(this.yAxis);
+      
+      // --> DRAW THE LEGEND 
+      
+      var labels = this.colorScale.domain().map(function(d) { return this.niceCategory[d]; }.bind(this))      
+    
+      this.svgAge.append("g")
+        .attr("class", "legend_age")
+        .attr("transform", "translate(" + (this.width - 20)+ "," + (this.margin.top * 2) + ")");
+   
+      this.legendAge
+        .shapeWidth(this.xScale.rangeBand() * 0.7)
+        .shapeHeight(this.yScale.rangeBand() * 0.7)
+        .shapePadding(10)
+        .scale(this.colorScale)
+        .labels(labels)
+        .title('Diferencia a favor de...')
+
+      d3.select(".legend_age")
+        .call(this.legendAge);
+
+      this.svgAge.selectAll('.legendTitle')
+        .style('font-weight', 600);
+
+    }.bind(this)); // end load data
+  }, // end render
+
+  renderTotals: function(urlData) {
+     
+      
+    d3.csv('web/data/vis_age_data.csv', function(error, csvData){
+      if (error) throw error;
+
+      // Map the data
+      this.dataChart = csvData;
+
+      // Filter the accepted_per != NaN
+      this.dataChart = this.dataChart.filter(function(d) { return d.win != "NA"; })
+
+      this.dataChart.forEach(function(d) { 
+        // d.year = this.parseDate(d.year);
+        d.menos14 = +d.menos14;
+        d.x14a17 = +d.x14a17;
+        d.x18a34 = +d.x18a34;
+        d.x35a64 = +d.x35a64;
+        d.x65mas = +d.x65mas;
+        d.Desconocido = +d.Desconocido;
+        d.total_country = +d.total_country;
+        d.dif = +d.dif;
+      }.bind(this));
+
+      this.ages = ["menos14", "x14a17", "x18a34", "x35a64", "x65mas", "Desconocido"]
+
+      this.dataTotals = d3.nest()
+        .key(function(d) { return d.win;}).sortKeys(function(a,b) { return this.ages.indexOf(b) - this.ages.indexOf(a); }.bind(this))
+        .entries(this.dataChart);
+
+      var valuesLength =  d3.nest()
+        .key(function(d) { return d.win;})
+        .rollup(function(values) { return values.length; })
+        .entries(this.dataChart);
+
+      var max = d3.max(valuesLength, function(d) { return d.values; })
+      
+      var totalsDomain = [];
+      for (var i = 0; i < max; i++) { 
+        totalsDomain.push(i.toString())
+      }
+
+      // Define the scales
+
+      this.xScaleTotals
+        .domain(totalsDomain)
+        .rangeRoundBands([this.margin.left, (this.width - this.margin.right)], .2)
+
+      this.yScaleTotals
+        .domain(this.ages)
+        .rangeRoundBands([0, this.height], .2);
+
+      this.colorScale
+        .domain(this.ages);
+
+      // The Axis
+      this.yAxisTotals
+          .scale(this.yScaleTotals)
+          .tickFormat(function(d) { return this.niceCategory[d]; }.bind(this))
+          .orient("left");
+
+      //--> DRAW AXIS
+      this.svgAge.append("g")
+          .attr("class", "y axis")
+          .attr("transform", "translate(" + (this.margin.left * 2) + ",0)")
+          .call(this.yAxisTotals);
+
+      //--> DRAW BARS
+      var ageGroup = this.svgAge.selectAll(".age_total_bar")
+          .data(this.dataTotals)
+          .enter().append("g")
+          .attr('class', '.age_total_bar')
+          .attr("transform", function(d) {
+            return "translate(" + this.margin.left + "," + this.yScaleTotals(d.key) + ")";
+      }.bind(this));
+
+
+      ageGroup.selectAll("rect")
+          .data(function(d) { return d.values; })
+        .enter().append("rect")
+          .attr("width", 10)
+          .attr("x", function(d, i) { return this.xScaleTotals(i.toString()); }.bind(this))
+          .attr("y", 0)
+          .attr("height", this.yScaleTotals.rangeBand())
+          .style("fill", function(d) { return this.colorScale(d.win); }.bind(this))
+          .style('opacity', 0)
+          .transition()
+          .delay(function(d, i) { return i * (this.duration/100); }.bind(this))
+          .duration(this.duration/100)
+          .style('opacity', 1);
+
+    }.bind(this))
+  },
+
+  updateRender: function () {
+
+    // // re-map the data
+    // this.dataChart = this.data.budgets[this.measure];
+    // this.kind = this.data.kind;
+    // this.dataYear = this.parseDate(this.data.year);
+
+    // this.dataDomain = [d3.min(this.dataChart.map(function(d) { return d3.min(d.values.map(function(v) { return v.value; })); })), 
+    //           d3.max(this.dataChart.map(function(d) { return d3.max(d.values.map(function(v) { return v.value; })); }))];
+
+    // // Update the scales
+    // this.xScale
+    //   .domain(d3.extent(this.dataChart[0].values, function(d) { return d.date; }));
+
+    // this.yScale
+    //   .domain([this.dataDomain[0] * .3, this.dataDomain[1] * 1.2]);
+
+    // this.colorScale
+    //   .domain(this.dataChart.map(function(d) { return d.name; }));
+
+    // // Update the axis
+    // this.xAxis.scale(this.xScale);
+ 
+    // this.yAxis
+    //     .scale(this.yScale)
+    //     .tickValues(this._tickValues(this.yScale))
+    //     .tickFormat(function(d) { return this.measure != 'percentage' ? d3.round(d, 2) : d3.round(d * 100, 2) + '%'; }.bind(this));
+
+    // this.svgAge.select(".x.axis")
+    //   .transition()
+    //   .duration(this.duration)
+    //   .delay(this.duration/2)
+    //   .ease("sin-in-out") 
+    //   .call(this.xAxis);
+
+    // this.svgAge.select(".y.axis")
+    //   .transition()
+    //   .duration(this.duration)
+    //   .delay(this.duration/2)
+    //   .ease("sin-in-out") 
+    //   .call(this.yAxis);
+
+    // // Change ticks color
+    // d3.selectAll('.axis').selectAll('text')
+    //   .attr('fill', this.darkColor);
+
+    // d3.selectAll('.axis').selectAll('path')
+    //   .attr('stroke', this.darkColor);
+
+    // // Update lines
+    // this.svgAge.selectAll('.evolution_line')
+    //   .data(this.dataChart)
+    //   .transition()
+    //   .duration(this.duration)
+    //   .attr('d', function(d) { return this.line(d.values); }.bind(this))
+    //   .style('stroke', function(d) { return this.colorScale(d.name); }.bind(this));
+
+    // // Update the points
+    // this.svgAge.selectAll(".dots")
+    //     .data(this.dataChart)
+    //   .selectAll(".dot_line")
+    //     .data(function(d) { return d.values; })
+    //     .transition()
+    //     .duration(this.duration)
+    //     .attr('cx', function(d) { return this.xScale(d.date); }.bind(this))
+    //     .attr('cy', function(d) { return this.yScale(d.value); }.bind(this))
+    //     // .style('fill', function(v) { return this.colorScale(d3.select('.dot_line.x'+v.value).node().parentNode.__data__.name); }.bind(this)); 
+    //     //
+    // var series = this.colorScale.domain();
+
+    // var labels = [];
+    // for (var i = 0; i < series.length; i++) {
+    //   if (this.niceCategory[series[i]] != undefined) {
+    //     labels.push(this.niceCategory[series[i]])
+    //   } else {
+    //     labels.push(series[i])
+    //   }
+    // }
+
+    // // Update legends
+    // this.legendEvolution
+    //     .labels(labels)
+    //     .scale(this.colorScale);
+
+    // d3.select(".legend_evolution")
+    //     .call(this.legendEvolution);
+  },
+
+  //PRIVATE
+  _tickValues:  function (scale) {
+    var range = scale.domain()[1] - scale.domain()[0];
+    var a = range/4;
+    return [scale.domain()[0], scale.domain()[0] + a, scale.domain()[0] + (a * 2), scale.domain()[1] - a, scale.domain()[1]];
+  },
+
+  _mouseover: function () {
+    var selected = d3.event.target,
+        selectedClass = selected.classList,
+        selectedData = d3.select(selected).data()[0];
+
+    this.selectedColor = d3.select(selected).style('fill')
+
+    if (selectedClass[0].indexOf('total-bar') == -1) {
+      var text = '% Mujeres aceptadas: <strong>' + this.formatPercent(selectedData.Mujeres) + '</strong><br>' +
+              '% Hombres aceptados: <strong>' + this.formatPercent(selectedData.Hombres)  + '</strong><br>' + 
+              '% Diferencia: <strong>' + this.formatPercent(selectedData.dif)  + ' más ' + selectedData.win.toLowerCase() + '</strong>';
+    } else {
+      var text = '<strong>' + selectedData.destiny + '</strong><br>' + 
+            'Total solicitudes: <strong>' + selectedData.total_country.toLocaleString() + '</strong>';
+    }
+   
+    // Hightlight selected
+    d3.select(selected)
+      .transition()
+      .duration(this.duration / 2)
+      .style('fill', d3.rgb(this.selectedColor).darker());
+    
+    this.tooltip
+        .transition()
+        .duration(this.duration / 4)
+        .style('opacity', this.opacity);
+
+    this.tooltip
+        .html(text)
+        .style('left', (d3.event.pageX + 25) + 'px')
+        .style('top', (d3.event.pageY - 25) + 'px');
+
+  },
+
+  _mouseout: function () {
+    var selected = d3.event.target,
+        selectedClass = selected.classList,
+        selectedData = d3.select(selected).data()[0];
+
+    // UN - Hightlight selected
+    d3.select(selected)
+      .transition()
+      .duration(this.duration / 2)
+      .style('fill', this.selectedColor)
+    
+    this.tooltip
+        .transition()
+        .duration(this.duration / 4)
+        .style('opacity', 0);
+  },
+
+  _normalize: (function() {
+    var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç ", 
+        to   = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc_",
+        mapping = {};
+   
+    for(var i = 0, j = from.length; i < j; i++ )
+        mapping[ from.charAt( i ) ] = to.charAt( i );
+   
+    return function( str ) {
+        var ret = [];
+        for( var i = 0, j = str.length; i < j; i++ ) {
+            var c = str.charAt( i );
+            if( mapping.hasOwnProperty( str.charAt( i ) ) )
+                ret.push( mapping[ c ] );
+            else
+                ret.push( c );
+        }      
+        return ret.join( '' ).toLowerCase();
+    }
+ 
+  })()
+
+}); // End object
+
+
+
+
+
+
+
+

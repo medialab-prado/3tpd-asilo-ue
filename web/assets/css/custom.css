@@ -342,6 +342,27 @@ h1 {
   fill: none;
 }
 
+/*Buttons*/
+ul.buttons {
+  text-align: center;
+}
+
+ul.buttons li {
+  display: inline-block;
+  padding: 1em 0 1em 1.5em;
+}
+
+.measure.button {
+  background-color: rgba(60, 63, 79, 0.5);
+}
+
+.measure.button.buttonSelected {
+  background-color: rgba(60, 63, 79, 1);
+}
+
+.measure.button:hover {
+  background-color: rgba(60, 63, 79, 0.7);
+}
 
 /*Tooltip*/
 
