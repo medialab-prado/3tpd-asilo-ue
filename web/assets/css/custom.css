@@ -118,6 +118,20 @@
   text-align: center;
 }
 
+.cargo {
+  color: #363949;
+  font-weight: 300;
+  padding-bottom: 3em;
+}
+
+.datos-page strong {
+  color: #363949;
+}
+
+#murcia {
+  padding-top: 4em;
+}
+
 
 h1 {
   -moz-transition: opacity 0.5s ease, -moz-transform 0.5s ease, -moz-filter 0.25s ease;
