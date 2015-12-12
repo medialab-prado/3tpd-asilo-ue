@@ -271,6 +271,25 @@ h1 {
   float: right;
 }
 
+.contact-title {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+#contact {
+  overflow: hidden;
+}
+
+.workers {
+  width: calc(50% - 1.5em);
+  float: left;
+  padding-top: 1em;
+}
+
+.contact {
+  width: calc(50% - 1.5em);
+  float: right;
+}
 /* Selects */
 
 .select-title {
