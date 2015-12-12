@@ -42,13 +42,55 @@
 /*General*/
 
 #banner {
-  padding: 3em 0 5em 0;
+  padding: 3em 0 0em 0;
 }
 
 #banner h2 {
   font-size: 1.2em;
   border-bottom: none;
 }
+
+#wrapper.lugar-title {
+  padding-bottom: 1em;
+  color: #2E3141;
+}
+
+.lugar-title {
+  padding-top: 0.5em !important;
+}
+
+#predict {
+  background-color: #D7D9DC;
+  color: #2E3141;
+}
+
+#predict h1 {
+  color: #2E3141;
+  border-bottom: solid 2px rgba(46, 49, 65, 0.125);
+  margin-bottom: .2em;
+}
+
+#predict strong {
+  color: #2E3141
+}
+
+#predict .icon {
+  border: solid 2px rgba(46, 49, 65, 0.125);
+}
+
+#predict:before, #predict:after {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,100 100,0 100,100' style='fill:#D7D9DC;' /%3E%3C/svg%3E");
+}
+
+#predict .button {
+  box-shadow: inset 0 0 0 2px rgba(46, 49, 65, 0.125);
+  font-size: 1em;
+}
+
+.history {
+  padding-bottom: 0.2em;
+}
+
 
 h1 {
   -moz-transition: opacity 0.5s ease, -moz-transform 0.5s ease, -moz-filter 0.25s ease;
@@ -378,6 +420,7 @@ h1 {
 .lugar {
   text-align: center;
 }
+
 /*Buttons*/
 ul.buttons {
   text-align: center;
