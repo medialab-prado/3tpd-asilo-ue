@@ -366,7 +366,7 @@ ul.buttons li {
 
 /*Tooltip*/
 
-.vis_sex_tooltip {
+.tooltip {
   top: 0;
   right: 0;
   position: absolute;
@@ -383,7 +383,12 @@ ul.buttons li {
   color: #3C3F4F;
 }
 
-.vis_sex_tooltip strong {
+.tooltip strong {
   color: #3C3F4F;
   font-weight: 600;
+}
+
+.vis_age_tooltip {
+  width: 160px;
+  height: 140px;
 }

@@ -49,7 +49,7 @@ var VisAge = Class.extend({
     
     // Constant values
     this.radius = 6;
-    this.opacity = .7;
+    this.opacity = .9;
     this.opacityLow = .02;
     this.duration = 1500;
     this.niceCategory = null;
@@ -61,6 +61,7 @@ var VisAge = Class.extend({
     // Variable values
     this.selectedColor = null;
   },
+
   loadData: function() {
     // Chart dimensions
     this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
@@ -70,7 +71,7 @@ var VisAge = Class.extend({
 
     // Append tooltip
     this.tooltip = d3.select('body').append('div')
-      .attr('class', 'vis_age_tooltip')
+      .attr('class', 'vis_age_tooltip tooltip')
       .style('opacity', 0);
 
 
@@ -222,8 +223,8 @@ var VisAge = Class.extend({
         .attr('width', this.xScale.rangeBand())
         .attr('height', this.yScale.rangeBand())
         .style('fill', function(d) { return this.colorScale(d.win); }.bind(this))
-        .on('mouseover', this._mouseover.bind(this))
-        .on('mouseout', this._mouseout.bind(this));
+        .on('mouseover', this._mouseoverRender.bind(this))
+        .on('mouseout', this._mouseoutRender.bind(this));
 
       // --> DRAW THE AXIS
       this.svgAge.append("g")
@@ -328,7 +329,7 @@ var VisAge = Class.extend({
           .attr("transform", "translate(" + (this.margin.left * 2) + ",0)")
           .call(this.yAxisTotals);
 
-      //--> DRAW BARS
+      //--> DRAW BARS & LABELS
       var ageGroup = this.svgAge.selectAll(".age_total_bar")
           .data(this.dataTotals)
           .enter().append("g")
@@ -352,95 +353,25 @@ var VisAge = Class.extend({
           .duration(this.duration/100)
           .style('opacity', 1);
 
+      this.svgAge.selectAll(".age_total_label")
+        .data(this.dataTotals)
+        .enter().append('text')
+            .attr('class', 'label ')
+            .attr('x', function(d) { console.log(d.values.length);return this.xScaleTotals((d.values.length - 1).toString()) + this.margin.left; }.bind(this))
+            .attr('y', function(d) { return this.yScaleTotals(d.key) + (this.yScaleTotals.rangeBand()/1.5); }.bind(this))
+            .attr('dx', 15)
+            .attr('dy', 2)
+            .attr('text-anchor', 'start')
+            .text(function(d) { return d.values.length; })
+            .style('fill', this.grey)
+            .style('font-size', '1em')
+            .style('opacity', 0)
+          .transition()
+            .delay(50 * (this.duration/100))
+            .duration(this.duration/2)
+            .style('opacity', 1);
+
     }.bind(this))
-  },
-
-  updateRender: function () {
-
-    // // re-map the data
-    // this.dataChart = this.data.budgets[this.measure];
-    // this.kind = this.data.kind;
-    // this.dataYear = this.parseDate(this.data.year);
-
-    // this.dataDomain = [d3.min(this.dataChart.map(function(d) { return d3.min(d.values.map(function(v) { return v.value; })); })), 
-    //           d3.max(this.dataChart.map(function(d) { return d3.max(d.values.map(function(v) { return v.value; })); }))];
-
-    // // Update the scales
-    // this.xScale
-    //   .domain(d3.extent(this.dataChart[0].values, function(d) { return d.date; }));
-
-    // this.yScale
-    //   .domain([this.dataDomain[0] * .3, this.dataDomain[1] * 1.2]);
-
-    // this.colorScale
-    //   .domain(this.dataChart.map(function(d) { return d.name; }));
-
-    // // Update the axis
-    // this.xAxis.scale(this.xScale);
- 
-    // this.yAxis
-    //     .scale(this.yScale)
-    //     .tickValues(this._tickValues(this.yScale))
-    //     .tickFormat(function(d) { return this.measure != 'percentage' ? d3.round(d, 2) : d3.round(d * 100, 2) + '%'; }.bind(this));
-
-    // this.svgAge.select(".x.axis")
-    //   .transition()
-    //   .duration(this.duration)
-    //   .delay(this.duration/2)
-    //   .ease("sin-in-out") 
-    //   .call(this.xAxis);
-
-    // this.svgAge.select(".y.axis")
-    //   .transition()
-    //   .duration(this.duration)
-    //   .delay(this.duration/2)
-    //   .ease("sin-in-out") 
-    //   .call(this.yAxis);
-
-    // // Change ticks color
-    // d3.selectAll('.axis').selectAll('text')
-    //   .attr('fill', this.darkColor);
-
-    // d3.selectAll('.axis').selectAll('path')
-    //   .attr('stroke', this.darkColor);
-
-    // // Update lines
-    // this.svgAge.selectAll('.evolution_line')
-    //   .data(this.dataChart)
-    //   .transition()
-    //   .duration(this.duration)
-    //   .attr('d', function(d) { return this.line(d.values); }.bind(this))
-    //   .style('stroke', function(d) { return this.colorScale(d.name); }.bind(this));
-
-    // // Update the points
-    // this.svgAge.selectAll(".dots")
-    //     .data(this.dataChart)
-    //   .selectAll(".dot_line")
-    //     .data(function(d) { return d.values; })
-    //     .transition()
-    //     .duration(this.duration)
-    //     .attr('cx', function(d) { return this.xScale(d.date); }.bind(this))
-    //     .attr('cy', function(d) { return this.yScale(d.value); }.bind(this))
-    //     // .style('fill', function(v) { return this.colorScale(d3.select('.dot_line.x'+v.value).node().parentNode.__data__.name); }.bind(this)); 
-    //     //
-    // var series = this.colorScale.domain();
-
-    // var labels = [];
-    // for (var i = 0; i < series.length; i++) {
-    //   if (this.niceCategory[series[i]] != undefined) {
-    //     labels.push(this.niceCategory[series[i]])
-    //   } else {
-    //     labels.push(series[i])
-    //   }
-    // }
-
-    // // Update legends
-    // this.legendEvolution
-    //     .labels(labels)
-    //     .scale(this.colorScale);
-
-    // d3.select(".legend_evolution")
-    //     .call(this.legendEvolution);
   },
 
   //PRIVATE
@@ -450,21 +381,23 @@ var VisAge = Class.extend({
     return [scale.domain()[0], scale.domain()[0] + a, scale.domain()[0] + (a * 2), scale.domain()[1] - a, scale.domain()[1]];
   },
 
-  _mouseover: function () {
+  _mouseoverRender: function () {
     var selected = d3.event.target,
         selectedClass = selected.classList,
         selectedData = d3.select(selected).data()[0];
 
     this.selectedColor = d3.select(selected).style('fill')
 
-    if (selectedClass[0].indexOf('total-bar') == -1) {
-      var text = '% Mujeres aceptadas: <strong>' + this.formatPercent(selectedData.Mujeres) + '</strong><br>' +
-              '% Hombres aceptados: <strong>' + this.formatPercent(selectedData.Hombres)  + '</strong><br>' + 
-              '% Diferencia: <strong>' + this.formatPercent(selectedData.dif)  + ' más ' + selectedData.win.toLowerCase() + '</strong>';
-    } else {
-      var text = '<strong>' + selectedData.destiny + '</strong><br>' + 
-            'Total solicitudes: <strong>' + selectedData.total_country.toLocaleString() + '</strong>';
+    var texts = [];
+    for (var i = 0; i < this.ages.length; i++) {
+      var a = this.niceCategory[this.ages[i]] + ': <strong>' + this.formatPercent(selectedData[this.ages[i]]) + '</strong><br>'
+      texts.push(a)
     }
+
+    var text = '<strong>' + selectedData.destiny + '</strong> - ' + selectedData.year + '<br>' +
+      'a favor de: <strong>' + this.niceCategory[selectedData.win] + '</strong><br>' +
+      texts[0] + texts[1] + texts[2] + texts[3] + texts[4] + texts[5]
+
    
     // Hightlight selected
     d3.select(selected)
@@ -484,7 +417,7 @@ var VisAge = Class.extend({
 
   },
 
-  _mouseout: function () {
+  _mouseoutRender: function () {
     var selected = d3.event.target,
         selectedClass = selected.classList,
         selectedData = d3.select(selected).data()[0];

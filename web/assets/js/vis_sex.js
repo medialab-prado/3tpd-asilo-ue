@@ -73,7 +73,7 @@ var VisSex = Class.extend({
 
     // Append tooltip
     this.tooltip = d3.select('body').append('div')
-      .attr('class', 'vis_sex_tooltip')
+      .attr('class', 'vis_sex_tooltip tooltip')
       .style('opacity', 0);
 
 
