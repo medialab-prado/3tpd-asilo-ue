@@ -124,6 +124,10 @@
   padding-bottom: 3em;
 }
 
+.cargo a {
+  font-weight: 600;
+}
+
 .datos-page strong {
   color: #363949;
 }
