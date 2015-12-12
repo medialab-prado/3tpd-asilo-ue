@@ -91,6 +91,33 @@
   padding-bottom: 0.2em;
 }
 
+.experts {
+  overflow: hidden;
+}
+
+.inner .left {
+  width: 45%;
+  float: left;
+  padding-top: 0;
+  text-align: left;
+}
+
+.inner .right {
+  width: 45%;
+  float: right;
+  padding-top: 0;
+  text-align: left;
+}
+
+.
+#experts.custom-inner {
+  text-align: left;
+}
+
+.experts-article {
+  text-align: center;
+}
+
 
 h1 {
   -moz-transition: opacity 0.5s ease, -moz-transform 0.5s ease, -moz-filter 0.25s ease;
