@@ -366,6 +366,18 @@ h1 {
   fill: none;
 }
 
+#main-title h1 {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.figure {
+  font-size: 3em;
+}
+
+.lugar {
+  text-align: center;
+}
 /*Buttons*/
 ul.buttons {
   text-align: center;
