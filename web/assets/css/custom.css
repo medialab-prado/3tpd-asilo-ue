@@ -237,6 +237,10 @@ h1 {
   font-size: 13px;
 }
 
+.chart h3 {
+  color: #36394A;
+}
+
 #general_chart_lines {
   width: 80%;
   float: left;
@@ -266,6 +270,7 @@ h1 {
   width: 85%;
   float: right;
 }
+
 /* Selects */
 
 .select-title {
@@ -345,6 +350,7 @@ h1 {
 /*Buttons*/
 ul.buttons {
   text-align: center;
+  margin: 0 0 0em 0;
 }
 
 ul.buttons li {
@@ -352,15 +358,22 @@ ul.buttons li {
   padding: 1em 0 1em 1.5em;
 }
 
-.measure.button {
+.age.button,
+.origin.button {
   background-color: rgba(60, 63, 79, 0.5);
+  height: 2.75em;
+  line-height: 2.75em;
+  padding: 0 1.25em;
+  font-weight: 300;
 }
 
-.measure.button.buttonSelected {
+.age.button.buttonSelected,
+.origin.button.buttonSelected {
   background-color: rgba(60, 63, 79, 1);
 }
 
-.measure.button:hover {
+.age.button:hover,
+.origin.button:hover {
   background-color: rgba(60, 63, 79, 0.7);
 }
 
