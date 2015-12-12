@@ -213,15 +213,11 @@ h1 {
     background-color: #353849;
     border-radius: 5px;
     margin: 1em 0.5em 1.5em 0;
-    width: calc(35% - 1.5em);
+    width: calc(50% - 1.5em);
 }
 
-.features .datos-article:nth-child(2n) {
-    margin: 1em 0.5em 1.5em 0;
-}
-
-.features .datos-article:nth-child(3) {
-    margin-right: 0;
+.features .datos-article h3 {
+  font-size: 1.2em
 }
 
 .features .datos-article .image {
