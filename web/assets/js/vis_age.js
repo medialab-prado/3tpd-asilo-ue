@@ -251,7 +251,7 @@ var VisAge = Class.extend({
         .shapePadding(10)
         .scale(this.colorScale)
         .labels(labels)
-        .title('Diferencia a favor de...')
+        // .title('Diferencia a favor de...')
 
       d3.select(".legend_age")
         .call(this.legendAge);

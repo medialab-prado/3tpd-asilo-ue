@@ -251,7 +251,7 @@ var VisOrigin = Class.extend({
         .shapeHeight(this.yScale.rangeBand() * 0.7)
         .shapePadding(5)
         .scale(this.colorScale)
-        .title('Diferencia a favor de...')
+        // .title('Diferencia a favor de...')
 
       d3.select(".legend_origin")
         .call(this.legendOrigin);
