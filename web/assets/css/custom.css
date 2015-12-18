@@ -144,6 +144,15 @@
   margin: 3em 0 1em 0;
 }
 
+.normativa p {
+  font-weight: 200;
+  font-size: 105%;
+}
+.normativa a {
+  border-bottom: dotted 1px #D04A4A;
+  font-weight: 300;
+}
+
 
 
 h1 {
@@ -397,8 +406,11 @@ h1 {
 }
 
 .contact a {
-  font-size: 1.5em;
+  font-size: 1.3em;
   text-align: center;
+  display: block;
+  margin-top: 1em;
+  border-bottom: dotted 1px #D04A4A;
 }
 
 /* Selects */
@@ -547,4 +559,12 @@ ul.buttons li {
 .vis_age_tooltip {
   width: 160px;
   height: 140px;
+}
+
+@media screen and (max-width: 1100px) {
+  #header nav a {
+    font-size: 80%;
+    padding: 0 0.7em;
+  }
+
 }
