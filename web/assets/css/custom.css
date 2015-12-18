@@ -137,6 +137,7 @@
 }
 
 
+
 h1 {
   -moz-transition: opacity 0.5s ease, -moz-transform 0.5s ease, -moz-filter 0.25s ease;
   -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease, -webkit-filter 0.25s ease;
@@ -374,9 +375,24 @@ h1 {
 }
 
 .contact {
-  width: calc(50% - 1.5em);
+  width: calc(45% - 1.5em);
   float: right;
+  text-align: center;
 }
+
+.contact h2 {
+  padding-top: 5em;
+}
+
+.contact p {
+  letter-spacing: 1px;
+}
+
+.contact a {
+  font-size: 1.5em;
+  text-align: center;
+}
+
 /* Selects */
 
 .select-title {
