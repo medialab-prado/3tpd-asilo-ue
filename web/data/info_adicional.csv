@@ -1,16 +1,16 @@
 country,pib_capita,rank_pib,population,unemployment,rank_unemployment,organism,time_waiting
 Austria,46892.90512,6,8506889,0.05,1,Centros Federales de Primera Acogida,
 Alemania,43683.0399,8,80767463,0.05,1,Federal Office for Migration and Refugees (Bundesamt für Migration und Flüchtlinge / BAMF),5 a 7 meses
-Polonia,13228.34645,24,38017856,0.056,2,,
-Malta,20889.94262,16,425384,0.059,3,,
-Luxemburgo,101499.8693,1,549680,0.06,4,,
-República Checa,17934.50396,20,10512419,0.061,5,,
+Polonia,13228.34645,24,38017856,0.056,2,Head of Office for Foreigners,6 meses (se puede prolongar hasta 15 en casos complicados)
+Malta,20889.94262,16,425384,0.059,3,The Office of the Refugee Commissioner,65 días
+Luxemburgo,101499.8693,1,549680,0.06,4,Office Luxembourgeois de l'accueil et de l'intégration (OLAI),18 meses
+República Checa,17934.50396,20,10512419,0.061,5,Ministry of Interior,6 meses
 Reino Unido,41826.56986,10,64351155,0.063,6,Refugee Council (refugeecouncil.org.uk),6 meses
-Dinamarca,55612.83871,2,5617345,0.066,7,,
-Rumanía,9168.802936,27,19947311,0.068,8,,
+Dinamarca,55612.83871,2,5617345,0.066,7,Servicio de Inmigración Danés,5 meses
+Rumanía,9168.802936,27,19947311,0.068,8,Ministry of Foreign Affairs / Ministerul Afacerilor Externe,
 Holanda,47317.46911,5,16829289,0.07,9,"Aanmeldcentrum: DenBosch, Zevenaar, Ter Apel, Schiphol.",
 Estonia,18086.66461,19,1315819,0.074,10,Police and Border Guard Board (PBGP),4 meses
-Hungría,12751.31959,25,9877365,0.077,11,,
+Hungría,12751.31959,25,9877365,0.077,11,Hungarian Office of Immigration and Nationality,2 a 5 meses (con la crisis de refugiados el tiempo de espera se ha polarizado: de minutos a muchos meses)
 Suecia,54010.42836,3,9644864,0.079,12,Swedish Migration Agency (Migrationsverket),7 meses
 Bélgica,43581.32431,9,11203992,0.085,13,Federal Agency for the Reception of Asylum Seekers (FEDASIL),3 a 6 meses
 Finlandia,45438.43637,7,5451270,0.087,14,The Finnish Immigration Service (Migri),
@@ -26,4 +26,4 @@ Portugal,20252.22531,17,10427301,0.141,23,Immigration and Borders Service (SEF),
 Chipre,24942.2404,14,858000,0.161,24,"Asylum Service, of Ministry of Interior",
 Croacia,12388.75717,26,4246809,0.173,25,"Reception Centre for Asylum Seekers' Administration, of Ministry of Interior",unos pocos meses a un año y medio
 España,27755.97429,13,46512199,0.245,26,"Oficina de Asilo y Refugio, Puestos fronterizos de entrada al territorio español, Oficinas de Extranjeros, Comisarías de Policía autorizadas, Centros de Internamiento de Extranjeros.",
-Grecia,19886.91134,18,10926807,0.265,27,,
+Grecia,19886.91134,18,10926807,0.265,27,"Oficinas Regionales de Asilo y Unidades de Asilo, dependiendo de su jurisdicción local",6 meses
