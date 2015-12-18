@@ -132,8 +132,16 @@
   color: #363949;
 }
 
-#murcia {
+#murcia, #cear, #italia {
   padding-top: 4em;
+}
+
+.interviews p {
+  margin-bottom: 1em;
+}
+
+.question {
+  margin: 3em 0 1em 0;
 }
 
 
