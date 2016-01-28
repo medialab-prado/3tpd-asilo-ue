@@ -132,7 +132,7 @@
   color: #363949;
 }
 
-#murcia, #cear, #italia {
+#clear {
   padding-top: 4em;
 }
 
@@ -568,3 +568,33 @@ ul.buttons li {
   }
 
 }
+
+// Interviews
+
+.interviews {
+  min-height: 500px;
+}
+
+.interviews ul { 
+  list-style: none;
+  display: block;
+  height: 800px;
+}
+
+.interviews li {
+  display:block;
+  float:left;
+  padding: 0.8em;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  border: 3px solid #555765;
+  width: 250px;
+}
+
+.interviews li a {
+  color: #555765;
+  text-decoration: none;
+}
+
+
+.interviews li:nth-child(5n+0) { clear: left; }
