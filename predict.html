@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Predict - ¿Y tú?</title>
+		<title>Asilo en la UE - Predict - ¿Y tú?</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="web/assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -59,12 +59,12 @@
 						<!-- Content -->
 							<div class="wrapper">
 								<div class="inner">
-									
+
 									<section id="application">
 										<div class="intro-metodologia">
 											<h3 class="predict-intro">La probabilidad, expresada en forma de porcentaje, se refiere al año 2015, y está basada en los datos de los últimos siete años (2008-2014) publicados por Eurostat. <br>Si alguna opción está deshabilitada, es porque no existen datos para esa combinación.<h3>
 
-											
+
 										</div>
 										<!-- <h3 class="major">Form</h3> -->
 										<div id="application-input">
@@ -85,7 +85,7 @@
 												<option></option>
 											</select>
 										</div>
-										
+
 										<div id="application-output">
 											<h3 class="probability rm"></h3>
 											<h4 class="interes rm"></h4>
@@ -109,7 +109,7 @@
 				<!-- Footer -->
 					<section id="footer">
 						<div class="inner">
-							
+
 							<ul class="copyright">
 								<li>&copy; Untitled Inc. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 								<li>Refugiados-inmigrantes arrestados en el centro de detención de Filakio, Evros, Grecia. / By User:Ggia (Own work) [CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0)], via Wikimedia Commons.</li>
@@ -122,77 +122,96 @@
 
 		<!-- Scripts -->
 			<script src="web/assets/js/main.js"></script>
-			<!--  <script src="web/assets/js/form.js"></script> -->
 			<script src="web/assets/js/application.js"></script>
 
 			<script type="text/javascript">
 		    var appTable = new AppTable('#application-output');
-		    appTable.loadData();
+        appTable.loadData(function(){
+          d3.json('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/select_data.json', function(error, jsonData){
+            if (error) throw error;
 
-		    d3.json('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/select_data.json', function(error, jsonData){
-				  if (error) throw error;
+            var origin = jsonData.origin,
+                sex = jsonData.sex.map(function(d) { d.disabled = true; return d; }),
+                age = jsonData.age.map(function(d) { d.disabled = true; return d; }),
+                destiny = jsonData.destiny.map(function(d) { d.disabled = true; return d; });
 
-				  var origin = jsonData.origin,
-				      sex = jsonData.sex.map(function(d) { d.disabled = true; return d; }),
-				      age = jsonData.age.map(function(d) { d.disabled = true; return d; }),
-				      destiny = jsonData.destiny.map(function(d) { d.disabled = true; return d; });
+            appTable.originData = origin;
+            appTable.sexData = sex;
+            appTable.ageData = age;
+            appTable.destinyData = destiny;
 
-				  appTable.originData = origin;
-				  appTable.sexData = sex;
-				  appTable.ageData = age;
-				  appTable.destinyData = destiny;
+            if(window.location.hash !== ""){
+              var elements = window.location.hash.split('|');
+              appTable.setOrigin(elements[0].slice(1))
+              appTable.setSex(elements[1]);
+              appTable.setAge(elements[2]);
+              appTable.setDestiny(elements[3]);
 
-				  appTable.originRenderSelect();
-				  appTable.sexRenderSelect();
-				  appTable.ageRenderSelect();
-				  appTable.destinyRenderSelect();
+              appTable.enable('origin');
+              appTable.enable('sex');
+              appTable.enable('age');
+              appTable.enable('destiny');
+              document.title = "Asilo en la UE - Predict: Probabilidad de " + appTable.sex + " (" + appTable.age + " años) de conseguir asilo en " + appTable.destiny + " si vienen de " + appTable.origin;
+            } else {
+              appTable.originRenderSelect();
+              appTable.sexRenderSelect();
+              appTable.ageRenderSelect();
+              appTable.destinyRenderSelect();
+            }
 
-				});
+            if (appTable.renderable())
+              appTable.render();
 
-		    $(".select-origin").on("select2:select", function (e) {  
-			    appTable.origin = $('.select-origin :selected').text();
-			    appTable.sex = null;
-					appTable.age = null;
-					appTable.destiny = null;
+          });
 
-		    	appTable.enable('sex');
+          $(".select-origin").on("select2:select", function (e) {
+            appTable.setOrigin($('.select-origin :selected').text());
+            appTable.sex = null;
+            appTable.age = null;
+            appTable.destiny = null;
 
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
+            appTable.enable('sex');
 
-			  $(".select-sex").on("select2:select", function (e) {  
-			    appTable.sex = $('.select-sex :selected').text();
-			    appTable.age = null;
-					appTable.destiny = null;
-			    
-			    appTable.enable('age');
+            if (appTable.renderable()) {
+              appTable.render();
+              window.location.hash = [appTable.origin, appTable.sex, appTable.age, appTable.destiny].join('|');
+            }
+          });
 
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
+          $(".select-sex").on("select2:select", function (e) {
+            appTable.setSex($('.select-sex :selected').text());
+            appTable.age = null;
+            appTable.destiny = null;
 
-			  $(".select-age").on("select2:select", function (e) {  
-			    appTable.age = $('.select-age :selected').text();
-			    appTable.destiny = null;
-			    
-			  	appTable.enable('destiny');
+            appTable.enable('age');
 
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
+            if (appTable.renderable()) {
+              appTable.render();
+              window.location.hash = [appTable.origin, appTable.sex, appTable.age, appTable.destiny].join('|');
+            }
+          });
 
-			  $(".select-destiny").on("select2:select", function (e) {  
-			    appTable.destiny = $('.select-destiny :selected').text();
+          $(".select-age").on("select2:select", function (e) {
+            appTable.setAge($('.select-age :selected').text());
+            appTable.destiny = null;
 
-			    if (appTable.renderable()) {
-			    	appTable.render();
-			    }
-			  });
+            appTable.enable('destiny');
 
+            if (appTable.renderable()) {
+              appTable.render();
+              window.location.hash = [appTable.origin, appTable.sex, appTable.age, appTable.destiny].join('|');
+            }
+          });
+
+          $(".select-destiny").on("select2:select", function (e) {
+            appTable.setDestiny($('.select-destiny :selected').text());
+
+            if (appTable.renderable()) {
+              appTable.render();
+              window.location.hash = [appTable.origin, appTable.sex, appTable.age, appTable.destiny].join('|');
+            }
+          });
+        });
 		  </script>
 
 
@@ -206,7 +225,5 @@
 			  ga('send', 'pageview');
 
 			</script>
-			
-
 	</body>
 </html>

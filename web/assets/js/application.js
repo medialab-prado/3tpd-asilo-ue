@@ -3,18 +3,22 @@
 var AppTable = Class.extend({
   init: function(divId) {
     this.container = divId;
-    
+
     // Chart dimensions
     this.containerWidth = null;
     this.margin = {top: 20, right: 0, bottom: 20, left: 40};
     this.width = null;
     this.height = null;
-    
-    // Variable 
+
+    // Variable
     this.origin = null;
     this.sex = null;
     this.age = null;
     this.destiny = null;
+    this.originId = null;
+    this.sexId = null;
+    this.ageId = null;
+    this.destinyId = null;
 
     // Scales
     this.xScale = d3.scale.ordinal();
@@ -53,13 +57,27 @@ var AppTable = Class.extend({
     this.darkColor = '#B87570';
   },
 
-  originRenderSelect: function () {
+  originRenderSelect: function() {
     $(".select-origin").select2({
       placeholder: "Selecciona el país de origen",
       allowClear: true,
       dataType: 'json',
       data: this.originData
     });
+
+    if(this.originId !== null)
+      $('.select-origin').val(this.originId).change();
+  },
+  setOrigin: function(originValue){
+    var selected;
+    this.originData.map(function(d){ return d.children; }).forEach(function(collection){
+      collection.forEach(function(country){
+        if(country.text == originValue){
+          this.origin = country.text;
+          this.originId = country.id;
+        }
+      }.bind(this));
+    }.bind(this));
   },
   sexRenderSelect: function () {
     $(".select-sex").select2({
@@ -68,6 +86,16 @@ var AppTable = Class.extend({
       dataType: 'json',
       data: this.sexData
     });
+    if(this.sexId !== null)
+      $('.select-sex').val(this.sexId).change();
+  },
+  setSex: function(sexValue){
+    this.sexData.forEach(function(sex){
+      if(sex.text == sexValue){
+        this.sex = sex.text;
+        this.sexId = sex.id;
+      }
+    }.bind(this));
   },
   ageRenderSelect: function () {
     $(".select-age").select2({
@@ -76,6 +104,16 @@ var AppTable = Class.extend({
       dataType: 'json',
       data: this.ageData
     });
+    if(this.ageId !== null)
+      $('.select-age').val(this.ageId).change();
+  },
+  setAge: function(ageValue){
+    this.ageData.forEach(function(age){
+      if(age.text == ageValue){
+        this.age = age.text;
+        this.ageId = age.id;
+      }
+    }.bind(this));
   },
   destinyRenderSelect: function () {
     $(".select-destiny").select2({
@@ -90,9 +128,19 @@ var AppTable = Class.extend({
         );
       }
     });
+    if(this.destinyId !== null)
+      $('.select-destiny').val(this.destinyId).change();
+  },
+  setDestiny: function(destinyValue){
+    this.destinyData.forEach(function(destiny){
+      if(destiny.text == destinyValue){
+        this.destiny = destiny.text;
+        this.destinyId = destiny.id;
+      }
+    }.bind(this));
   },
 
-  loadData: function() {
+  loadData: function(callback) {
 
     // Chart dimensions
     this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
@@ -102,7 +150,7 @@ var AppTable = Class.extend({
     // Load the data
     d3.csv('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/predict2015_short_esp.csv', function(error, predictData){
       if (error) throw error;
-      
+
       this.data = predictData;
       this.data.forEach(function(d) {
         d.accepted_total = +d.accepted_total;
@@ -113,32 +161,36 @@ var AppTable = Class.extend({
 
       d3.csv('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/info_adicional.csv', function(error, auxData){
         if (error) throw error;
-        
+
         this.adicionalData = auxData;
         this.adicionalData.forEach(function(d) {
           d.pib_capita = +d.pib_capita;
           d.population = +d.population;
           d.rank_pib = +d.rank_pib;
           d.rank_unemployment = +d.rank_unemployment;
-          d.unemployment = +d.unemployment; 
+          d.unemployment = +d.unemployment;
         });
-      }.bind(this));   
-    }.bind(this)); 
+
+        if (callback && typeof(callback) === "function") {
+          callback();
+        }
+      }.bind(this));
+    }.bind(this));
   }, // end load data
 
-  enable: function (variable) { 
+  enable: function (variable) {
     // Reset nexts selects
     var index = this.allSelects.indexOf(variable);
     var selects2reset = this.allSelects.slice(index, this.allSelects.length);
 
-    selects2reset.forEach(function(d) { 
+    selects2reset.forEach(function(d) {
       eval('this.' + d + 'RenderSelect()')
     }.bind(this));
 
     // Build an array with the selects != null
     var selected = [];
 
-    this.allSelects.forEach(function(d) { 
+    this.allSelects.forEach(function(d) {
       if (this[d] != null) {
         selected.push(d)
       }
@@ -150,7 +202,7 @@ var AppTable = Class.extend({
     selected.forEach(function(d) {
       this.filteredData = this.filteredData.filter(function(v) { return v[d] == this[d]; }.bind(this));
     }.bind(this));
-    
+
     // Get the unique values
     var nest = d3.nest()
         .key(function(d) { return d[variable];})
@@ -158,19 +210,19 @@ var AppTable = Class.extend({
 
     var able = nest.map(function(d) { return d.key; })
 
-    eval('this.' + variable + 'Data').map(function(d) { 
+    eval('this.' + variable + 'Data').map(function(d) {
       if (able.indexOf(d.text) != -1) {
-        return d.disabled = false; 
+        return d.disabled = false;
       } else {
         return d.disabled = true;
       }
     }.bind(this));
 
-    eval('this.' + variable + 'RenderSelect()')
-    
+     eval('this.' + variable + 'RenderSelect()')
+
   },
 
-  renderable: function () { 
+  renderable: function () {
    return this.origin != null && this.sex != null && this.age != null && this.destiny != null;
 
   },
@@ -185,7 +237,7 @@ var AppTable = Class.extend({
 
     var likely = this.data.filter(function(d) { return d.sex == this.sex & d.origin == this.origin & d.age == this.age; }.bind(this));
     var max = d3.max(likely, function(d) { return d.predict2015; });
-    
+
     likely = likely.filter(function(d) { return d.predict2015 == max; })
 
     // Texts
@@ -245,7 +297,7 @@ var AppTable = Class.extend({
 
     var timeOut = this.duration/3
 
-    setTimeout(function(){ 
+    setTimeout(function(){
 
     d3.select(this.container)
       .append('h3')
@@ -282,7 +334,7 @@ var AppTable = Class.extend({
     .transition()
       .duration(this.duration/4)
       .style('opacity', 1)
-    
+
     tr.append('td')
       .attr('class', 'td_right')
       .style('opacity', 0)
