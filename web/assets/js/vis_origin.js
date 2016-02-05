@@ -134,7 +134,7 @@ var VisOrigin = Class.extend({
 
 
     // Load the data
-    d3.csv('web/data/vis_origin_data_v2.csv', function(error, csvData){
+    d3.csv('web/data/vis_origin_data.csv', function(error, csvData){
       if (error) throw error;
       
       // Map the data
