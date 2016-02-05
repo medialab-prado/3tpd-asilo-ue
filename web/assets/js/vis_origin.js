@@ -103,36 +103,7 @@ var VisOrigin = Class.extend({
 
   render: function(urlData) {
 
-    // // Chart dimensions
-    // this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
-    // this.width = (this.containerWidth) - this.margin.left - this.margin.right;
-    // this.height = (this.containerWidth / 3.7) - this.margin.top - this.margin.bottom;
-
-    // // this.axisWidth = parseInt(d3.select('#sex_chart_axis').style('width'), 10);
-
-    // // this.margin.left = d3.select(this.container)[0][0].getBoundingClientRect().left;
-
-    // // Append tooltip
-    // this.tooltip = d3.select('body').append('div')
-    //   .attr('class', 'vis_age_tooltip')
-    //   .style('opacity', 0);
-
-
-    // // Append svg
-    // this.svgOrigin = d3.select(this.container).append('svg')
-    //     .attr('width', this.width + this.margin.left + this.margin.right)
-    //     .attr('height', this.height + this.margin.top + this.margin.bottom)
-    //     .attr('class', 'svg_age')
-    //   .append('g')
-    //     .attr('transform', 'translate(' + 0 + ',' + this.margin.top + ')');
-
-    // // this.svgOriginAxis = d3.select('#sex_chart_axis').append('svg')
-    // //     .attr('width', this.axisWidth)
-    // //     .attr('height', this.height + this.margin.top + this.margin.bottom)
-    // //   .append('g')
-    // //     .attr('transform', 'translate(' + (this.margin.left / 2)+ ',' + this.margin.top + ')');
-
-
+   
     // Load the data
     d3.csv('web/data/vis_origin_data.csv', function(error, csvData){
       if (error) throw error;
