@@ -63,12 +63,11 @@ var VisOrigin = Class.extend({
     this.selectedColor = null;
   },
 
-  loadData: function() {
+  setDimensions: function() {
     // Chart dimensions
     this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
     this.width = (this.containerWidth) - this.margin.left - this.margin.right;
-    this.height = (this.containerWidth / 3.3) - this.margin.top - this.margin.bottom;
-
+    this.height = (this.containerWidth / 4) - this.margin.top - this.margin.bottom;
 
     // Append tooltip
     this.tooltip = d3.select('body').append('div')
@@ -102,45 +101,12 @@ var VisOrigin = Class.extend({
 
 
   render: function(urlData) {
-
-    // // Chart dimensions
-    // this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
-    // this.width = (this.containerWidth) - this.margin.left - this.margin.right;
-    // this.height = (this.containerWidth / 3.7) - this.margin.top - this.margin.bottom;
-
-    // // this.axisWidth = parseInt(d3.select('#sex_chart_axis').style('width'), 10);
-
-    // // this.margin.left = d3.select(this.container)[0][0].getBoundingClientRect().left;
-
-    // // Append tooltip
-    // this.tooltip = d3.select('body').append('div')
-    //   .attr('class', 'vis_age_tooltip')
-    //   .style('opacity', 0);
-
-
-    // // Append svg
-    // this.svgOrigin = d3.select(this.container).append('svg')
-    //     .attr('width', this.width + this.margin.left + this.margin.right)
-    //     .attr('height', this.height + this.margin.top + this.margin.bottom)
-    //     .attr('class', 'svg_age')
-    //   .append('g')
-    //     .attr('transform', 'translate(' + 0 + ',' + this.margin.top + ')');
-
-    // // this.svgOriginAxis = d3.select('#sex_chart_axis').append('svg')
-    // //     .attr('width', this.axisWidth)
-    // //     .attr('height', this.height + this.margin.top + this.margin.bottom)
-    // //   .append('g')
-    // //     .attr('transform', 'translate(' + (this.margin.left / 2)+ ',' + this.margin.top + ')');
-
-
     // Load the data
-    d3.csv('web/data/vis_origin_data.csv', function(error, csvData){
+    d3.csv(urlData, function(error, csvData){
       if (error) throw error;
       
       // Map the data
       this.dataChart = csvData;
-
-      console.log(this.dataChart)
 
       // Filter the accepted_per != NaN
       this.dataChart = this.dataChart.filter(function(d) { return d.win != "NA"; })
@@ -195,13 +161,17 @@ var VisOrigin = Class.extend({
         .domain(this.countries)
         .rangeRoundBands([this.margin.left, (this.width - this.margin.right)], .2);
       
+      // Set yScale height based on xScale rangebands
+      var yScaleHeight = (this.years.length * this.xScale.rangeBand()) / .8;
+
       this.yScale
         .domain(this.years)
-        .rangeRoundBands([this.height, 0], .2);
+        .rangeRoundBands([yScaleHeight, 0], .2);
       
       this.colorScale
         .domain(this.origins);
       
+
       // Define the axis 
       this.xAxis
           .scale(this.xScale)
@@ -263,10 +233,8 @@ var VisOrigin = Class.extend({
   }, // end render
 
   renderTotals: function(urlData) {
-    
 
-      
-    d3.csv('web/data/vis_origin_data_v2.csv', function(error, csvData){
+    d3.csv(urlData, function(error, csvData){
       if (error) throw error;
 
       // Map the data
