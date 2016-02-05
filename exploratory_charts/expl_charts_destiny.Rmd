@@ -17,7 +17,7 @@ library(reshape2)
 library(gridExtra)
 library(scales)
 
-decisions <- read_csv('data/decisions_v2_comp_decod.csv', col_names = T)
+decisions <- read_csv('data/decisions_v2_comp_decod.csv', col_names = T, col_types = 'ccccciiicccccccccc')
 ```
 
 ### 1. Volumen de solicitudes por país.
