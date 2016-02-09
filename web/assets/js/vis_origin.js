@@ -16,7 +16,8 @@ var VisOrigin = Class.extend({
     this.xScaleTotals = d3.scale.ordinal();
     this.yScaleTotals = d3.scale.ordinal();
     this.yScale = d3.scale.ordinal();
-    this.colorScale = d3.scale.ordinal().range(['#ECD078', '#FBCE34', '#FB9A02', '#D05253', '#BA1C1B', '#6FAA71', '#C86700', '#3A7343', '#C68E26', '#700404']);
+    this.colorScale = d3.scale.ordinal().range(['#ECD078', '#FBCE34', '#FB9A02', '#C68E26', '#C86700', '#6FAA71', '#3A7343', '#D05253', '#BA1C1B', '#700404']);
+                                                
     // this.colorScale = d3.scale.ordinal().range(['#92E98E', '#5CBF88', '#34937A', '#1D6963', '#14474A', '#686868']);
                                                 // ['Siria', 'Afganistán', 'Iraq',   'Rusia',   'Serbia',   'Somalia','Pakistán', 'Nigeria', 'Irán',    'Kosovo']
     // Axis
@@ -111,11 +112,10 @@ var VisOrigin = Class.extend({
       // Map the data
       this.dataChart = csvData;
 
-      console.log(this.dataChart)
-
       // Filter the accepted_per != NaN
       this.dataChart = this.dataChart.filter(function(d) { return d.win != "NA"; })
 
+      console.log(this.dataChart)
       this.dataChart.forEach(function(d) { 
         // d.year = this.parseDate(d.year);
         d.Afganistán = +d.Afganistán;
@@ -153,7 +153,7 @@ var VisOrigin = Class.extend({
         .entries(this.dataChart)
         .map(function(d) { return d.key; });
 
-      this.origins = ['Siria', 'Afganistán', 'Iraq', 'Rusia', 'Serbia', 'Somalia', 'Pakistán', 'Nigeria', 'Irán', 'Kosovo']
+      this.origins = ['Siria', 'Afganistán', 'Iraq', 'Irán', 'Pakistán', 'Somalia', 'Nigeria', 'Rusia', 'Serbia', 'Kosovo'];
       
       this.years = d3.nest()
         .key(function(d) { return d.year;})
