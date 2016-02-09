@@ -166,9 +166,11 @@ var VisOrigin = Class.extend({
         .domain(this.countries)
         .rangeRoundBands([this.margin.left, (this.width - this.margin.right)], .2);
       
+      var yScaleHeight = (this.years.length * (((this.width - this.margin.right)) - this.margin.left)) / this.countries.length
+
       this.yScale
         .domain(this.years)
-        .rangeRoundBands([this.height, 0], .2);
+        .rangeRoundBands([yScaleHeight, 0], .2);
       
       this.colorScale
         .domain(this.origins);
@@ -203,7 +205,7 @@ var VisOrigin = Class.extend({
       // --> DRAW THE AXIS
       this.svgOrigin.append("g")
           .attr("class", "x axis")
-          .attr("transform", "translate(" + 0 + "," + this.height + ")")
+          .attr("transform", "translate(" + 0 + "," + yScaleHeight + ")")
           .call(this.xAxis)
         .selectAll("text")
           .attr("y", 0)
