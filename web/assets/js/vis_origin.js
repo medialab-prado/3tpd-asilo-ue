@@ -191,7 +191,7 @@ var VisOrigin = Class.extend({
         .data(this.dataChart)
         .enter()
       .append('rect')
-        .attr('class', function(d) { return 'origin-bar ' + this._normalize(d.win); }.bind(this))
+        .attr('class', function(d) { return 'origin-bar ' + this._normalize(d.win) + ' ' + this._normalize(d.destiny); }.bind(this))
         .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
         .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
         .attr('width', this.xScale.rangeBand())
@@ -206,6 +206,7 @@ var VisOrigin = Class.extend({
           .attr("transform", "translate(" + 0 + "," + yScaleHeight + ")")
           .call(this.xAxis)
         .selectAll("text")
+          .attr('class', function(d) { return this._normalize(d); }.bind(this))
           .attr("y", 0)
           .attr("x", 9)
           .attr("dx", "-.85em")
@@ -372,6 +373,7 @@ var VisOrigin = Class.extend({
 
     this.selectedColor = d3.select(selected).style('fill')
 
+    // Get the text for the tooltip
     var texts = [];
     for (var i = 0; i < this.origins.length; i++) {
       if (!isNaN(selectedData[this.origins[i]])) {
@@ -391,10 +393,17 @@ var VisOrigin = Class.extend({
    
     // Hightlight selected
     d3.select(selected)
+      .style('stroke', d3.rgb(this.selectedColor).darker())
       .transition()
-      .duration(this.duration / 2)
-      .style('fill', d3.rgb(this.selectedColor).darker());
+      .duration(this.duration / 4)
+      .style('stroke-width', '3px');
     
+    // Highlight legend & axis
+    d3.selectAll('.x.axis').select('text.' + selectedClass[2])
+      .style('fill', 'black')
+      .style('font-weight', 600);
+
+    // Show tooltip
     this.tooltip
         .transition()
         .duration(this.duration / 4)
@@ -415,8 +424,13 @@ var VisOrigin = Class.extend({
     // UN - Hightlight selected
     d3.select(selected)
       .transition()
-      .duration(this.duration / 2)
-      .style('fill', this.selectedColor)
+      .duration(this.duration / 4)
+      .style('stroke', 'none')
+
+    // UN - Highlight legend & axis
+    d3.selectAll('.x.axis').select('text.' + selectedClass[2])
+      .style('fill', '#7C8388')
+      .style('font-weight', 300);
     
     this.tooltip
         .transition()
