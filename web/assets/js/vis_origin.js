@@ -18,7 +18,7 @@ var VisOrigin = Class.extend({
     this.yScale = d3.scale.ordinal();
     this.colorScale = d3.scale.ordinal().range(['#ECD078', '#FBCE34', '#FB9A02', '#C68E26', '#C86700', '#6FAA71', '#3A7343', '#D05253', '#BA1C1B', '#700404']);
                                                 
-    // this.colorScale = d3.scale.ordinal().range(['#92E98E', '#5CBF88', '#34937A', '#1D6963', '#14474A', '#686868']);
+    // this.colorScale = d3.scale.ordinal().range(['#F9CE4A', '#F5A71A', '#EF8D19', '#C47413', '#FADE8A','#B6CA0A', '#7A9B02', '#e95b46', '#e4001e', '#ba0006']);
                                                 // ['Siria', 'Afganistán', 'Iraq',   'Rusia',   'Serbia',   'Somalia','Pakistán', 'Nigeria', 'Irán',    'Kosovo']
     // Axis
     this.xAxis = d3.svg.axis();
