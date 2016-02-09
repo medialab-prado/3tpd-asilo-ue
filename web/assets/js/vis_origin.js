@@ -73,7 +73,7 @@ var VisOrigin = Class.extend({
 
     // Append tooltip
     this.tooltip = d3.select('body').append('div')
-      .attr('class', 'vis_age_tooltip tooltip')
+      .attr('class', 'vis_origin_tooltip tooltip')
       .style('opacity', 0);
 
 
@@ -112,10 +112,9 @@ var VisOrigin = Class.extend({
       // Map the data
       this.dataChart = csvData;
 
-      // Filter the accepted_per != NaN
+      // Filter the accepted_per != NA
       this.dataChart = this.dataChart.filter(function(d) { return d.win != "NA"; })
 
-      console.log(this.dataChart)
       this.dataChart.forEach(function(d) { 
         // d.year = this.parseDate(d.year);
         d.Afganistán = +d.Afganistán;
@@ -131,7 +130,6 @@ var VisOrigin = Class.extend({
         d.total_country = +d.total_country;
         d.dif = +d.dif;
       }.bind(this));
-
       
 
       this.dataCountryTotals = d3.nest()
@@ -146,7 +144,7 @@ var VisOrigin = Class.extend({
           .thenBy('year', -1)
       );
 
-      // Get the unique countries and unique sex
+      // Get the unique countries, origins and years.
       
       this.countries = d3.nest()
         .key(function(d) { return d.destiny;})
@@ -376,13 +374,19 @@ var VisOrigin = Class.extend({
 
     var texts = [];
     for (var i = 0; i < this.origins.length; i++) {
-      var a = this.origins[i] + ': <strong>' + this.formatPercent(selectedData[this.origins[i]]) + '</strong><br>'
-      texts.push(a)
+      if (!isNaN(selectedData[this.origins[i]])) {
+        var a = this.origins[i] + ': <strong>' + this.formatPercent(selectedData[this.origins[i]]) + '</strong><br>'
+        texts.push(a)
+      }
     }
+    
+    var textValues = '';
+    texts.forEach(function(text) { 
+      textValues = textValues + text;
+    });
 
     var text = '<strong>' + selectedData.destiny + '</strong> - ' + selectedData.year + '<br>' +
-      'a favor de: <strong>' + selectedData.win + '</strong><br>' +
-      texts[0] + texts[1] + texts[2] + texts[3] + texts[4] + texts[5]
+      'a favor de: <strong>' + selectedData.win + '</strong><br>' + textValues
 
    
     // Hightlight selected
