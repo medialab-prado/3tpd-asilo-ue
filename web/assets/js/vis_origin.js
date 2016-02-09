@@ -149,7 +149,7 @@ var VisOrigin = Class.extend({
       // Get the unique countries and unique sex
       
       this.countries = d3.nest()
-        .key(function(d) { return d.destiny_code;})
+        .key(function(d) { return d.destiny;})
         .entries(this.dataChart)
         .map(function(d) { return d.key; });
 
@@ -192,7 +192,7 @@ var VisOrigin = Class.extend({
         .enter()
       .append('rect')
         .attr('class', function(d) { return 'origin-bar ' + this._normalize(d.win); }.bind(this))
-        .attr('x', function(d) { return this.xScale(d.destiny_code); }.bind(this))
+        .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
         .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
         .attr('width', this.xScale.rangeBand())
         .attr('height', this.yScale.rangeBand())
@@ -204,7 +204,14 @@ var VisOrigin = Class.extend({
       this.svgOrigin.append("g")
           .attr("class", "x axis")
           .attr("transform", "translate(" + 0 + "," + this.height + ")")
-          .call(this.xAxis);
+          .call(this.xAxis)
+        .selectAll("text")
+          .attr("y", 0)
+          .attr("x", 9)
+          .attr("dx", "-.85em")
+          .attr("dy", ".25em")
+          .attr("transform", "rotate(-45)")
+          .style("text-anchor", "end");
 
       this.svgOrigin.append("g")
           .attr("class", "y axis")
