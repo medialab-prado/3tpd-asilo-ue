@@ -229,14 +229,17 @@ var VisOrigin = Class.extend({
         .shapeWidth(this.xScale.rangeBand() * 0.7)
         .shapeHeight(this.yScale.rangeBand() * 0.7)
         .shapePadding(5)
-        .scale(this.colorScale)
-        // .title('Diferencia a favor de...')
+        .scale(this.colorScale);
 
       d3.select(".legend_origin")
         .call(this.legendOrigin);
 
-      this.svgOrigin.selectAll('.legendTitle')
-        .style('font-weight', 600);
+      this.svgOrigin.selectAll('.label')
+          .attr('class', function(d) { return 'legend label ' + this._normalize(d); }.bind(this));
+
+      this.svgOrigin.selectAll('.swatch')
+          .attr('class', function(d) { return 'legend swatch ' + this._normalize(d); }.bind(this));
+
 
     }.bind(this)); // end load data
   }, // end render
@@ -399,6 +402,16 @@ var VisOrigin = Class.extend({
       .style('stroke-width', '3px');
     
     // Highlight legend & axis
+    d3.selectAll('.legend.label.' + selectedClass[1])
+      .style('fill', 'black')
+      .style('font-weight', 600); 
+
+    d3.selectAll('.legend.swatch.' + selectedClass[1])
+      .style('stroke', d3.rgb(this.selectedColor).darker())
+      .transition()
+      .duration(this.duration / 4)
+      .style('stroke-width', '3px');
+
     d3.selectAll('.x.axis').select('text.' + selectedClass[2])
       .style('fill', 'black')
       .style('font-weight', 600);
@@ -425,9 +438,18 @@ var VisOrigin = Class.extend({
     d3.select(selected)
       .transition()
       .duration(this.duration / 4)
-      .style('stroke', 'none')
+      .style('stroke', 'none');
 
     // UN - Highlight legend & axis
+    d3.selectAll('.legend.label.' + selectedClass[1])
+      .style('fill', '#7C8388')
+      .style('font-weight', 300);
+
+    d3.selectAll('.legend.swatch.' + selectedClass[1])
+      .transition()
+      .duration(this.duration / 4)
+      .style('stroke', 'none');
+
     d3.selectAll('.x.axis').select('text.' + selectedClass[2])
       .style('fill', '#7C8388')
       .style('font-weight', 300);
