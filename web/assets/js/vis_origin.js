@@ -52,7 +52,7 @@ var VisOrigin = Class.extend({
     // Constant values
     this.radius = 6;
     this.opacity = .9;
-    this.opacityLow = .02;
+    this.opacityLow = .5;
     this.duration = 1500;
     this.niceCategory = null;
     this.heavyLine = 5;
@@ -103,8 +103,6 @@ var VisOrigin = Class.extend({
 
 
   render: function(urlData) {
-
-   
     // Load the data
     d3.csv(urlData, function(error, csvData){
       if (error) throw error;
@@ -235,18 +233,38 @@ var VisOrigin = Class.extend({
         .call(this.legendOrigin);
 
       this.svgOrigin.selectAll('.label')
-          .attr('class', function(d) { return 'legend label ' + this._normalize(d); }.bind(this));
+          .attr('class', function(d) { return 'legend label ' + this._normalize(d); }.bind(this))
+          .on('mouseover', function(d) { 
+            var selectedClass = d3.event.target.classList;
+            d3.selectAll('.' + selectedClass[0] + '.' + selectedClass[2])
+              .style('cursor', 'pointer')
+              .style('opacity', this.opacityLow);
+          }.bind(this))
+          .on('mouseout', function(d) { 
+            var selectedClass = d3.event.target.classList;
+            d3.selectAll('.' + selectedClass[0] + '.' + selectedClass[2])
+              .style('opacity', 1);
+          }.bind(this))
+          .on('click', this._clickLegend.bind(this));
 
       this.svgOrigin.selectAll('.swatch')
-          .attr('class', function(d) { return 'legend swatch ' + this._normalize(d); }.bind(this));
-
-
+          .attr('class', function(d) { return 'legend swatch ' + this._normalize(d); }.bind(this))
+          .on('mouseover', function(d) { 
+            var selectedClass = d3.event.target.classList;
+            d3.selectAll('.' + selectedClass[0] + '.' + selectedClass[2])
+              .style('cursor', 'pointer')
+              .style('opacity', this.opacityLow);
+          }.bind(this))
+          .on('mouseout', function(d) { 
+            var selectedClass = d3.event.target.classList;
+            d3.selectAll('.' + selectedClass[0] + '.' + selectedClass[2])
+              .style('opacity', 1);
+          }.bind(this))
+          .on('click', this._clickLegend.bind(this));
     }.bind(this)); // end load data
   }, // end render
 
   renderTotals: function(urlData) {
-    
-
       
     d3.csv(urlData, function(error, csvData){
       if (error) throw error;
@@ -374,7 +392,7 @@ var VisOrigin = Class.extend({
         selectedClass = selected.classList,
         selectedData = d3.select(selected).data()[0];
 
-    this.selectedColor = d3.select(selected).style('fill')
+    this.selectedColor = d3.select(selected).style('fill');
 
     // Get the text for the tooltip
     var texts = [];
@@ -458,6 +476,54 @@ var VisOrigin = Class.extend({
         .transition()
         .duration(this.duration / 4)
         .style('opacity', 0);
+  },
+
+  _clickLegend: function () {
+    var selected = d3.event.target,
+        selectedClass = selected.classList,
+        selectedData = d3.select(selected).data()[0];
+
+    this.selectedColor = d3.select('.swatch.' + selectedClass[2]).style('fill');
+
+    if (!selectedClass.contains('selected')) {
+    
+      // Apply selected class
+      d3.selectAll('.legend.' + selectedClass[2])
+        .classed('selected', true)
+        .style('opacity', 1);
+
+      if (selectedClass.contains('swatch')) {
+        d3.select(selected)
+          .style('stroke', d3.rgb(this.selectedColor).darker())
+          .transition()
+          .duration(this.duration / 4)
+          .style('stroke-width', '3px');
+      } else {
+        d3.selectAll('.swatch.' + selectedClass[2])
+          .style('stroke', d3.rgb(this.selectedColor).darker())
+          .transition()
+          .duration(this.duration / 4)
+          .style('stroke-width', '3px');
+      }
+        
+      // Hilight all the same class squares
+      d3.selectAll('.origin-bar.' + selectedClass[2])
+        .style('stroke', d3.rgb(this.selectedColor).darker())
+        .transition()
+        .duration(this.duration / 4)
+        .style('stroke-width', '3px');
+
+    } else {
+      d3.selectAll('.legend.' + selectedClass[2])
+        .classed('selected', false)
+        .style('opacity', 1);
+
+      d3.selectAll('.' + selectedClass[2])
+        .transition()
+        .duration(this.duration / 4)
+        .style('stroke', 'none');
+    }
+
   },
 
   _normalize: (function() {
