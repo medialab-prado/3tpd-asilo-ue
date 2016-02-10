@@ -187,7 +187,7 @@
 
 		  var visOrigin = new VisOrigin('#origin_chart');
 		  visOrigin.loadData();
-		  visOrigin.render();
+		  visOrigin.render('web/data/vis_origin_data.csv');
 		  // visOrigin.renderTotals();
 
 		  d3.selectAll('.origin.button')
@@ -214,7 +214,7 @@
 	          .transition()
 	          .remove()
 	          
-	          selectedId == 'pais' ? visOrigin.render() : visOrigin.renderTotals()
+	          selectedId == 'pais' ? visOrigin.render('web/data/vis_origin_data.csv') : visOrigin.renderTotals('web/data/vis_origin_data.csv')
 	        }.bind(visOrigin));
       });
 

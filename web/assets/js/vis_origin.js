@@ -106,7 +106,7 @@ var VisOrigin = Class.extend({
 
    
     // Load the data
-    d3.csv('web/data/vis_origin_data.csv', function(error, csvData){
+    d3.csv(urlData, function(error, csvData){
       if (error) throw error;
       
       // Map the data
@@ -245,7 +245,7 @@ var VisOrigin = Class.extend({
     
 
       
-    d3.csv('web/data/vis_origin_data_v2.csv', function(error, csvData){
+    d3.csv(urlData, function(error, csvData){
       if (error) throw error;
 
       // Map the data
@@ -341,7 +341,7 @@ var VisOrigin = Class.extend({
         .data(this.dataTotals)
         .enter().append('text')
             .attr('class', 'label ')
-            .attr('x', function(d) { console.log(d.values.length);return this.xScaleTotals((d.values.length - 1).toString()) + this.margin.left; }.bind(this))
+            .attr('x', function(d) { return this.xScaleTotals((d.values.length - 1).toString()) + this.margin.left; }.bind(this))
             .attr('y', function(d) { return this.yScaleTotals(d.key) + (this.yScaleTotals.rangeBand()/1.5); }.bind(this))
             .attr('dx', 15)
             .attr('dy', 2)
