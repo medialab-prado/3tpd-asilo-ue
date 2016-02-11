@@ -273,6 +273,9 @@ var VisSquares = Class.extend({
     this.measure = measure; 
 
     var svg = d3.select('.svg_' + this.measure);
+    svg.selectAll('.square')
+        .on('mouseover', null)
+        .on('mouseout', null);
 
     // Actualizar colorScale
     if (this.measure == 'origin') {
@@ -309,6 +312,11 @@ var VisSquares = Class.extend({
           .transition()
           .duration(this.duration)
           .attr('x', function(d, i) { return this.xScale(i); }.bind(this))
+          .each('end', function() { 
+            svg.selectAll('.square')
+              .on('mouseover', this._mouseoverRender.bind(this))
+              .on('mouseout', this._mouseoutRender.bind(this));
+          }.bind(this));
       }.bind(this));    
     } else {
 
@@ -323,9 +331,15 @@ var VisSquares = Class.extend({
 
       // Squares position
       svg.selectAll('.square')
-          .transition()
+        .transition()
           .duration(this.duration)
           .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
+          .each('end', function() { 
+            svg.selectAll('.square')
+              .on('mouseover', this._mouseoverRender.bind(this))
+              .on('mouseout', this._mouseoutRender.bind(this));
+          }.bind(this));
+
     }
   }, 
 
