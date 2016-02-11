@@ -145,13 +145,23 @@
 
 									<p>Tradicionalmente, los hombres han sido el sexo mayoritario a la hora de pedir asilo, dado que también eran tradicionalmente los que emigraban en primer lugar a otros países. No obstante, esto ha cambiado en los últimos años, desde que se comenzaron a resolver las solicitudes de nacionales sirios. Desde 2013, pero sobre todo, en 2014 y 2015, ha aumentado el número de mujeres solicitantes de asilo, porque el perfil de personas de Siria son básicamente grupos familiares. </p>
 									
-									<h3 style="color: #36394A">Sexo con mayor proporción de solicitudes aceptadas</h3>
+<!-- 									<h3 style="color: #36394A">Sexo con mayor proporción de solicitudes aceptadas</h3>
 									<div id="sex_chart" class="chart">
 
 										<div id="sex_chart_legend"></div>
 										<div id="sex_chart_axis"></div>
 										<div id="sex_chart_bars"></div>
+									</div> -->
+
+									<div id="sex_chart" class="chart">
+										<h3>¿Qué edad tiene mayor porcentaje de solicitudes aceptadas?</h3>
+
 									</div>
+									<ul id="measure_selector" class="measure buttons">
+						           <li><a href="javascript:void(null)" id="pais" class ="sex button buttonSelected">Por año ~ país</a></li><!--
+						        --><li><a href="javascript:void(null)" id="total" class ="sex button">Totales</a></li>
+						      </ul>
+
 
 									<p>Las mujeres tienen más probabilidad de ser aceptadas, pero por porcentajes muy pequeños que generalmente no alcanzan el 10%. </p>
 
@@ -177,18 +187,17 @@
 
 		<!-- Scripts -->
 		<script src="web/assets/js/vis_general.js"></script>
-		<script src="web/assets/js/vis_origin.js"></script>
-		<script src="web/assets/js/vis_sex.js"></script>
-		<script src="web/assets/js/vis_age.js"></script>
+		<script src="web/assets/js/vis_squares.js"></script>
+		<!--<script src="web/assets/js/vis_sex.js"></script>
+		<script src="web/assets/js/vis_age.js"></script>-->
 
 		<script type="text/javascript">
 			var visGeneral = new VisGeneral('#general_chart_lines');
 		  visGeneral.render();
 
-		  var visOrigin = new VisOrigin('#origin_chart');
-		  visOrigin.loadData();
-		  visOrigin.render('web/data/vis_origin_data.csv');
-		  // visOrigin.renderTotals();
+		  var visSquares = new VisSquares('#origin_chart', 'origin');
+		  visSquares.loadData();
+		  visSquares.render('web/data/vis_origin_data.csv');
 
 		  d3.selectAll('.origin.button')
       	.on('click', function(d) {
@@ -196,7 +205,7 @@
         	d3.select(this).classed("buttonSelected", true);
         	var selectedId = this.id;
         
-        	visOrigin.updateRender(this.id)
+        	visSquares.updateRender(this.id)
 
 
       	// visOrigin.svgOrigin
@@ -219,39 +228,65 @@
 	      //     selectedId == 'pais' ? visOrigin.render('web/data/vis_origin_data.csv') : visOrigin.renderTotals('web/data/vis_origin_data.csv')
 	      //   }.bind(visOrigin));
       });
+		
 
-
-		  var visAge = new VisAge('#age_chart');
-		  visAge.loadData();
-		  visAge.render();
-		  // visAge.renderTotals();
+			var visSquares = new VisSquares('#age_chart', 'age');
+		  visSquares.loadData();
+		  visSquares.render('web/data/vis_age_data.csv');
 
 		  d3.selectAll('.age.button')
-      .on('click', function(d) {
-        d3.selectAll(".age.button.buttonSelected").classed("buttonSelected", false);
-        d3.select(this).classed("buttonSelected", true);
-        var selectedId = this.id;
+      	.on('click', function(d) {
+       		d3.selectAll(".origin.button.buttonSelected").classed("buttonSelected", false);
+        	d3.select(this).classed("buttonSelected", true);
+        	var selectedId = this.id;
+        
+        	visSquares.updateRender(this.id)
+			});
 
-      	visAge.svgAge
-	        .append('g:rect')
-	        .attr('x', 0)
-	        .attr('y', 0)
-	        .attr('width', visAge.width + visAge.margin.right + visAge.margin.left)
-	        .attr('height', visAge.height + visAge.margin.bottom)
-	        .style('fill', '#D7D9DC')
-	        .style('opacity', 0)
-	      .transition()
-	        .duration(visAge.duration/2)
-	        .style('opacity', 1)
-	        .each('end', function(d) { 
-	          visAge.svgAge
-	              .selectAll('g')
-	          .transition()
-	          .remove()
+      var visSquares = new VisSquares('#sex_chart', 'sex');
+		  visSquares.loadData();
+		  visSquares.render('web/data/vis_sex_data.csv');
+
+		  d3.selectAll('.sex.button')
+      	.on('click', function(d) {
+       		d3.selectAll(".origin.button.buttonSelected").classed("buttonSelected", false);
+        	d3.select(this).classed("buttonSelected", true);
+        	var selectedId = this.id;
+        
+        	visSquares.updateRender(this.id)
+			});
+
+		  // var visAge = new VisAge('#age_chart');
+		  // visAge.loadData();
+		  // visAge.render();
+		  // // visAge.renderTotals();
+
+		  // d3.selectAll('.age.button')
+    //   .on('click', function(d) {
+    //     d3.selectAll(".age.button.buttonSelected").classed("buttonSelected", false);
+    //     d3.select(this).classed("buttonSelected", true);
+    //     var selectedId = this.id;
+
+    //   	visAge.svgAge
+	   //      .append('g:rect')
+	   //      .attr('x', 0)
+	   //      .attr('y', 0)
+	   //      .attr('width', visAge.width + visAge.margin.right + visAge.margin.left)
+	   //      .attr('height', visAge.height + visAge.margin.bottom)
+	   //      .style('fill', '#D7D9DC')
+	   //      .style('opacity', 0)
+	   //    .transition()
+	   //      .duration(visAge.duration/2)
+	   //      .style('opacity', 1)
+	   //      .each('end', function(d) { 
+	   //        visAge.svgAge
+	   //            .selectAll('g')
+	   //        .transition()
+	   //        .remove()
 	          
-	          selectedId == 'pais' ? visAge.render() : visAge.renderTotals()
-	        }.bind(visAge));
-      });
+	   //        selectedId == 'pais' ? visAge.render() : visAge.renderTotals()
+	   //      }.bind(visAge));
+    //   });
 			
 
 			// var visSex = new VisSex('#sex_chart_bars');
