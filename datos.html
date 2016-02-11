@@ -192,9 +192,12 @@
 		<script src="web/assets/js/vis_age.js"></script>-->
 
 		<script type="text/javascript">
+			
+			//----> GENERAL
 			var visGeneral = new VisGeneral('#general_chart_lines');
 		  visGeneral.render();
 
+		  //----> ORIGIN
 		  var visSquares = new VisSquares('#origin_chart', 'origin');
 		  visSquares.loadData();
 		  visSquares.render('web/data/vis_origin_data.csv');
@@ -205,31 +208,10 @@
         	d3.select(this).classed("buttonSelected", true);
         	var selectedId = this.id;
         
-        	visSquares.updateRender(this.id)
-
-
-      	// visOrigin.svgOrigin
-	      //   .append('g:rect')
-	      //   .attr('x', 0)
-	      //   .attr('y', 0)
-	      //   .attr('width', visOrigin.width + visOrigin.margin.right + visOrigin.margin.left)
-	      //   .attr('height', visOrigin.height + visOrigin.margin.bottom + visOrigin.margin.top)
-	      //   .style('fill', '#D7D9DC')
-	      //   .style('opacity', 0)
-	      // .transition()
-	      //   .duration(visOrigin.duration/2)
-	      //   .style('opacity', 1)
-	      //   .each('end', function(d) { 
-	      //     visOrigin.svgOrigin
-	      //         .selectAll('g')
-	      //     .transition()
-	      //     .remove()
-	          
-	      //     selectedId == 'pais' ? visOrigin.render('web/data/vis_origin_data.csv') : visOrigin.renderTotals('web/data/vis_origin_data.csv')
-	      //   }.bind(visOrigin));
+        	visSquares.updateRender(this.id, 'origin')
       });
 		
-
+			//----> AGE
 			var visSquares = new VisSquares('#age_chart', 'age');
 		  visSquares.loadData();
 		  visSquares.render('web/data/vis_age_data.csv');
@@ -240,9 +222,11 @@
         	d3.select(this).classed("buttonSelected", true);
         	var selectedId = this.id;
         
-        	visSquares.updateRender(this.id)
+        	visSquares.updateRender(this.id, 'age')
 			});
 
+
+      //----> SEX
       var visSquares = new VisSquares('#sex_chart', 'sex');
 		  visSquares.loadData();
 		  visSquares.render('web/data/vis_sex_data.csv');
@@ -253,44 +237,8 @@
         	d3.select(this).classed("buttonSelected", true);
         	var selectedId = this.id;
         
-        	visSquares.updateRender(this.id)
+        	visSquares.updateRender(this.id, 'sex')
 			});
-
-		  // var visAge = new VisAge('#age_chart');
-		  // visAge.loadData();
-		  // visAge.render();
-		  // // visAge.renderTotals();
-
-		  // d3.selectAll('.age.button')
-    //   .on('click', function(d) {
-    //     d3.selectAll(".age.button.buttonSelected").classed("buttonSelected", false);
-    //     d3.select(this).classed("buttonSelected", true);
-    //     var selectedId = this.id;
-
-    //   	visAge.svgAge
-	   //      .append('g:rect')
-	   //      .attr('x', 0)
-	   //      .attr('y', 0)
-	   //      .attr('width', visAge.width + visAge.margin.right + visAge.margin.left)
-	   //      .attr('height', visAge.height + visAge.margin.bottom)
-	   //      .style('fill', '#D7D9DC')
-	   //      .style('opacity', 0)
-	   //    .transition()
-	   //      .duration(visAge.duration/2)
-	   //      .style('opacity', 1)
-	   //      .each('end', function(d) { 
-	   //        visAge.svgAge
-	   //            .selectAll('g')
-	   //        .transition()
-	   //        .remove()
-	          
-	   //        selectedId == 'pais' ? visAge.render() : visAge.renderTotals()
-	   //      }.bind(visAge));
-    //   });
-			
-
-			// var visSex = new VisSex('#sex_chart_bars');
-		 //  visSex.render();
 
 		</script>
 
