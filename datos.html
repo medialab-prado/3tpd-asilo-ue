@@ -191,31 +191,33 @@
 		  // visOrigin.renderTotals();
 
 		  d3.selectAll('.origin.button')
-      .on('click', function(d) {
-        d3.selectAll(".origin.button.buttonSelected").classed("buttonSelected", false);
-        d3.select(this).classed("buttonSelected", true);
-        var selectedId = this.id;
-        console.log(this.id)
+      	.on('click', function(d) {
+       		d3.selectAll(".origin.button.buttonSelected").classed("buttonSelected", false);
+        	d3.select(this).classed("buttonSelected", true);
+        	var selectedId = this.id;
+        
+        	visOrigin.updateRender(this.id)
 
-      	visOrigin.svgOrigin
-	        .append('g:rect')
-	        .attr('x', 0)
-	        .attr('y', 0)
-	        .attr('width', visOrigin.width + visOrigin.margin.right + visOrigin.margin.left)
-	        .attr('height', visOrigin.height + visOrigin.margin.bottom + visOrigin.margin.top)
-	        .style('fill', '#D7D9DC')
-	        .style('opacity', 0)
-	      .transition()
-	        .duration(visOrigin.duration/2)
-	        .style('opacity', 1)
-	        .each('end', function(d) { 
-	          visOrigin.svgOrigin
-	              .selectAll('g')
-	          .transition()
-	          .remove()
+
+      	// visOrigin.svgOrigin
+	      //   .append('g:rect')
+	      //   .attr('x', 0)
+	      //   .attr('y', 0)
+	      //   .attr('width', visOrigin.width + visOrigin.margin.right + visOrigin.margin.left)
+	      //   .attr('height', visOrigin.height + visOrigin.margin.bottom + visOrigin.margin.top)
+	      //   .style('fill', '#D7D9DC')
+	      //   .style('opacity', 0)
+	      // .transition()
+	      //   .duration(visOrigin.duration/2)
+	      //   .style('opacity', 1)
+	      //   .each('end', function(d) { 
+	      //     visOrigin.svgOrigin
+	      //         .selectAll('g')
+	      //     .transition()
+	      //     .remove()
 	          
-	          selectedId == 'pais' ? visOrigin.render('web/data/vis_origin_data.csv') : visOrigin.renderTotals('web/data/vis_origin_data.csv')
-	        }.bind(visOrigin));
+	      //     selectedId == 'pais' ? visOrigin.render('web/data/vis_origin_data.csv') : visOrigin.renderTotals('web/data/vis_origin_data.csv')
+	      //   }.bind(visOrigin));
       });
 
 

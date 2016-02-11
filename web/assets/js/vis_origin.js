@@ -189,7 +189,7 @@ var VisOrigin = Class.extend({
         .data(this.dataChart)
         .enter()
       .append('rect')
-        .attr('class', function(d) { return 'origin-bar ' + this._normalize(d.win) + ' ' + this._normalize(d.destiny); }.bind(this))
+        .attr('class', function(d) { return 'origin-bar ' + this._normalize(d.win) + ' ' + this._normalize(d.destiny) + ' x' + d.year; }.bind(this))
         .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
         .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
         .attr('width', this.xScale.rangeBand())
@@ -201,6 +201,7 @@ var VisOrigin = Class.extend({
       // --> DRAW THE AXIS
       this.svgOrigin.append("g")
           .attr("class", "x axis")
+          .attr('id', 'originAxis')
           .attr("transform", "translate(" + 0 + "," + yScaleHeight + ")")
           .call(this.xAxis)
         .selectAll("text")
@@ -263,6 +264,49 @@ var VisOrigin = Class.extend({
           .on('click', this._clickLegend.bind(this));
     }.bind(this)); // end load data
   }, // end render
+
+  updateRender: function(buttonID) {
+
+    if (buttonID == 'total') {
+
+      // Update xScale to number of elements instead of countries
+      this.xScale.domain(d3.range(this.countries.length))
+
+      // Hide x axis
+      d3.select('#originAxis')
+        .transition()
+        .duration(this.duration/2)
+        .style('opacity', 0);
+
+      // Update squares
+      this.years.forEach(function(year) {
+        this.svgOrigin.selectAll('.origin-bar.x' + year)
+          .sort(function(a,b) { return this.origins.indexOf(a.win) - this.origins.indexOf(b.win); }.bind(this))
+          .transition()
+          .delay(function(d, i) { return 10 * i; })
+          .duration(this.duration)
+          .attr('x', function(d, i) { return this.xScale(i); }.bind(this))
+      }.bind(this));    
+    } else {
+     
+      // Update xScale to the destiny countries names
+      this.xScale.domain(this.countries)
+
+      // Show x axis
+      d3.select('#originAxis')
+        .transition()
+        .duration(this.duration/2)
+        .style('opacity', 1);
+
+      // Squares position
+      this.svgOrigin.selectAll('.origin-bar')
+          .transition()
+          .delay(function(d, i) { return 10 * i; })
+          .duration(this.duration)
+          .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
+    }
+  }, 
+
 
   renderTotals: function(urlData) {
       
