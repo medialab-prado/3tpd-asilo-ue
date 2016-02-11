@@ -188,7 +188,7 @@ var VisSquares = Class.extend({
         .data(this.dataChart)
         .enter()
       .append('rect')
-        .attr('class', function(d) { return 'square ' + this._normalize(d.win) + ' ' + this._normalize(d.destiny) + ' x' + d.year; }.bind(this))
+        .attr('class', function(d) { return this.measure + ' square ' + this._normalize(d.win) + ' ' + this._normalize(d.destiny) + ' x' + d.year; }.bind(this))
         .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
         .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
         .attr('width', this.xScale.rangeBand())
@@ -253,7 +253,7 @@ var VisSquares = Class.extend({
           .on('click', this._clickLegend.bind(this));
 
       this.svgSquares.selectAll('.swatch')
-          .attr('class', function(d) { return 'legend swatch ' + this._normalize(d); }.bind(this))
+          .attr('class', function(d) { return this.measure +' legend swatch ' + this._normalize(d); }.bind(this))
           .on('mouseover', function(d) { 
             var selectedClass = d3.event.target.classList;
             d3.selectAll('.' + selectedClass[0] + '.' + selectedClass[2])
@@ -370,27 +370,30 @@ var VisSquares = Class.extend({
     var winCategory = this.measure != 'age' ? selectedData.win : this.niceCategory[selectedData.win];
     var text = '<strong>' + selectedData.destiny + '</strong> - ' + selectedData.year + '<br>' +
       'a favor de: <strong>' + winCategory + '</strong><br>' + textValues
-
    
     // Hightlight selected
-    d3.select(selected)
-      .style('stroke', d3.rgb(this.selectedColor).darker())
+    d3.selectAll('.square.' + selectedClass[0])
+      .filter(function(d) { 
+        return this._normalize(d.win) != selectedClass[2] | 
+        this._normalize(d.destiny) != selectedClass[3] | 
+        ('x' + d.year) != selectedClass[4]; 
+      }.bind(this))
       .transition()
       .duration(this.duration / 4)
-      .style('stroke-width', '3px');
+      .style('opacity', this.opacityLow);
     
     // Highlight legend & axis
-    d3.selectAll('.legend.label.' + selectedClass[1])
+    d3.selectAll('.legend.label.' + selectedClass[2])
       .style('fill', 'black')
       .style('font-weight', 600); 
 
-    d3.selectAll('.legend.swatch.' + selectedClass[1])
-      .style('stroke', d3.rgb(this.selectedColor).darker())
+    d3.selectAll('.legend.swatch.' + selectedClass[0])
+      .filter(function(d) { return this._normalize(d) != selectedClass[2]; }.bind(this))
       .transition()
       .duration(this.duration / 4)
-      .style('stroke-width', '3px');
+      .style('opacity', this.opacityLow);
 
-    d3.selectAll('.x.axis').select('text.' + selectedClass[2])
+    d3.selectAll('.x.axis').select('text.' + selectedClass[3])
       .style('fill', 'black')
       .style('font-weight', 600);
 
@@ -413,22 +416,22 @@ var VisSquares = Class.extend({
         selectedData = d3.select(selected).data()[0];
 
     // UN - Hightlight selected
-    d3.select(selected)
+    d3.selectAll('.square.' + selectedClass[0])
       .transition()
       .duration(this.duration / 4)
-      .style('stroke', 'none');
+      .style('opacity', 1);
 
     // UN - Highlight legend & axis
-    d3.selectAll('.legend.label.' + selectedClass[1])
+    d3.selectAll('.legend.label.' + selectedClass[2])
       .style('fill', '#7C8388')
       .style('font-weight', 300);
 
-    d3.selectAll('.legend.swatch.' + selectedClass[1])
+    d3.selectAll('.legend.swatch.' + selectedClass[0])
       .transition()
       .duration(this.duration / 4)
-      .style('stroke', 'none');
+      .style('opacity', 1);
 
-    d3.selectAll('.x.axis').select('text.' + selectedClass[2])
+    d3.selectAll('.x.axis').select('text.' + selectedClass[3])
       .style('fill', '#7C8388')
       .style('font-weight', 300);
     
