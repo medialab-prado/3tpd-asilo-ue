@@ -165,7 +165,7 @@ var VisSquares = Class.extend({
             .domain(this.ages)
             // .range(['#92E98E', '#5CBF88', '#34937A', '#1D6963', '#14474A', '#686868']);
             // .range(['#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494', '#A4A4B0']);
-            .range(['#7fb7b8', '#66a9a9', '#328c8d', '#007071', '#006465', '#A4A4B0']);
+            .range(['#99c5c6', '#66a9a9', '#328c8d', '#007071', '#006465', '#A4A4B0']);
       } else {  
         this.colorScale
             .domain(this.sexs)
