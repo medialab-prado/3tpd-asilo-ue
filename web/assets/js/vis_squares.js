@@ -157,16 +157,20 @@ var VisSquares = Class.extend({
       if (this.measure == 'origin') {
         this.colorScale
           .domain(this.origins)
-          .range(['#ECD078', '#FBCE34', '#FB9A02', '#C68E26', '#C86700', '#6FAA71', '#3A7343', '#D05253', '#BA1C1B', '#700404']);
+          // .range(['#ECD078', '#FBCE34', '#FB9A02', '#C68E26', '#C86700', '#6FAA71', '#3A7343', '#D05253', '#BA1C1B', '#700404']);
+          .range(['#fec44f', '#fe9929', '#ec7014', '#cc4c02', '#993404', '#ABB253', '#848C2F', '#6BB9BA', '#42A1A3', '#007071']);
       } else if (this.measure == 'age') {
 
         this.colorScale
             .domain(this.ages)
-            .range(['#92E98E', '#5CBF88', '#34937A', '#1D6963', '#14474A', '#686868']);
+            // .range(['#92E98E', '#5CBF88', '#34937A', '#1D6963', '#14474A', '#686868']);
+            // .range(['#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494', '#A4A4B0']);
+            .range(['#7fb7b8', '#66a9a9', '#328c8d', '#007071', '#006465', '#A4A4B0']);
       } else {  
         this.colorScale
             .domain(this.sexs)
-            .range(['#D55B50', '#3C3F4F']);
+            // .range(['#D55B50', '#3C3F4F']);
+            .range(['#ABB253', '#fec44f']);
       }
 
       
