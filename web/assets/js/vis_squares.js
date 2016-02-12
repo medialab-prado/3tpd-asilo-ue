@@ -91,7 +91,7 @@ var VisSquares = Class.extend({
       "x18a34": "18 a 34",
       "x35a64": "35 a 64",
       "x65mas": "65 o más",
-      "Desconocido": "Desconocido"
+      "Desconocido": "Edad desconocida"
     }
   }, 
 
