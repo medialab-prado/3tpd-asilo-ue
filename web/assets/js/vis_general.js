@@ -41,7 +41,7 @@ var VisGeneral = Class.extend({
     this.svgGeneral = null;
     this.svgGeneralLegend = null;
     this.chart = null;
-    this.line = d3.svg.line()
+    this.line = d3.svg.line();
     
     // Constant values
     this.radius = 6;
@@ -129,7 +129,7 @@ var VisGeneral = Class.extend({
           }.bind(this))
         };
       }.bind(this));
-
+      
       // Load data totals
       d3.csv('web/data/totals.csv', function(error, totalsData) {
         
@@ -185,6 +185,7 @@ var VisGeneral = Class.extend({
         // Define the line
         this.line
           .interpolate("basis")
+          .defined(function(d) { return !isNaN(d.accepted_per); })
           .x(function(d) { return this.xScale(d.year); }.bind(this))
           .y(function(d) { return this.yScale(d.accepted_per); }.bind(this));
 
@@ -396,8 +397,6 @@ var VisGeneral = Class.extend({
     var selected = d3.event.target,
         selectedClass = selected.classList,
         selectedData = d3.select(selected).data()[0];
-
-    console.log(selectedClass[0])
 
     // Hilight the line
     d3.selectAll('.general-line.' + selectedClass[0])
