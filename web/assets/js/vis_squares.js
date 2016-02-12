@@ -224,7 +224,7 @@ var VisSquares = Class.extend({
       // --> DRAW THE LEGEND 
     
       this.svgSquares.append("g")
-        .attr("class", "legend " + this.measure)
+        .attr("class", "legendGroup " + this.measure)
         .attr("transform", "translate(" + (this.width - 20)+ "," + 0 + ")");
    
       this.legendSquares
@@ -238,35 +238,35 @@ var VisSquares = Class.extend({
             .labels(this.colorScale.domain().map(function(d) { return this.niceCategory[d]; }.bind(this)))
       }
 
-      d3.select(".legend." + this.measure)
+      d3.select(".legendGroup." + this.measure)
         .call(this.legendSquares);
 
       this.svgSquares.selectAll('.label')
-          .attr('class', function(d) { return 'legend label ' + this._normalize(d); }.bind(this))
+          .attr('class', function(d) { return this.measure + ' legend label ' + this._normalize(d); }.bind(this))
           .on('mouseover', function(d) { 
             var selectedClass = d3.event.target.classList;
-            d3.selectAll('.' + selectedClass[0] + '.' + selectedClass[2])
+            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
               .style('cursor', 'pointer')
               .style('opacity', this.opacityLow);
           }.bind(this))
           .on('mouseout', function(d) { 
             var selectedClass = d3.event.target.classList;
-            d3.selectAll('.' + selectedClass[0] + '.' + selectedClass[2])
+            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
               .style('opacity', 1);
           }.bind(this))
           .on('click', this._clickLegend.bind(this));
 
       this.svgSquares.selectAll('.swatch')
-          .attr('class', function(d) { return this.measure +' legend swatch ' + this._normalize(d); }.bind(this))
+          .attr('class', function(d) { return this.measure + ' legend swatch ' + this._normalize(d); }.bind(this))
           .on('mouseover', function(d) { 
             var selectedClass = d3.event.target.classList;
-            d3.selectAll('.' + selectedClass[0] + '.' + selectedClass[2])
+            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
               .style('cursor', 'pointer')
               .style('opacity', this.opacityLow);
           }.bind(this))
           .on('mouseout', function(d) { 
             var selectedClass = d3.event.target.classList;
-            d3.selectAll('.' + selectedClass[0] + '.' + selectedClass[2])
+            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
               .style('opacity', 1);
           }.bind(this))
           .on('click', this._clickLegend.bind(this));
@@ -450,12 +450,12 @@ var VisSquares = Class.extend({
         selectedClass = selected.classList,
         selectedData = d3.select(selected).data()[0];
 
-    this.selectedColor = d3.select('.swatch.' + selectedClass[2]).style('fill');
+    this.selectedColor = d3.select('.swatch.' + selectedClass[3]).style('fill');
 
     if (!selectedClass.contains('selected')) {
     
       // Apply selected class
-      d3.selectAll('.legend.' + selectedClass[2])
+      d3.selectAll('.legend.' + selectedClass[3])
         .classed('selected', true)
         .style('opacity', 1);
 
@@ -464,28 +464,28 @@ var VisSquares = Class.extend({
           .style('stroke', d3.rgb(this.selectedColor).darker())
           .transition()
           .duration(this.duration / 4)
-          .style('stroke-width', '3px');
+          .style('stroke-width', '2px');
       } else {
-        d3.selectAll('.swatch.' + selectedClass[2])
+        d3.selectAll('.swatch.' + selectedClass[3])
           .style('stroke', d3.rgb(this.selectedColor).darker())
           .transition()
           .duration(this.duration / 4)
-          .style('stroke-width', '3px');
+          .style('stroke-width', '2px');
       }
         
       // Hilight all the same class squares
-      d3.selectAll('.square.' + selectedClass[2])
+      d3.selectAll('.square.' + selectedClass[3])
         .style('stroke', d3.rgb(this.selectedColor).darker())
         .transition()
         .duration(this.duration / 4)
-        .style('stroke-width', '3px');
+        .style('stroke-width', '2px');
 
     } else {
-      d3.selectAll('.legend.' + selectedClass[2])
+      d3.selectAll('.legend.' + selectedClass[3])
         .classed('selected', false)
         .style('opacity', 1);
 
-      d3.selectAll('.' + selectedClass[2])
+      d3.selectAll('.' + selectedClass[3])
         .transition()
         .duration(this.duration / 4)
         .style('stroke', 'none');
