@@ -218,7 +218,7 @@
 
 		  d3.selectAll('.age.button')
       	.on('click', function(d) {
-       		d3.selectAll(".origin.button.buttonSelected").classed("buttonSelected", false);
+       		d3.selectAll(".age.button.buttonSelected").classed("buttonSelected", false);
         	d3.select(this).classed("buttonSelected", true);
         	var selectedId = this.id;
         
@@ -233,7 +233,7 @@
 
 		  d3.selectAll('.sex.button')
       	.on('click', function(d) {
-       		d3.selectAll(".origin.button.buttonSelected").classed("buttonSelected", false);
+       		d3.selectAll(".sex.button.buttonSelected").classed("buttonSelected", false);
         	d3.select(this).classed("buttonSelected", true);
         	var selectedId = this.id;
         

@@ -521,18 +521,21 @@ ul.buttons li {
   line-height: 2.75em;
   padding: 0 1.25em;
   font-weight: 300;
+  box-shadow: none;
 }
 
 .age.button.buttonSelected,
 .origin.button.buttonSelected,
 .sex.button.buttonSelected {
   background-color: rgba(60, 63, 79, 1);
+  box-shadow: none;
 }
 
 .age.button:hover,
 .origin.button:hover,
 .sex.button:hover {
   background-color: rgba(60, 63, 79, 0.7);
+  box-shadow: none;
 }
 
 /*Tooltip*/
