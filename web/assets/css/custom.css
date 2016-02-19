@@ -630,9 +630,14 @@ ul.buttons li {
 }
 
 .interviews .quote {
-  font-size: 140%;
-  font-weight: bold;
-  margin-left: 40px;
+  text-align: left;
+  font-size: 150%;
   padding-left: 1em;
-  border-left: 5px solid #35374b;
+  border-left: 2px solid #35374b;
+}
+
+.interviews .quote:before {
+  content: "\201C";
+  font-size: 4em;
+  line-height: 60px;
 }
