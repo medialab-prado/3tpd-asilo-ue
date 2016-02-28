@@ -8,7 +8,7 @@
  */
 
 ;(function ( $, window, undefined ) {
-    
+
     var document = window.document;
 
     $.fn.share = function(method) {
@@ -26,11 +26,11 @@
                     pageTitle = this.share.settings.title||$(document).attr('title'),
                     pageUrl = this.share.settings.urlToShare||$(location).attr('href'),
                     pageDesc = "";
-                
+
                 $.each($(document).find('meta[name="description"]'),function(idx,item){
                     pageDesc = $(item).attr("content");
         		});
-                
+
                 // each instance of this plugin
                 return this.each(function() {
                     var $element = $(this),
@@ -45,22 +45,22 @@
                         item = networks[item];
                         href = helpers.networkDefs[item].url;
                         href = href.replace('|u|',u).replace('|t|',t).replace('|d|',d)
-                                   .replace('|140|',t.substring(0,130));
+                                   .replace('|140|',t.substring(0,150));
                         $("<a href='"+href+"' title='Share this page on "+item+
                             "' class='pop share-"+theme+" share-"+theme+"-"+item+"'></a>")
                             .appendTo($element);
                     }
-                    
+
                     // customize css
                     $("#"+id+".share-"+theme).css('margin',margin);
-                    
+
                     if (orientation != "horizontal"){
                         $("#"+id+" a.share-"+theme).css('display','block');
                     }
                     else {
                         $("#"+id+" a.share-"+theme).css('display','inline-block');
                     }
-                    
+
                     if (typeof affix != "undefined"){
                         $element.addClass('share-affix');
                         if (affix.indexOf('right')!=-1){
@@ -73,7 +73,7 @@
                         else if (affix.indexOf('left center')!=-1){
                             $element.css('top','40%');
                         }
-                        
+
                         if (affix.indexOf('bottom')!=-1){
                             $element.css('bottom','0px');
                             $element.css('top','auto');
@@ -82,17 +82,17 @@
                             }
                         }
                     }
-                    
+
                     // bind click
                     $('.pop').click(function(){
                         window.open($(this).attr('href'),'t','toolbar=0,resizable=1,status=0,width=640,height=528');
                         return false;
                     });
-                    
-                    
+
+
                 });// end plugin instance
-            
-            }        
+
+            }
         }
 
         var helpers = {
@@ -112,7 +112,7 @@
                 email:{url:'mailto:?subject=|t|'}
             }
         }
-     
+
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
@@ -133,5 +133,5 @@
     }
 
     $.fn.share.settings = {}
-        
+
 })(jQuery, window);

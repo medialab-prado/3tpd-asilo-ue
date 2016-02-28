@@ -360,7 +360,8 @@ var AppTable = Class.extend({
 
     $('#share').share({
       networks: ['twitter', 'facebook', 'email', 'googleplus'],
-      theme: 'square'
+      theme: 'square',
+      title: $("<p>" + prob + "</p>").text() + " ¡Ponte en su lugar! #EuropaSinRefugio",
     });
 
     }.bind(this), timeOut);
