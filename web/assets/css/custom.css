@@ -87,6 +87,35 @@
   font-size: 1em;
 }
 
+#predict .btn {
+  border: 1px solid #990000;
+  border-radius: 5px;
+  /*materilize.css z-depth-2*/
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+  /*inline style coypaste*/
+  background-color: #D04A4A;
+  font-size: 1.2em;
+  
+  /*main.css .button text style copypaste*/
+  font-family: Raleway, Helvetica, sans-serif;
+  /*font-size: 0.8em;*/
+  font-weight: 700;
+  height: 3.75em;
+  letter-spacing: 0.1em;
+  line-height: 3.75em;
+  padding: 0 2.25em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+#predict .btn:hover {
+  /*materilize.css z-depth-4*/
+  box-shadow: 0 16px 28px 0 rgba(0, 0, 0, 0.22), 0 25px 55px 0 rgba(0, 0, 0, 0.21);
+  background-color: #F25656;
+}
+
 .history {
   padding-bottom: 0.2em;
 }
