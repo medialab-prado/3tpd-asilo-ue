@@ -8,7 +8,7 @@ var VisSquares = Class.extend({
     // Chart dimensions
     this.containerWidth = null;
     this.axisWidth = null;
-    this.margin = {top: 10, right: 60, bottom: 40, left: 40};
+    this.margin = {top: 10, right: 30, bottom: 20, left: 35};
     this.width = null;
     this.height = null;
 
@@ -50,7 +50,7 @@ var VisSquares = Class.extend({
     this.origins = ['Siria', 'Afganistán', 'Iraq', 'Irán', 'Pakistán', 'Somalia', 'Nigeria', 'Rusia', 'Serbia', 'Kosovo'];
     this.ages = ["menos14", "x14a17", "x18a34", "x35a64", "x65mas", "Desconocido"];
     this.sexs = ["Mujeres", "Hombres"];
-    this.countries = ["Alemania", "Francia", "Suecia", "Reino Unido", "Italia", "Bélgica", "Holanda", "Grecia", "Austria", "Dinamarca", "Polonia", "España", "Finlandia", "Hungría", "Bulgaria", "Malta", "Chipre", "Irlanda", "Rumanía", "Luxemburgo", "República Checa", "Lituania", "Eslovaquia", "Eslovenia", "Portugal", "Croacia", "Letonia", "Estonia"]
+    this.countries = ["Alemania", "Francia", "Suecia", "Reino Unido", "Italia", "Bélgica", "Holanda", "Grecia", "Austria", "Dinamarca", "Polonia", "España", "Finlandia", "Hungría", "Bulgaria", "Malta", "Chipre", "Irlanda", "Rumanía", "Luxemburgo", "República Checa", "Lituania", "Eslovaquia", "Eslovenia", "Portugal", "Croacia", "Letonia", "Estonia"];
     this.radius = 6;
     this.opacity = .9;
     this.opacityLow = .5;
@@ -68,14 +68,15 @@ var VisSquares = Class.extend({
   loadData: function() {
     // Chart dimensions
     this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
-    this.width = (this.containerWidth) - this.margin.left - this.margin.right;
-    this.height = (this.containerWidth / 3.3) - this.margin.top - this.margin.bottom;
+    this.margin.right = this.containerWidth > 475 ? this.containerWidth * .16 : 0;
+    this.margin.left = this.containerWidth > 475 ? this.containerWidth * .05 : 0;
+    this.width = this.containerWidth - this.margin.left - this.margin.right;
+    this.height = (this.containerWidth / 3.5) - this.margin.top - this.margin.bottom;
 
     // Append tooltip
     this.tooltip = d3.select('body').append('div')
       .attr('class', 'tooltip ' + this.measure)
       .style('opacity', 0);
-
 
     // Append svg
     this.svgSquares = d3.select(this.container).append('svg')
@@ -97,6 +98,8 @@ var VisSquares = Class.extend({
 
 
   render: function(urlData) {
+    d3.select(window).on('resize', this._resize.bind(this))
+
     // Load the data
     d3.csv(urlData, function(error, csvData){
       if (error) throw error;
@@ -145,9 +148,10 @@ var VisSquares = Class.extend({
       // Set the scales
       this.xScale
         .domain(this.countries)
-        .rangeRoundBands([this.margin.left, (this.width - this.margin.right)], .2);
-      
-      var yScaleHeight = (this.years.length * (((this.width - this.margin.right)) - this.margin.left)) / this.countries.length
+        .rangeRoundBands([this.margin.left, this.width], .2);
+      console.log(this.width)
+      console.log(254 + this.xScale.rangeBand())
+      var yScaleHeight = (this.years.length * (this.xScale.rangeExtent()[1] / this.countries.length))
 
       this.yScale
         .domain(this.years)
@@ -172,8 +176,7 @@ var VisSquares = Class.extend({
             // .range(['#D55B50', '#3C3F4F']);
             .range(['#ABB253', '#fec44f']);
       }
-
-      
+  
       // Define the axis 
       this.xAxis
           .scale(this.xScale)
@@ -201,75 +204,83 @@ var VisSquares = Class.extend({
         .on('mouseover', this._mouseoverRender.bind(this))
         .on('mouseout', this._mouseoutRender.bind(this));
 
-      // --> DRAW THE AXIS
-      this.svgSquares.append("g")
-          .attr("class", "x axis")
-          .attr('id', this.measure + 'Axis')
-          .attr("transform", "translate(" + 0 + "," + yScaleHeight + ")")
-          .call(this.xAxis)
-        .selectAll("text")
-          .attr('class', function(d) { return this._normalize(d); }.bind(this))
-          .attr("y", 0)
-          .attr("x", 9)
-          .attr("dx", "-.85em")
-          .attr("dy", ".25em")
-          .attr("transform", "rotate(-45)")
-          .style("text-anchor", "end");
+      if (this.containerWidth > 475) {
 
-      this.svgSquares.append("g")
-          .attr("class", "y axis")
-          .attr("transform", "translate(" + this.margin.left + ",0)")
-          .call(this.yAxis);
+        // --> DRAW THE AXIS
+        this.svgSquares.append("g")
+            .attr("class", "squares x axis")
+            .attr('id', this.measure + 'Axis')
+            .attr("transform", "translate(" + 0 + "," + yScaleHeight + ")")
+            .call(this.xAxis)
+          .selectAll("text")
+            .attr('class', function(d) { return this._normalize(d); }.bind(this))
+            .attr("y", 0)
+            .attr("x", 9)
+            .attr("dx", "-.85em")
+            .attr("dy", ".25em")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "end");
+
+        this.svgSquares.append("g")
+            .attr("class", "squares y axis")
+            .attr("transform", "translate(" + this.margin.left + ",0)")
+            .call(this.yAxis)
+          .selectAll("text")
+            .style("text-anchor", "middle");
+        
+        // --> DRAW THE LEGEND 
       
-      // --> DRAW THE LEGEND 
-    
-      this.svgSquares.append("g")
-        .attr("class", "legendGroup " + this.measure)
-        .attr("transform", "translate(" + (this.width - 20)+ "," + 0 + ")");
-   
-      this.legendSquares
-        .shapeWidth(this.xScale.rangeBand() * 0.7)
-        .shapeHeight(this.yScale.rangeBand() * 0.7)
-        .shapePadding(5)
-        .scale(this.colorScale);
-
-      if (this.measure == 'age') {
+        this.svgSquares.append("g")
+          .attr("class", "legendGroup " + this.measure)
+          .attr("transform", "translate(" + (this.containerWidth - this.margin.right)+ "," + 0 + ")");
+     
         this.legendSquares
-            .labels(this.colorScale.domain().map(function(d) { return this.niceCategory[d]; }.bind(this)))
+          .shapeWidth(this.xScale.rangeBand() * 0.7)
+          .shapeHeight(this.yScale.rangeBand() * 0.7)
+          .shapePadding(this.yScale.rangeBand() * 0.2)
+          .scale(this.colorScale);
+
+        if (this.measure == 'age') {
+          this.legendSquares
+              .labels(this.colorScale.domain().map(function(d) { return this.niceCategory[d]; }.bind(this)))
+        }
+
+        d3.select(".legendGroup." + this.measure)
+          .call(this.legendSquares);
+
+        this.svgSquares.selectAll('.label')
+            .attr('class', function(d) { return this.measure + ' legend label ' + this._normalize(d); }.bind(this))
+            .on('mouseover', function(d) { 
+              var selectedClass = d3.event.target.classList;
+              d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
+                .style('cursor', 'pointer')
+                .style('opacity', this.opacityLow);
+            }.bind(this))
+            .on('mouseout', function(d) { 
+              var selectedClass = d3.event.target.classList;
+              d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
+                .style('opacity', 1);
+            }.bind(this))
+            .on('click', this._clickLegend.bind(this));
+
+        this.svgSquares.selectAll('.swatch')
+            .attr('class', function(d) { return this.measure + ' legend swatch ' + this._normalize(d); }.bind(this))
+            .on('mouseover', function(d) { 
+              var selectedClass = d3.event.target.classList;
+              d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
+                .style('cursor', 'pointer')
+                .style('opacity', this.opacityLow);
+            }.bind(this))
+            .on('mouseout', function(d) { 
+              var selectedClass = d3.event.target.classList;
+              d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
+                .style('opacity', 1);
+            }.bind(this))
+            .on('click', this._clickLegend.bind(this));
       }
 
-      d3.select(".legendGroup." + this.measure)
-        .call(this.legendSquares);
 
-      this.svgSquares.selectAll('.label')
-          .attr('class', function(d) { return this.measure + ' legend label ' + this._normalize(d); }.bind(this))
-          .on('mouseover', function(d) { 
-            var selectedClass = d3.event.target.classList;
-            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
-              .style('cursor', 'pointer')
-              .style('opacity', this.opacityLow);
-          }.bind(this))
-          .on('mouseout', function(d) { 
-            var selectedClass = d3.event.target.classList;
-            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
-              .style('opacity', 1);
-          }.bind(this))
-          .on('click', this._clickLegend.bind(this));
 
-      this.svgSquares.selectAll('.swatch')
-          .attr('class', function(d) { return this.measure + ' legend swatch ' + this._normalize(d); }.bind(this))
-          .on('mouseover', function(d) { 
-            var selectedClass = d3.event.target.classList;
-            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
-              .style('cursor', 'pointer')
-              .style('opacity', this.opacityLow);
-          }.bind(this))
-          .on('mouseout', function(d) { 
-            var selectedClass = d3.event.target.classList;
-            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
-              .style('opacity', 1);
-          }.bind(this))
-          .on('click', this._clickLegend.bind(this));
     }.bind(this)); // end load data
   }, // end render
 
@@ -492,6 +503,65 @@ var VisSquares = Class.extend({
     }
 
   },
+
+  _resize: function() {
+    console.log(this.container)
+
+    // update chart dimensions
+    this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
+    this.margin.right = this.containerWidth > 475 ? this.containerWidth * .16 : 0;
+    this.margin.left = this.containerWidth > 475 ? this.containerWidth * .05 : 0;
+    this.width = this.containerWidth - this.margin.left - this.margin.right;
+    this.height = (this.containerWidth / 3.5) - this.margin.top - this.margin.bottom;
+
+    d3.selectAll('.squares svg')
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom)
+
+    // Update the scales
+    this.xScale
+        .rangeRoundBands([this.margin.left, this.width], .2);
+    
+    var yScaleHeight = (this.years.length * (this.xScale.rangeExtent()[1] / this.countries.length))
+
+    this.yScale
+        .rangeRoundBands([yScaleHeight, 0], .2);
+
+    // Update the axis
+    this.xAxis
+        .scale(this.xScale)
+    this.yAxis
+        .scale(this.yScale)
+
+
+    // resize the chart
+    d3.selectAll('.square')
+        .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
+        .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
+        .attr('width', this.xScale.rangeBand())
+        .attr('height', this.yScale.rangeBand())
+
+
+    // update axes
+    d3.selectAll('.squares.x.axis')
+        .attr("transform", "translate(" + 0 + "," + yScaleHeight + ")")
+        .call(this.xAxis)
+      .selectAll("text")
+        .attr("y", 0)
+        .attr("x", 9)
+        .attr("dx", "-.85em")
+        .attr("dy", ".25em")
+        .attr("transform", "rotate(-45)")
+        .style("text-anchor", "end");
+
+    d3.selectAll('.squares.y.axis').call(this.yAxis);
+
+    // MOVE THE LEGEND   
+    d3.selectAll(".legendGroup")
+      .attr("transform", "translate(" + (this.containerWidth - this.margin.right)+ "," + 0 + ")");
+  },
+
+
 
   _normalize: (function() {
     var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç ", 
