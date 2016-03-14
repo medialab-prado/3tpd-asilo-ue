@@ -565,14 +565,18 @@ var VisSquares = Class.extend({
         this.colorScale
           .domain(this.origins)
           .range(['#fec44f', '#fe9929', '#ec7014', '#cc4c02', '#993404', '#ABB253', '#848C2F', '#6BB9BA', '#42A1A3', '#007071']);
+      var legendLabels = this.colorScale.domain();
+
       } else if (measure == 'age') {
         this.colorScale
             .domain(this.ages)
             .range(['#99c5c6', '#66a9a9', '#328c8d', '#007071', '#006465', '#A4A4B0']);
+        var legendLabels = this.colorScale.domain().map(function(d) { return this.niceCategory[d]; }.bind(this));
       } else {  
         this.colorScale
             .domain(this.sexs)
             .range(['#ABB253', '#fec44f']);
+        var legendLabels = this.colorScale.domain();
       }
 
       
@@ -607,12 +611,8 @@ var VisSquares = Class.extend({
           .shapeWidth(this.xScale.rangeBand() * 0.7)
           .shapeHeight(this.yScale.rangeBand() * 0.7)
           .shapePadding(this.yScale.rangeBand() * 0.2)
-          .scale(this.colorScale);
-
-      if (measure == 'age') {
-        this.legendSquares
-            .labels(this.colorScale.domain().map(function(d) { return this.niceCategory[d]; }.bind(this)))
-      }
+          .scale(this.colorScale)
+          .labels(legendLabels);
 
       // Re call the legend   
       d3.select('.legendGroup.' + measure)
