@@ -1,0 +1,18 @@
+@media screen and (max-width: 736px) {
+	.chart text {
+		font-size: 10px;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	ul.buttons li {
+	    display: inline-block;
+	    padding: 0.2em 0;   
+	}
+
+	.age.button, .origin.button, .sex.button {
+    height: 2em;
+    line-height: 2em;
+    padding: 0 0.5em;
+  }
+}
