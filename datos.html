@@ -96,8 +96,8 @@
 
 									<div id="origin_chart" class="chart squares">
 										<h3>¿Qué nacionalidad tiene mayor porcentaje de solicitudes aceptadas?</h3>
-										<ul id="measure_selector" class="actions measure buttons">
-						           <li><a href="javascript:void(null)" id="pais" class ="origin button buttonSelected special">Específico por país de destino</a></li><!--
+										<ul id="measure_selector" class="measure buttons">
+						           <li><a href="javascript:void(null)" id="pais" class ="origin button buttonSelected special">Por país de destino</a></li><!--
 						        --><li><a href="javascript:void(null)" id="year" class ="origin button special">Agrupado por año</a></li>
 						        </ul>
 									</div>
@@ -122,7 +122,7 @@
 									<div id="age_chart" class="chart squares">
 										<h3>¿Qué edad tiene mayor porcentaje de solicitudes aceptadas?</h3>
 										<ul id="measure_selector" class="measure buttons">
-						           <li><a href="javascript:void(null)" id="pais" class ="age button buttonSelected special">Específico por país de destino</a></li><!--
+						           <li><a href="javascript:void(null)" id="pais" class ="age button buttonSelected special">Por país de destino</a></li><!--
 						        --><li><a href="javascript:void(null)" id="year" class ="age button special">Agrupado por año</a></li>
 							      </ul>
 									</div>
@@ -151,7 +151,7 @@
 									<div id="sex_chart" class="chart squares">
 										<h3>¿Qué sexo tiene mayor porcentaje de solicitudes aceptadas?</h3>
 										<ul id="measure_selector" class="measure buttons">
-						           <li><a href="javascript:void(null)" id="pais" class ="sex button buttonSelected special">Específico por país de destino</a></li><!--
+						           <li><a href="javascript:void(null)" id="pais" class ="sex button buttonSelected special">Por país de destino</a></li><!--
 						        --><li><a href="javascript:void(null)" id="year" class ="sex button special">Agrupado por año</a></li>
 							      </ul>
 
@@ -203,7 +203,6 @@
        		d3.selectAll(".origin.button.buttonSelected").classed("buttonSelected", false);
         	d3.select(this).classed("buttonSelected", true);
         	var selectedId = this.id;
-        	console.log(this.id)
         	visSquares.updateRender(this.id, 'origin')
       });
 		

@@ -558,18 +558,18 @@ ul.buttons li {
   height: 1.75em;
   line-height: 1.75em;
   padding: 0;
-
-
 }
 
+.origin.button.buttonSelected {
+  border-bottom: 0.3em solid #cc4c02;
+}
 
+.age.button.buttonSelected {
+  border-bottom: 0.3em solid #328c8d;
+}
 
-.age.button.buttonSelected,
-.origin.button.buttonSelected,
 .sex.button.buttonSelected {
-/*  background-color: rgba(60, 63, 79, 1);
-  box-shadow: none;*/
-  border-bottom: 0.3em solid #4c5c96;
+  border-bottom: 0.3em solid #ABB253;
 }
 
 .age.button:hover,

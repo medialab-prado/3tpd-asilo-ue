@@ -2,9 +2,17 @@
 	.chart text {
 		font-size: 10px;
 	}
+	ul.buttons {
+	  font-size: 0.8em;
+	}
 }
 
 @media screen and (max-width: 480px) {
+	ul.buttons {
+	  text-align: center;
+	  font-size: 0.7em;
+	}
+
 	ul.buttons li {
 	    display: inline-block;
 	    padding: 0.2em 0;   
