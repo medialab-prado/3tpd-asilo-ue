@@ -354,6 +354,16 @@ var AppTable = Class.extend({
       .duration(this.duration/4)
       .style('opacity', 1);
 
+    d3.select(this.container)
+      .append('div')
+      .attr('id', 'share');
+
+    $('#share').share({
+      networks: ['twitter', 'facebook', 'email', 'googleplus'],
+      theme: 'square',
+      title: $("<p>" + prob + "</p>").text() + " ¡Ponte en su lugar! #EuropaSinRefugio",
+    });
+
     }.bind(this), timeOut);
   } // end
 

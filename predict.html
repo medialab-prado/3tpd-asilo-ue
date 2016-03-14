@@ -11,6 +11,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="web/assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="web/assets/css/main.css" />
+		<link rel="stylesheet" href="web/assets/css/jquery.share.css" />
 		<!--[if lte IE 9]><link rel="stylesheet" href="web/assets/css/ie9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="web/assets/css/ie8.css" /><![endif]-->
 		<link rel="stylesheet" href="web/assets/css/select2.min.css" />
@@ -24,6 +25,7 @@
 		<script src="web/assets/js/vendor/jquery.min.js"></script>
 		<script src="web/assets/js/vendor/thenBy.min.js"></script>
 		<script src="web/assets/js/vendor/jquery.scrollex.min.js"></script>
+		<script src="web/assets/js/vendor/jquery.share.js"></script>
 		<script src="web/assets/js/util.js"></script>
 		<!--[if lte IE 8]><script src="web/assets/js/ie/respond.min.js"></script><![endif]-->
 		<script src="web/assets/js/vendor/select2.min.js"></script>
@@ -151,7 +153,7 @@
               appTable.enable('sex');
               appTable.enable('age');
               appTable.enable('destiny');
-              document.title = "Asilo en la UE - Predict: Probabilidad de " + appTable.sex + " (" + appTable.age + " años) de conseguir asilo en " + appTable.destiny + " si vienen de " + appTable.origin;
+              document.title = "Probabilidad de " + appTable.sex + " (" + appTable.age + " años) de conseguir asilo en " + appTable.destiny + " si vienen de " + appTable.origin;
             } else {
               appTable.originRenderSelect();
               appTable.sexRenderSelect();
