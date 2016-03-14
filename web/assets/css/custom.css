@@ -504,39 +504,53 @@ h1 {
 
 /*Buttons*/
 ul.buttons {
-  text-align: center;
+  /*text-align: center;*/
   margin: 0;
-  padding: 0;
+  padding: 0 10%;
 }
 
 ul.buttons li {
   display: inline-block;
-  padding: 1em 0 1em 1.5em;
+  padding: 1em 0 0.5em 1.5em;
 }
 
 .age.button,
 .origin.button,
 .sex.button {
-  background-color: rgba(60, 63, 79, 0.5);
+/*  background-color: rgba(60, 63, 79, 0.5);
   height: 2.75em;
   line-height: 2.75em;
   padding: 0 1.25em;
   font-weight: 300;
-  box-shadow: none;
+  box-shadow: none;*/
+  background-color: transparent;
+  border-radius: 0px;
+  color: rgba(46, 49, 65, 0.7);
+  height: 1.75em;
+  line-height: 1.75em;
+  padding: 0;
+
+
 }
+
+
 
 .age.button.buttonSelected,
 .origin.button.buttonSelected,
 .sex.button.buttonSelected {
-  background-color: rgba(60, 63, 79, 1);
-  box-shadow: none;
+/*  background-color: rgba(60, 63, 79, 1);
+  box-shadow: none;*/
+  border-bottom: 0.3em solid #4c5c96;
 }
 
 .age.button:hover,
 .origin.button:hover,
 .sex.button:hover {
-  background-color: rgba(60, 63, 79, 0.7);
-  box-shadow: none;
+  /*background-color: rgba(60, 63, 79, 0.7);*/
+  background-color: transparent;
+  color: #2E3141 !important;
+  opacity: 0.4;
+  border-bottom: 0.3em solid rgba(60, 63, 79, 0.7);
 }
 
 /*Tooltip*/

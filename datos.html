@@ -96,16 +96,13 @@
 
 									<div id="origin_chart" class="chart squares">
 										<h3>¿Qué nacionalidad tiene mayor porcentaje de solicitudes aceptadas?</h3>
-										
-<!-- 										<div id="sex_chart_legend"></div>
-										<div id="sex_chart_axis"></div>
-										<div id="sex_chart_bars"></div> -->
+										<ul id="measure_selector" class="actions measure buttons">
+						           <li><a href="javascript:void(null)" id="pais" class ="origin button buttonSelected special">Específico por país de destino</a></li><!--
+						        --><li><a href="javascript:void(null)" id="year" class ="origin button special">Agrupado por año</a></li>
+						        </ul>
 									</div>
 
-									<ul id="measure_selector" class="measure buttons">
-						           <li><a href="javascript:void(null)" id="pais" class ="origin button buttonSelected">Específico por país de destino</a></li><!--
-						        --><li><a href="javascript:void(null)" id="total" class ="origin button">Agrupado por año</a></li>
-					        </ul>
+									
 
 					        <p>Las personas provenientes de Afganistán (a pesar de ser uno de los países con más solicitudes y de vivir un conflicto armado desde 2001) no cuentan con el amparo del estatus de refugiado en todos los países de la Unión. Italia otorgó un 95% de las peticiones de asilo hechas por afganos en 2014. Sin embargo, en las últimas negociaciones de la Unión Europea para gestionar el derecho al asilo de forma inmediata, Afganistán se ha quedado fuera del acuerdo de protección ya que únicamente se han tenido en cuenta las nacionalidades que, en el conjunto de la Unión, tienen un porcentaje de protección superior al 75%.</p>
 											
@@ -124,15 +121,12 @@
 
 									<div id="age_chart" class="chart squares">
 										<h3>¿Qué edad tiene mayor porcentaje de solicitudes aceptadas?</h3>
-										
-<!-- 										<div id="sex_chart_legend"></div>
-										<div id="sex_chart_axis"></div>
-										<div id="sex_chart_bars"></div> -->
+										<ul id="measure_selector" class="measure buttons">
+						           <li><a href="javascript:void(null)" id="pais" class ="age button buttonSelected special">Específico por país de destino</a></li><!--
+						        --><li><a href="javascript:void(null)" id="year" class ="age button special">Agrupado por año</a></li>
+							      </ul>
 									</div>
-									<ul id="measure_selector" class="measure buttons">
-						           <li><a href="javascript:void(null)" id="pais" class ="age button buttonSelected">Específico por país de destino</a></li><!--
-						        --><li><a href="javascript:void(null)" id="total" class ="age button">Agrupado por año</a></li>
-						      </ul>
+									
 
 						      <p>Diferenciando por países, Alemania, desde 2008, presenta una mayor aceptación de solicitudes de personas más ancianas; Francia acepta más a las personas que tienen edades inferiores a 14 años y en Suecia tienen más probabilidad de ser aceptadas las personas con edades entre 14 y 17 años, al igual que ocurre en Reino Unido. Por otra parte, sorprende Estonia que desde 2009 tiene más solicitudes aceptadas de aquellos que en general en la Unión Europea se aceptan menos (de 18 a 34 años).</p>
 
@@ -156,12 +150,13 @@
 
 									<div id="sex_chart" class="chart squares">
 										<h3>¿Qué sexo tiene mayor porcentaje de solicitudes aceptadas?</h3>
+										<ul id="measure_selector" class="measure buttons">
+						           <li><a href="javascript:void(null)" id="pais" class ="sex button buttonSelected special">Específico por país de destino</a></li><!--
+						        --><li><a href="javascript:void(null)" id="year" class ="sex button special">Agrupado por año</a></li>
+							      </ul>
 
 									</div>
-									<ul id="measure_selector" class="measure buttons">
-						           <li><a href="javascript:void(null)" id="pais" class ="sex button buttonSelected">Específico por país de destino</a></li><!--
-						        --><li><a href="javascript:void(null)" id="total" class ="sex button">Agrupado por año</a></li>
-						      </ul>
+									
 
 
 									<p>Las mujeres tienen más probabilidad de ser aceptadas, pero por porcentajes muy pequeños que generalmente no alcanzan el 10%. </p>
@@ -208,7 +203,7 @@
        		d3.selectAll(".origin.button.buttonSelected").classed("buttonSelected", false);
         	d3.select(this).classed("buttonSelected", true);
         	var selectedId = this.id;
-        
+        	console.log(this.id)
         	visSquares.updateRender(this.id, 'origin')
       });
 		
@@ -237,7 +232,7 @@
        		d3.selectAll(".sex.button.buttonSelected").classed("buttonSelected", false);
         	d3.select(this).classed("buttonSelected", true);
         	var selectedId = this.id;
-        
+        	
         	visSquares.updateRender(this.id, 'sex')
 			});
 

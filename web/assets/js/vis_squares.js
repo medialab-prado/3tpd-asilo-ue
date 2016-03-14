@@ -149,8 +149,7 @@ var VisSquares = Class.extend({
       this.xScale
         .domain(this.countries)
         .rangeRoundBands([this.margin.left, this.width], .2);
-      console.log(this.width)
-      console.log(254 + this.xScale.rangeBand())
+
       var yScaleHeight = (this.years.length * (this.xScale.rangeExtent()[1] / this.countries.length))
 
       this.yScale
@@ -195,7 +194,7 @@ var VisSquares = Class.extend({
         .data(this.dataChart)
         .enter()
       .append('rect')
-        .attr('class', function(d) { return this.measure + ' square ' + this._normalize(d.win) + ' ' + this._normalize(d.destiny) + ' x' + d.year; }.bind(this))
+        .attr('class', function(d) { return this.measure + ' square ' + this._normalize(d.win) + ' ' + this._normalize(d.destiny) + ' x' + d.year + ' ' + 'pais'; }.bind(this))
         .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
         .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
         .attr('width', this.xScale.rangeBand())
@@ -298,7 +297,6 @@ var VisSquares = Class.extend({
         .domain(this.origins)
         .range(['#ECD078', '#FBCE34', '#FB9A02', '#C68E26', '#C86700', '#6FAA71', '#3A7343', '#D05253', '#BA1C1B', '#700404']);
     } else if (this.measure == 'age') {
-
       this.colorScale
           .domain(this.ages)
           .range(['#92E98E', '#5CBF88', '#34937A', '#1D6963', '#14474A', '#686868']);
@@ -309,7 +307,7 @@ var VisSquares = Class.extend({
     }
 
     // Move elements
-    if (buttonID == 'total') {
+    if (buttonID == 'year') {
 
       // Update xScale to number of elements instead of countries
       this.xScale.domain(d3.range(this.countries.length))
@@ -326,6 +324,7 @@ var VisSquares = Class.extend({
           .sort(function(a,b) { return this.colorScale.domain().indexOf(a.win) - this.colorScale.domain().indexOf(b.win); }.bind(this))
           .transition()
           .duration(this.duration)
+          .attr('class', function(d) { return this.measure + ' square ' + this._normalize(d.win) + ' ' + this._normalize(d.destiny) + ' x' + d.year + ' ' + buttonID; }.bind(this))
           .attr('x', function(d, i) { return this.xScale(i); }.bind(this))
           .each('end', function() { 
             svg.selectAll('.square')
@@ -348,6 +347,7 @@ var VisSquares = Class.extend({
       svg.selectAll('.square')
         .transition()
           .duration(this.duration)
+          .attr('class', function(d) { return this.measure + ' square ' + this._normalize(d.win) + ' ' + this._normalize(d.destiny) + ' x' + d.year + ' ' + buttonID; }.bind(this))
           .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
           .each('end', function() { 
             svg.selectAll('.square')
@@ -505,12 +505,10 @@ var VisSquares = Class.extend({
   },
 
   _resize: function() {
-    console.log(this.container)
-
     // update chart dimensions
     this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
-    this.margin.right = this.containerWidth > 475 ? this.containerWidth * .16 : 0;
-    this.margin.left = this.containerWidth > 475 ? this.containerWidth * .05 : 0;
+    this.margin.right = this.containerWidth > 476 ? this.containerWidth * .16 : 0;
+    this.margin.left = this.containerWidth > 476 ? this.containerWidth * .06 : 0;
     this.width = this.containerWidth - this.margin.left - this.margin.right;
     this.height = (this.containerWidth / 3.5) - this.margin.top - this.margin.bottom;
 
@@ -520,6 +518,7 @@ var VisSquares = Class.extend({
 
     // Update the scales
     this.xScale
+        .domain(this.countries)
         .rangeRoundBands([this.margin.left, this.width], .2);
     
     var yScaleHeight = (this.years.length * (this.xScale.rangeExtent()[1] / this.countries.length))
@@ -531,16 +530,7 @@ var VisSquares = Class.extend({
     this.xAxis
         .scale(this.xScale)
     this.yAxis
-        .scale(this.yScale)
-
-
-    // resize the chart
-    d3.selectAll('.square')
-        .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
-        .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
-        .attr('width', this.xScale.rangeBand())
-        .attr('height', this.yScale.rangeBand())
-
+        .scale(this.yScale);
 
     // update axes
     d3.selectAll('.squares.x.axis')
@@ -554,11 +544,90 @@ var VisSquares = Class.extend({
         .attr("transform", "rotate(-45)")
         .style("text-anchor", "end");
 
-    d3.selectAll('.squares.y.axis').call(this.yAxis);
+    d3.selectAll('.squares.y.axis')
+      .attr("transform", "translate(" + this.margin.left + ",0)")
+      .call(this.yAxis);
+
+    // Hide the axis in small devices
+    if (this.containerWidth < 476) {
+      d3.selectAll('.axis')
+        .style('visibility', 'hidden');
+    } else {
+      d3.selectAll('.axis')
+        .style('visibility', 'visible');
+    }
+
+    // resize everys chart
+    var measures = ['origin', 'age', 'sex'];
+    measures.forEach(function(measure) { 
+      // Set color scales 
+      if (measure == 'origin') {
+        this.colorScale
+          .domain(this.origins)
+          .range(['#fec44f', '#fe9929', '#ec7014', '#cc4c02', '#993404', '#ABB253', '#848C2F', '#6BB9BA', '#42A1A3', '#007071']);
+      } else if (measure == 'age') {
+
+        this.colorScale
+            .domain(this.ages)
+            .range(['#99c5c6', '#66a9a9', '#328c8d', '#007071', '#006465', '#A4A4B0']);
+      } else {  
+        this.colorScale
+            .domain(this.sexs)
+            .range(['#ABB253', '#fec44f']);
+      }
+
+      
+      // resize the chart depending on its status
+      // Get all the squares
+      var measureSquares = d3.selectAll('.square.' + measure);
+
+      // resize common attributes
+       measureSquares
+        .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
+        .attr('width', this.xScale.rangeBand())
+        .attr('height', this.yScale.rangeBand());
+
+      // Update the 'x' parameter depending on the chart form
+      if (measureSquares.attr('class').indexOf('pais') != -1) {
+
+        this.xScale.domain(this.countries);
+        measureSquares
+          .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this));
+      
+      } else {
+        this.xScale.domain(d3.range(this.countries.length))
+        
+        this.years.forEach(function(year) {
+          d3.selectAll('.square.x' + year + '.' + measure)
+            .attr('x', function(d, i) { return this.xScale(i); }.bind(this));
+        }.bind(this))
+      }
+
+      // Redefine the legend
+      this.legendSquares
+          .shapeWidth(this.xScale.rangeBand() * 0.7)
+          .shapeHeight(this.yScale.rangeBand() * 0.7)
+          .shapePadding(this.yScale.rangeBand() * 0.2)
+          .scale(this.colorScale);
+
+      // Re call the legend   
+      d3.select('.legendGroup.' + measure)
+        .call(this.legendSquares);
+
+    }.bind(this))
+
+    // d3.selectAll('.square')
+    //     .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
+    //     .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
+    //     .attr('width', this.xScale.rangeBand())
+    //     .attr('height', this.yScale.rangeBand());
+
 
     // MOVE THE LEGEND   
     d3.selectAll(".legendGroup")
       .attr("transform", "translate(" + (this.containerWidth - this.margin.right)+ "," + 0 + ")");
+
+          
   },
 
 
