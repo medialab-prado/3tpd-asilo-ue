@@ -98,7 +98,7 @@ var VisSquares = Class.extend({
 
 
   render: function(urlData) {
-    d3.select(window).on('resize', this._resize.bind(this))
+    d3.select(window).on('resize.squares', this._resize.bind(this));
 
     // Load the data
     d3.csv(urlData, function(error, csvData){
@@ -550,10 +550,10 @@ var VisSquares = Class.extend({
 
     // Hide the axis in small devices
     if (this.containerWidth < 476) {
-      d3.selectAll('.axis')
+      d3.selectAll('.axis.squares')
         .style('visibility', 'hidden');
     } else {
-      d3.selectAll('.axis')
+      d3.selectAll('.axis.squares')
         .style('visibility', 'visible');
     }
 

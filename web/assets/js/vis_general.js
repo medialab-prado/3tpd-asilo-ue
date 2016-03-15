@@ -9,7 +9,8 @@ var VisGeneral = Class.extend({
     this.margin = {top: 30, right: 10, bottom: 30, left: 40};
     this.width = null;
     this.height = null;
-    this.paddingLegend = 100;
+    this.paddingLegend = null;
+    this.wrapperWidth = null;
 
     // Scales
     this.xScale = d3.time.scale();
@@ -45,8 +46,8 @@ var VisGeneral = Class.extend({
     
     // Constant values
     this.radius = 6;
-    this.opacity = .7;
-    this.opacityLow = .02;
+    this.opacity = .5;
+    this.opacityLow = .3;
     this.duration = 1500;
     this.niceCategory = null;
     this.heavyLine = 5;
@@ -61,14 +62,24 @@ var VisGeneral = Class.extend({
   },
 
   render: function(urlData) {
+    d3.select(window).on('resize.general', this._resize.bind(this));
 
     // Chart dimensions
+    this.wrapperWidth = parseInt(d3.select('#general_chart').style('width'), 10);
+    if (this.wrapperWidth < 482) {
+      d3.select('#general_chart_lines')
+        .style('width', '100%');
+
+      d3.select('#general_chart_legend')
+        .style('width', '0%');
+    } 
+
     this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
     this.width = (this.containerWidth) - this.margin.left - this.margin.right;
-    this.height = (this.containerWidth / 1.5) - this.margin.top - this.margin.bottom;
+    this.height = (this.containerWidth / 1.2) - this.margin.top - this.margin.bottom;
+    this.paddingLegend = this.containerWidth > 476 ? this.containerWidth * 0.18 : this.containerWidth * 0.08;
 
-
-    this.legendWidth = parseInt(d3.select('#general_chart_legend').style('width'), 10)
+    this.legendWidth = parseInt(d3.select('#general_chart_legend').style('width'), 10);
     
     // Append tooltip
     this.tooltip = d3.select('body').append('div')
@@ -163,7 +174,7 @@ var VisGeneral = Class.extend({
             .range([0, (this.legendWidth - this.paddingLegend)]);
         
         this.yScaleLegend
-            .domain(this.dataTotals.map(function(d) { return d.destiny; }.bind(this)))
+            .domain(this.dataTotals.map(function(d) { return this.containerWidth > 476 ? d.destiny : d.destiny_code; }.bind(this)))
             .rangeRoundBands([this.height, 0], .3)
         
         // Define the axis 
@@ -184,24 +195,25 @@ var VisGeneral = Class.extend({
         
         // Define the line
         this.line
-          .interpolate("basis")
-          .defined(function(d) { return !isNaN(d.accepted_per); })
-          .x(function(d) { return this.xScale(d.year); }.bind(this))
-          .y(function(d) { return this.yScale(d.accepted_per); }.bind(this));
+            .interpolate("basis")
+            .defined(function(d) { return !isNaN(d.accepted_per); })
+            .x(function(d) { return this.xScale(d.year); }.bind(this))
+            .y(function(d) { return this.yScale(d.accepted_per); }.bind(this));
 
 
         // --> DRAW THE AXIS
         this.svgGeneral.append("g")
-            .attr("class", "x axis")
+            .attr("class", "x axis general")
             .attr("transform", "translate(0," + this.height + ")")
             .call(this.xAxis);
 
         this.svgGeneral.append("g")
-            .attr("class", "y axis")
+            .attr("class", "y axis general")
             .attr("transform", "translate(" + this.margin.left+ ",0)")
             .call(this.yAxis)
           .append("text")
             .attr("transform", "rotate(-90)")
+            .attr('class', 'general-yaxis-title')
             .attr("y", 6)
             .attr("dy", ".71em")
             .style("text-anchor", "end")
@@ -234,7 +246,7 @@ var VisGeneral = Class.extend({
           .attr('class', function(d) { return this._normalize(d.destiny) + ' general-line'; }.bind(this))
           .attr('d', function(d) { return this.line(d.values); }.bind(this))
           .style('stroke', function(d) { return d.destiny == 'mean' ? this.red : this.grey; }.bind(this))
-          .style('opacity', this.opacity)
+          .style('opacity', this.wrapperWidth < 482 ? this.opacityLow: this.opacity)
           .style('stroke-width', function(d) { return d.destiny != 'mean' ? 1 : 2; }.bind(this))
           .on('mouseover', this._mouseover.bind(this))
           .on('mouseout', this._mouseout.bind(this));
@@ -244,6 +256,7 @@ var VisGeneral = Class.extend({
         this.chart.append("text")
             .datum(function(d) { return {destiny: d.destiny, value: d.values[d.values.length - 1]}; })
             .filter(function(d) { return d.destiny == 'mean'; })
+            .attr('class', 'mean-text')
             .attr("transform", function(d) { return "translate(" + this.xScale(d.value.year) + "," + this.yScale(d.value.accepted_per) + ")"; }.bind(this))
             .attr("x", 3)
             .attr("dy", ".35em")
@@ -253,30 +266,20 @@ var VisGeneral = Class.extend({
         // --> DRAW THE LEGEND
         // Bars
         this.svgGeneralLegend.selectAll('.legend-bar')
-            .data(this.dataTotals)
-            .enter().append('rect')
-            .attr('class', function(d) { return this._normalize(d.destiny) + ' legend-bar'; }.bind(this))
-                .attr('x', this.paddingLegend)
-                .attr('y', function(d) { return this.yScaleLegend(d.destiny); }.bind(this))
-                .attr('width', function(d) { return this.xScaleLegend(d.total_country); }.bind(this))
-                .attr('height', this.yScaleLegend.rangeBand())
-                .style('fill', this.yellow)
-                .on('mouseover', this._mouseover.bind(this))
-                .on('mouseout', this._mouseout.bind(this));
+              .data(this.dataTotals)
+              .enter()
+            .append('rect')
+              .attr('class', function(d) { return this._normalize(d.destiny) + ' legend-bar'; }.bind(this))
+              .attr('x', this.paddingLegend)
+              .attr('y', function(d) { return this.containerWidth > 476 ?  this.yScaleLegend(d.destiny) :  this.yScaleLegend(d.destiny_code); }.bind(this))
+              .attr('width', function(d) { return this.legendWidth != 0 ? this.xScaleLegend(d.total_country) : 0; }.bind(this))
+              .attr('width', function(d) { return this.xScaleLegend(d.total_country); }.bind(this))
+              .attr('height', this.yScaleLegend.rangeBand())
+              .style('fill', this.yellow)
+              .on('mouseover', this._mouseover.bind(this))
+              .on('mouseout', this._mouseout.bind(this));
 
-        // Total labels
-      this.svgGeneralLegend.selectAll('.total-label')
-        .data(this.dataTotals)
-        .enter()
-      .append('text')
-        .attr('class', function(d) { return this._normalize(d.destiny) + ' total-bar total-label'; }.bind(this))
-        .attr('x', this.legendWidth)
-        .attr('y', function(d) { return this.yScaleLegend(d.destiny) + this.yScaleLegend.rangeBand(); }.bind(this))
-        .text(function(d) { return d.total_country.toLocaleString(); })
-        .attr('text-anchor', 'end')
-        .style('fill', d3.rgb(this.grey).darker())
-        .style('font-size', '0.7em')
-        .style('opacity', 0)
+
 
         // Bars title
         this.svgGeneralLegend
@@ -286,7 +289,7 @@ var VisGeneral = Class.extend({
           .attr('y', -this.margin.top)
           .attr('width', this.xScaleLegend.range()[1] + this.paddingLegend)
           .attr('height', this.yScaleLegend.rangeBand())
-          .html('Total solicitudes <br>recibidas (2008 - 2014)')
+          .html('Total solicitudes <br>(2008 - 2014)')
           .style('color', '#7C8388')
           .style('text-align', 'right')
           .style('font-size', '0.8em')
@@ -297,94 +300,6 @@ var VisGeneral = Class.extend({
       }.bind(this)); // end load data totals
     }.bind(this)); // end load data
   }, // end render
-
-  updateRender: function () {
-
-    // // re-map the data
-    // this.dataChart = this.data.budgets[this.measure];
-    // this.kind = this.data.kind;
-    // this.dataYear = this.parseDate(this.data.year);
-
-    // this.dataDomain = [d3.min(this.dataChart.map(function(d) { return d3.min(d.values.map(function(v) { return v.value; })); })), 
-    //           d3.max(this.dataChart.map(function(d) { return d3.max(d.values.map(function(v) { return v.value; })); }))];
-
-    // // Update the scales
-    // this.xScale
-    //   .domain(d3.extent(this.dataChart[0].values, function(d) { return d.date; }));
-
-    // this.yScale
-    //   .domain([this.dataDomain[0] * .3, this.dataDomain[1] * 1.2]);
-
-    // this.colorScale
-    //   .domain(this.dataChart.map(function(d) { return d.name; }));
-
-    // // Update the axis
-    // this.xAxis.scale(this.xScale);
- 
-    // this.yAxis
-    //     .scale(this.yScale)
-    //     .tickValues(this._tickValues(this.yScale))
-    //     .tickFormat(function(d) { return this.measure != 'percentage' ? d3.round(d, 2) : d3.round(d * 100, 2) + '%'; }.bind(this));
-
-    // this.svgGeneral.select(".x.axis")
-    //   .transition()
-    //   .duration(this.duration)
-    //   .delay(this.duration/2)
-    //   .ease("sin-in-out") 
-    //   .call(this.xAxis);
-
-    // this.svgGeneral.select(".y.axis")
-    //   .transition()
-    //   .duration(this.duration)
-    //   .delay(this.duration/2)
-    //   .ease("sin-in-out") 
-    //   .call(this.yAxis);
-
-    // // Change ticks color
-    // d3.selectAll('.axis').selectAll('text')
-    //   .attr('fill', this.darkColor);
-
-    // d3.selectAll('.axis').selectAll('path')
-    //   .attr('stroke', this.darkColor);
-
-    // // Update lines
-    // this.svgGeneral.selectAll('.evolution_line')
-    //   .data(this.dataChart)
-    //   .transition()
-    //   .duration(this.duration)
-    //   .attr('d', function(d) { return this.line(d.values); }.bind(this))
-    //   .style('stroke', function(d) { return this.colorScale(d.name); }.bind(this));
-
-    // // Update the points
-    // this.svgGeneral.selectAll(".dots")
-    //     .data(this.dataChart)
-    //   .selectAll(".dot_line")
-    //     .data(function(d) { return d.values; })
-    //     .transition()
-    //     .duration(this.duration)
-    //     .attr('cx', function(d) { return this.xScale(d.date); }.bind(this))
-    //     .attr('cy', function(d) { return this.yScale(d.value); }.bind(this))
-    //     // .style('fill', function(v) { return this.colorScale(d3.select('.dot_line.x'+v.value).node().parentNode.__data__.name); }.bind(this)); 
-    //     //
-    // var series = this.colorScale.domain();
-
-    // var labels = [];
-    // for (var i = 0; i < series.length; i++) {
-    //   if (this.niceCategory[series[i]] != undefined) {
-    //     labels.push(this.niceCategory[series[i]])
-    //   } else {
-    //     labels.push(series[i])
-    //   }
-    // }
-
-    // // Update legends
-    // this.legendEvolution
-    //     .labels(labels)
-    //     .scale(this.colorScale);
-
-    // d3.select(".legend_evolution")
-    //     .call(this.legendEvolution);
-  },
 
   //PRIVATE
   _tickValues:  function (scale) {
@@ -419,37 +334,7 @@ var VisGeneral = Class.extend({
     d3.selectAll('.total-label.' + selectedClass[0])
       .transition()
       .duration(this.duration/3)
-      .style('opacity', 1)
-
-
-
-    // this.selectedColor = d3.select(selected).style('fill')
-
-    // if (selectedClass[0].indexOf('total-bar') == -1) {
-    //   var text = '% Mujeres aceptadas: <strong>' + this.formatPercent(selectedData.Mujeres) + '</strong><br>' +
-    //           '% Hombres aceptados: <strong>' + this.formatPercent(selectedData.Hombres)  + '</strong><br>' + 
-    //           '% Diferencia: <strong>' + this.formatPercent(selectedData.dif)  + ' más ' + selectedData.win.toLowerCase() + '</strong>';
-    // } else {
-    //   var text = '<strong>' + selectedData.destiny + '</strong><br>' + 
-    //         'Total solicitudes: <strong>' + selectedData.total_country.toLocaleString() + '</strong>';
-    // }
-   
-    // // Hightlight selected
-    // d3.select(selected)
-    //   .transition()
-    //   .duration(this.duration / 2)
-    //   .style('fill', d3.rgb(this.selectedColor).darker());
-    
-    // this.tooltip
-    //     .transition()
-    //     .duration(this.duration / 4)
-    //     .style('opacity', this.opacity);
-
-    // this.tooltip
-    //     .html(text)
-    //     .style('left', (d3.event.pageX + 25) + 'px')
-    //     .style('top', (d3.event.pageY - 25) + 'px');
-
+      .style('opacity', 1);
   },
 
   _mouseout: function () {
@@ -479,11 +364,119 @@ var VisGeneral = Class.extend({
       .transition()
       .duration(this.duration/3)
       .style('opacity', 0)
+
+  },
+
+  _resize: function () {
+
+    // Chart dimensions
+    this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
+    this.width = (this.containerWidth) - this.margin.left - this.margin.right;
+    this.height = (this.containerWidth / 1.2) - this.margin.top - this.margin.bottom;
+    this.legendWidth = parseInt(d3.select('#general_chart_legend').style('width'), 10);
+    this.paddingLegend = this.containerWidth < 476 ? this.containerWidth * 0.08 : this.containerWidth * 0.15;
+
+    this.wrapperWidth = parseInt(d3.select('#general_chart').style('width'), 10);
+
+    if (this.wrapperWidth < 482) {
+      d3.select('#general_chart_lines')
+        .style('width', '100%');
+
+      d3.select('#general_chart_legend')
+        .style('width', '0%');
+
+      d3.select('.general-yaxis-title')
+        .style('visibility', 'hidden');
+
+      d3.selectAll('.general-line')
+        .style('opacity', this.opacityLow)
+
+    } else {
+      d3.select('#general_chart_lines')
+        .style('width', '80%');
+
+      d3.select('#general_chart_legend')
+        .style('width', '20%');
+
+      d3.select('.general-yaxis-title')
+        .style('visibility', 'visible');
+
+      d3.selectAll('.general-line')
+        .style('opacity', this.opacity)
+    }
+
+
+   
+    // SVG dimensions
+    d3.select('.svg_general')
+        .attr('width', this.width + this.margin.left + this.margin.right)
+        .attr('height', this.height + this.margin.top + this.margin.bottom);
+
+    d3.select('.svg_general_legend')
+        .attr('width', this.legendWidth)
+        .attr('height', this.height + this.margin.top + this.margin.bottom);
+
+    // Update the scales
+    this.xScale
+        .range([this.margin.left, (this.width + this.margin.right)]);
     
-    // this.tooltip
-    //     .transition()
-    //     .duration(this.duration / 4)
-    //     .style('opacity', 0);
+    this.yScale
+        .range([this.height, 0]);
+
+
+    // Axis
+    this.xAxis
+        .scale(this.xScale);
+    this.yAxis
+        .scale(this.yScale);
+
+    d3.select(".x.axis")
+        .attr("transform", "translate(0," + this.height + ")")
+        .call(this.xAxis);
+
+    d3.select(".y.axis")
+        .call(this.yAxis);
+
+    // Line object
+    this.line
+        .x(function(d) { return this.xScale(d.year); }.bind(this))
+        .y(function(d) { return this.yScale(d.accepted_per); }.bind(this));
+
+    d3.selectAll('.general-line')
+        .attr('d', function(d) { return this.line(d.values); }.bind(this));
+
+    d3.select('.mean-text')
+      .attr("transform", function(d) { return "translate(" + this.xScale(d.value.year) + "," + this.yScale(d.value.accepted_per) + ")"; }.bind(this))
+
+    // Legend
+    if (this.legendWidth != 0) {
+
+      this.xScaleLegend
+        .range([0, (this.legendWidth - this.paddingLegend)]);
+      
+      this.yScaleLegend
+          .domain(this.dataTotals.map(function(d) { return this.containerWidth > 476 ? d.destiny : d.destiny_code; }.bind(this)) )
+          .rangeRoundBands([this.height, 0], .3)
+    
+      this.yAxisLegend
+          .scale(this.yScaleLegend);
+      
+      d3.select(".legendAxis")
+        .attr("transform", "translate(" + this.paddingLegend+ ", 0)")
+        .call(this.yAxisLegend);
+
+      this.svgGeneralLegend.selectAll('.legend-bar')
+          .attr('x', this.paddingLegend)
+          .attr('y', function(d) { return this.containerWidth > 476 ?  this.yScaleLegend(d.destiny) :  this.yScaleLegend(d.destiny_code); }.bind(this))
+          .attr('width', function(d) { return this.xScaleLegend(d.total_country); }.bind(this))
+          .attr('height', this.yScaleLegend.rangeBand())
+    
+      this.svgGeneralLegend.select('.total-text')
+          .attr('width', this.xScaleLegend.range()[1] + this.paddingLegend)
+          .attr('height', this.yScaleLegend.rangeBand())
+          .html(this.containerWidth > 476 ? 'Total solicitudes <br>(2008 - 2014)' : 'Total solicitudes');
+    }
+
   },
 
   _normalize: (function() {
