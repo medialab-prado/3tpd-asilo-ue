@@ -1,4 +1,11 @@
+html {
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+}
 
+body {
+  overflow-x: hidden;
+}
 
 #header h1 a {
  font-size: 1.5em;
@@ -213,11 +220,6 @@
   text-align: center;
 }
 
-/*.experts-article a {
-  max-width: 250px;
-  margin-right: 0;
-  margin-left: 0;
-}*/
 @media screen and (max-width: 736px) {
   .experts-article {
     margin: auto;
@@ -549,10 +551,6 @@ h1 {
   text-align: center;
 }
 
-.contact a {
-  border: 0;
-}
-
 @media screen and (max-width: 736px) { 
   .contact {
     width: 100%;
@@ -579,8 +577,17 @@ h1 {
   display: block;
   margin-top: 1em;
   border-bottom: dotted 1px #D04A4A;
+
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
 }
 
+@media screen and (max-width: 480px) { 
+  .contact a {
+    font-size: 1.1em;
+  }
+}
 /* Selects */
 
 .select-title {
@@ -672,6 +679,7 @@ h1 {
 
 .figure {
   font-size: 3em;
+  vertical-align: middle;
 }
 
 @media screen and (max-width: 736px) { 

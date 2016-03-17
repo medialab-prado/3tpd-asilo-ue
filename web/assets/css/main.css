@@ -3107,10 +3107,11 @@
 			-webkit-transition-delay: 0.8s;
 			-ms-transition-delay: 0.8s;
 			transition-delay: 0.8s;
-			-moz-filter: blur(0);
-			-webkit-filter: blur(0);
+			/*-moz-filter: blur(0);*/
+			/*-webkit-filter: blur(0);
 			-ms-filter: blur(0);
-			filter: blur(0);
+			filter: blur(0);*/
+			filter: none !important;
 			opacity: 1;
 			font-family: Raleway, Helvetica, sans-serif;
 			font-size: 1em;
