@@ -1,3 +1,5 @@
+
+
 #header h1 a {
  font-size: 1.5em;
  border: 0;
@@ -14,16 +16,25 @@
   min-height: 600px;
 }
 
-#application-input {
-  width: calc(40% - 1.5em);
-  float: left;
+#application-output {
+  padding: 1.75em 0;
 }
 
-#application-output {
-  width: calc(60% - 1.5em);
-  overflow: hidden;
-  float: right;
+@media screen and (min-width: 736px) { 
+  #application-input {
+    width: calc(40% - 1.5em);
+    float: left;
+  }
+
+  #application-output {
+    width: calc(60% - 1.5em);
+    overflow: hidden;
+    float: right;
+  }
 }
+
+
+
 
 .big {
   font-size: 1.2em;
@@ -134,6 +145,13 @@
   text-transform: uppercase;
   white-space: nowrap;
 }
+
+@media screen and (max-width: 736px) { 
+  #predict .btn {
+    font-size: 0.8em;
+  }
+}
+
 #predict .btn:hover {
   /*materilize.css z-depth-4*/
   box-shadow: 0 16px 28px 0 rgba(0, 0, 0, 0.22), 0 25px 55px 0 rgba(0, 0, 0, 0.21);
@@ -181,6 +199,12 @@
 
 .experts-article {
   text-align: center;
+}
+
+@media screen and (max-width: 736px) { 
+  .experts-article h3 {
+    font-size: 1em;
+  }
 }
 
 .cargo {
@@ -261,7 +285,7 @@ h1 {
   float: right;
 }
 
-.wrapper:after {
+/*.wrapper:after {
   height: 6.6em;
 }
 
@@ -269,7 +293,17 @@ h1 {
   .wrapper:after { 
     height: 2.5em;
   }
-}
+}*/
+
+/*.custom-section {
+  margin: 6.4em 0;
+}*/
+
+/*@media screen and (min-width: 736px) {
+  .wrapper {
+    margin: 6.4em 0;
+  }
+}*/
 
 .custom-section .logo .icon {
   border-radius: 100%;
@@ -332,7 +366,7 @@ h1 {
 
 @media screen and (max-width: 736px) { 
   .features .datos-article h3 {
-    font-size: 1em
+    font-size: 1em;
   }
 }
 
@@ -549,13 +583,13 @@ h1 {
 }
 
 .select2-selection__clear {
-    padding-right: 10px;
-    line-height: 48px;
+  padding-right: 10px;
+  line-height: 48px;
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: #CDD0E1;
-    color: #2E3141;
+  background-color: #CDD0E1;
+  color: #2E3141;
 }
 
 
@@ -574,6 +608,7 @@ h1 {
 .select-origin select option {
   color: #2E3141;
 }
+
 
 /* vis */
 .x.axis {
@@ -606,7 +641,7 @@ h1 {
 
 @media screen and (max-width: 736px) { 
   .figure {
-    font-size: 2.5em;
+    font-size: 1.5em;
     display: block;
   }
 }
@@ -780,4 +815,9 @@ ul.buttons li {
   font-size: bold;
   text-transform: none;
   background-color: #444;
+}
+
+.select2-container {
+  width: 100% !important;
+  max-width: 350px !important;
 }
