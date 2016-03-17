@@ -1624,7 +1624,7 @@
 
 	body {
 		background-color: #2e3141;
-		background-image: linear-gradient(to top, rgba(46, 49, 65, 0.8), rgba(46, 49, 65, 0.8)), url("../../images/bg.jpg") !important;
+		background-image: linear-gradient(to top, rgba(46, 49, 65, 0.8), rgba(46, 49, 65, 0.8)), url("../../images/bg.jpg");
 		background-size: auto, cover;
 		background-attachment: fixed, fixed;
 		background-position: center, center;
@@ -3278,7 +3278,7 @@
 
 	.wrapper {
 		background-color: #2e3141;
-		margin: 6.5em 0;
+		margin: 6em 0;
 		position: relative;
 	}
 
@@ -3291,14 +3291,14 @@
 			background-size: 100% 100%;
 			content: '';
 			display: block;
-			height: 6.5em;
+			height: 6em;
 			position: absolute;
 			width: 100%;
 		}
 
 		.wrapper:before {
 			left: 0;
-			top: -6.5em;
+			top: -6em;
 		}
 
 		.wrapper:after {
@@ -3306,7 +3306,7 @@
 			-webkit-transform: scaleY(-1);
 			-ms-transform: scaleY(-1);
 			transform: scaleY(-1);
-			bottom: -6.5em;
+			bottom: -6em;
 			left: 0;
 		}
 
@@ -3623,18 +3623,18 @@
 					color: inherit;
 				}
 
-	/*@media screen and (max-width: 1280px) {
+	@media screen and (max-width: 1280px) {
 
 		#footer {
 			background-color: #2e3141;
-			background-image: linear-gradient(to top, rgba(46, 49, 65, 0.3), rgba(46, 49, 65, 0.3)), url("../../images/bg.jpg");
+			background-image: linear-gradient(to top, rgba(46, 49, 65, 0.8), rgba(46, 49, 65, 0.8)), url("../../images/bg.jpg");
 			background-size: auto, cover;
 			background-position: center, center;
 			margin-top: -6.5em;
 			padding-top: 6.5em;
 		}
 
-	}*/
+	}
 
 	@media screen and (max-width: 980px) {
 
