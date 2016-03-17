@@ -67,7 +67,7 @@
   padding: 5.5em 0 3em 0;
 }
 
-@media screen and (max-width: 736px) { 
+@media screen and (max-width: 990px) { 
   #banner {
     padding: 5.5em 2em 3em;
   }
@@ -192,7 +192,6 @@
   }
 }
 
-.
 #experts.custom-inner {
   text-align: left;
 }
@@ -220,6 +219,15 @@
 .datos-page strong {
   color: #363949;
 }
+
+.datos-page a {
+  color: #36394A;
+  text-decoration: underline;
+}
+
+.datos-page a:hover {
+  color: #36394A;
+} 
 
 #clear {
   padding-top: 4em;
@@ -715,13 +723,80 @@ ul.buttons li {
   height: 140px;
 }
 
+@media screen and (max-width: 760px) {
+  #header nav  {
+    display: none;
+  }
+}
+
+#header a[href="#menu"]:before {
+  content: '\f0c9';
+  display: none;
+}
+
+#header a[href="#menu"]:before {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  text-transform: none !important;
+}
+
+@media screen and (max-width: 760px) {
+  #header a[href="#menu"]:before {
+    display: block;
+  }
+}
+
 @media screen and (max-width: 1100px) {
   #header nav a {
     font-size: 80%;
     padding: 0 0.7em;
   }
-
 }
+
+#menu2:active {
+  outline: none;
+}
+
+@media screen and (max-width: 760px) {
+  #menu2 {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    border: 0;
+  }
+}
+
+
+
+
+
+/*//Navigation mío*/
+
+/*@media screen and (max-width: 736px) {
+  #header nav {
+    width: 100%;
+    top: 44px;
+    background-color: rgba(53, 56, 73, 0.95);
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 736px) {
+  #header nav a {
+    display: block;
+    padding: 0 20px;
+    font-size: 100%;
+  }
+}
+
+@media screen and (max-width: 736px) {
+  #header nav a:hover {
+    color: #db7373;
+  }
+}*/
 
 // Interviews
 
