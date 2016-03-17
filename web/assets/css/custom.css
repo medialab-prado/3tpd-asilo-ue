@@ -504,26 +504,6 @@ h1 {
   float: right;
 }
 
-/*#sex_chart {
-  overflow: hidden;
-  position: relative;
-  width: 100vw;
-  left: calc(-50vw + 50%);
-  
-}
-
-#sex_chart_axis {
-  width: 15%;
-  float: left;
-}
-
-#sex_chart_bars {
-  overflow: scroll;
-  overflow-y: hidden;
-  width: 85%;
-  float: right;
-}*/
-
 .contact-title {
   border-bottom: none;
   padding-bottom: 0;
@@ -824,36 +804,7 @@ ul.buttons li {
   }
 }
 
-
-
-
-
-/*//Navigation mío*/
-
-/*@media screen and (max-width: 736px) {
-  #header nav {
-    width: 100%;
-    top: 44px;
-    background-color: rgba(53, 56, 73, 0.95);
-    height: auto;
-  }
-}
-
-@media screen and (max-width: 736px) {
-  #header nav a {
-    display: block;
-    padding: 0 20px;
-    font-size: 100%;
-  }
-}
-
-@media screen and (max-width: 736px) {
-  #header nav a:hover {
-    color: #db7373;
-  }
-}*/
-
-// Interviews
+/* Interviews */
 
 .interviews {
   min-height: 500px;
