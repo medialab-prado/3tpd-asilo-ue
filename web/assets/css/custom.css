@@ -166,6 +166,19 @@
   overflow: hidden;
 }
 
+@media screen and (max-width: 736px) { 
+  .experts .inner.left { 
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .experts .inner.right { 
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
 .inner .left {
   width: 45%;
   float: left;
@@ -198,6 +211,17 @@
 
 .experts-article {
   text-align: center;
+}
+
+/*.experts-article a {
+  max-width: 250px;
+  margin-right: 0;
+  margin-left: 0;
+}*/
+@media screen and (max-width: 736px) {
+  .experts-article {
+    margin: auto;
+  }
 }
 
 @media screen and (max-width: 736px) { 
@@ -373,6 +397,7 @@ h1 {
     border-radius: 5px 5px 0 0;
     width: 100%;
 }
+
 .image img {
     border-radius: 5px;
     display: block;
@@ -512,14 +537,36 @@ h1 {
   padding-top: 1em;
 }
 
+@media screen and (max-width: 736px) { 
+  .workers {
+    width: 100%;
+  }
+}
+
 .contact {
   width: calc(45% - 1.5em);
   float: right;
   text-align: center;
 }
 
+.contact a {
+  border: 0;
+}
+
+@media screen and (max-width: 736px) { 
+  .contact {
+    width: 100%;
+  }
+}
+
 .contact h2 {
   padding-top: 5em;
+}
+
+@media screen and (max-width: 736px) { 
+.contact h2 {
+    padding-top: 2em;
+  }
 }
 
 .contact p {
@@ -874,5 +921,4 @@ ul.buttons li {
 
 .select2-container {
   width: 100% !important;
-  max-width: 350px !important;
 }
