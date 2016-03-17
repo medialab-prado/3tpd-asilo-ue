@@ -56,6 +56,12 @@
   padding: 5.5em 0 3em 0;
 }
 
+@media screen and (max-width: 736px) { 
+  #banner {
+    padding: 5.5em 2em 3em;
+  }
+}
+
 #banner h2 {
   font-size: 1.2em;
   border-bottom: none;
@@ -79,6 +85,13 @@
   color: #2E3141;
   border-bottom: solid 2px rgba(46, 49, 65, 0.125);
   margin-bottom: .2em;
+}
+
+@media screen and (max-width: 736px) { 
+  #predict h1 {
+    font-size: 1.25em;
+    padding-left: 4em;
+  }
 }
 
 #predict strong {
@@ -142,11 +155,23 @@
   text-align: left;
 }
 
+@media screen and (max-width: 736px) { 
+  .inner .left {
+    width: 100%;
+  }
+}
+
 .inner .right {
   width: 45%;
   float: right;
   padding-top: 0;
   text-align: left;
+}
+
+@media screen and (max-width: 736px) { 
+  .inner .right {
+    width: 100%;
+  }
 }
 
 .
@@ -237,25 +262,46 @@ h1 {
 }
 
 .wrapper:after {
-    height: 6.6em;
+  height: 6.6em;
+}
+
+@media screen and (max-width: 736px) {
+  .wrapper:after { 
+    height: 2.5em;
+  }
 }
 
 .custom-section .logo .icon {
-    border-radius: 100%;
-    border: solid 2px rgba(255, 255, 255, 0.125);
-    cursor: default;
-    display: inline-block;
-    font-size: 2em;
-    height: 2.25em;
-    line-height: 2.25em;
-    text-align: center;
-    width: 2.25em;
+  border-radius: 100%;
+  border: solid 2px rgba(255, 255, 255, 0.125);
+  cursor: default;
+  display: inline-block;
+  font-size: 2em;
+  height: 2.25em;
+  line-height: 2.25em;
+  text-align: center;
+  width: 2.25em;
+}
+
+@media screen and (max-width: 736px) { 
+  .custom-section .logo .icon {
+    height: 1.75em;
+    line-height: 1.75em;
+    width: 1.75em;
+  }
 }
 
 .custom-section h1 {
   margin: -1.5em 0 1em 0;
   /* padding-bottom: 64px; */
   padding-left: 2.5em;
+}
+
+@media screen and (max-width: 736px) { 
+  .custom-section h1 {
+    font-size: 1.25em;
+    padding-left: 4em;
+  }
 }
 
 .secondary-page header {
@@ -267,16 +313,29 @@ h1 {
 }
 
 .features .datos-article {
-    padding: 1.75em 1.5em 0.1em 1.5em;
-    background-color: #353849;
-    border-radius: 5px;
-    margin: 1em 0.5em 1.5em 0;
-    width: calc(50% - 1.5em);
+  padding: 1.75em 1.5em 0.1em 1.5em;
+  background-color: #353849;
+  border-radius: 5px;
+  margin: 1em 0.5em 1.5em 0;
+  width: calc(50% - 1.5em);
+}
+
+@media screen and (max-width: 736px) { 
+  .features .datos-article {
+    width: 100%;
+  }
 }
 
 .features .datos-article h3 {
   font-size: 1.2em
 }
+
+@media screen and (max-width: 736px) { 
+  .features .datos-article h3 {
+    font-size: 1em
+  }
+}
+
 
 .features .datos-article .image {
     border-radius: 5px 5px 0 0;
@@ -535,8 +594,27 @@ h1 {
   padding-bottom: 0;
 }
 
+@media screen and (max-width: 736px) { 
+  #main-title h1 {
+    font-size: 1.25em;
+  }
+}
+
 .figure {
   font-size: 3em;
+}
+
+@media screen and (max-width: 736px) { 
+  .figure {
+    font-size: 2.5em;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 736px) { 
+  .figure-last {
+    margin-bottom: 0.52em;
+  }
 }
 
 .lugar {
