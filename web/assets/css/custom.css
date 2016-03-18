@@ -40,9 +40,6 @@ body {
   }
 }
 
-
-
-
 .big {
   font-size: 1.2em;
   font-weight: bold;
@@ -185,7 +182,6 @@ body {
   }
 }
 
-
 .inner .left {
   width: 45%;
   float: left;
@@ -195,6 +191,9 @@ body {
 
 @media screen and (max-width: 736px) { 
   .inner .left {
+    width: 100%;
+  }
+  .inner .right {
     width: 100%;
   }
 }
@@ -221,14 +220,33 @@ body {
 }
 
 @media screen and (max-width: 736px) {
-  .experts-article {
+  .experts-article { 
+    width: 100%;
     margin: auto;
+  }
+}
+
+@media (max-width:736px) and (min-width: 520px) {
+  .experts-article .image {
+    width: 50% !important;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .experts-article .image { 
+    width: 100%;
   }
 }
 
 @media screen and (max-width: 736px) { 
   .experts-article h3 {
     font-size: 1em;
+  }
+}
+
+@media screen and (max-width: 736px) { 
+  .experts-article a {
+    margin-left: 0 !important;
   }
 }
 
@@ -831,7 +849,13 @@ ul.buttons li {
   text-decoration: none;
 }
 
-.interviews li:nth-child(5n+0) { clear: left; }
+.interviews li:nth-child(5n+0) { 
+  clear: left; 
+}
+
+.interviews .image-rounded img {
+  width: 100% !important;
+}
 
 .back-interviews {
   margin: 5em auto;
@@ -840,6 +864,9 @@ ul.buttons li {
   padding-top: 0.1em;
 }
 
+.back-interviews a {
+  padding: 1em;
+}
 
 .image-rounded {
   float: right;
@@ -852,10 +879,24 @@ ul.buttons li {
   margin-bottom: 60px;
 }
 
+@media screen and (max-width: 736px) {
+  .image-rounded {
+    float: none;
+    display: block;
+    margin: auto;
+  }
+}
+
 .interviews h2.interview-heading {
   text-transform: none;
   border-bottom: none;
   font-size: 140%;
+}
+
+@media screen and (max-width: 736px) {
+  .interviews h2 {
+    text-align: center;
+  }
 }
 
 .interviews .quote {
@@ -876,6 +917,7 @@ ul.buttons li {
   font-size: bold;
   text-transform: none;
   background-color: #444;
+  color: #ffffff;
 }
 
 .select2-container {
