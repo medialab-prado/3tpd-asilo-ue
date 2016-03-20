@@ -203,81 +203,86 @@ var VisSquares = Class.extend({
         .on('mouseover', this._mouseoverRender.bind(this))
         .on('mouseout', this._mouseoutRender.bind(this));
 
-      if (this.containerWidth > 475) {
+      // --> DRAW THE AXIS
+      this.svgSquares.append("g")
+          .attr("class", "squares x axis")
+          .attr('id', this.measure + 'Axis')
+          .attr("transform", "translate(" + 0 + "," + yScaleHeight + ")")
+          .call(this.xAxis)
+        .selectAll("text")
+          .attr('class', function(d) { return this._normalize(d); }.bind(this))
+          .attr("y", 0)
+          .attr("x", 9)
+          .attr("dx", "-.85em")
+          .attr("dy", ".25em")
+          .attr("transform", "rotate(-45)")
+          .style("text-anchor", "end");
 
-        // --> DRAW THE AXIS
-        this.svgSquares.append("g")
-            .attr("class", "squares x axis")
-            .attr('id', this.measure + 'Axis')
-            .attr("transform", "translate(" + 0 + "," + yScaleHeight + ")")
-            .call(this.xAxis)
-          .selectAll("text")
-            .attr('class', function(d) { return this._normalize(d); }.bind(this))
-            .attr("y", 0)
-            .attr("x", 9)
-            .attr("dx", "-.85em")
-            .attr("dy", ".25em")
-            .attr("transform", "rotate(-45)")
-            .style("text-anchor", "end");
-
-        this.svgSquares.append("g")
-            .attr("class", "squares y axis")
-            .attr("transform", "translate(" + this.margin.left + ",0)")
-            .call(this.yAxis)
-          .selectAll("text")
-            .style("text-anchor", "middle");
-        
-        // --> DRAW THE LEGEND 
+      this.svgSquares.append("g")
+          .attr("class", "squares y axis")
+          .attr("transform", "translate(" + this.margin.left + ",0)")
+          .call(this.yAxis)
+        .selectAll("text")
+          .style("text-anchor", "middle");
       
-        this.svgSquares.append("g")
-          .attr("class", "legendGroup " + this.measure)
-          .attr("transform", "translate(" + (this.containerWidth - this.margin.right)+ "," + 0 + ")");
-     
+      // --> DRAW THE LEGEND 
+    
+      this.svgSquares.append("g")
+        .attr("class", "legendGroup " + this.measure)
+        .attr("transform", "translate(" + (this.containerWidth - this.margin.right)+ "," + 0 + ")");
+   
+      this.legendSquares
+        .shapeWidth(this.xScale.rangeBand() * 0.7)
+        .shapeHeight(this.yScale.rangeBand() * 0.7)
+        .shapePadding(this.yScale.rangeBand() * 0.2)
+        .scale(this.colorScale);
+
+      if (this.measure == 'age') {
         this.legendSquares
-          .shapeWidth(this.xScale.rangeBand() * 0.7)
-          .shapeHeight(this.yScale.rangeBand() * 0.7)
-          .shapePadding(this.yScale.rangeBand() * 0.2)
-          .scale(this.colorScale);
-
-        if (this.measure == 'age') {
-          this.legendSquares
-              .labels(this.colorScale.domain().map(function(d) { return this.niceCategory[d]; }.bind(this)))
-        }
-
-        d3.select(".legendGroup." + this.measure)
-          .call(this.legendSquares);
-
-        this.svgSquares.selectAll('.label')
-            .attr('class', function(d) { return this.measure + ' legend label ' + this._normalize(d); }.bind(this))
-            .on('mouseover', function(d) { 
-              var selectedClass = d3.event.target.classList;
-              d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
-                .style('cursor', 'pointer')
-                .style('opacity', this.opacityLow);
-            }.bind(this))
-            .on('mouseout', function(d) { 
-              var selectedClass = d3.event.target.classList;
-              d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
-                .style('opacity', 1);
-            }.bind(this))
-            .on('click', this._clickLegend.bind(this));
-
-        this.svgSquares.selectAll('.swatch')
-            .attr('class', function(d) { return this.measure + ' legend swatch ' + this._normalize(d); }.bind(this))
-            .on('mouseover', function(d) { 
-              var selectedClass = d3.event.target.classList;
-              d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
-                .style('cursor', 'pointer')
-                .style('opacity', this.opacityLow);
-            }.bind(this))
-            .on('mouseout', function(d) { 
-              var selectedClass = d3.event.target.classList;
-              d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
-                .style('opacity', 1);
-            }.bind(this))
-            .on('click', this._clickLegend.bind(this));
+            .labels(this.colorScale.domain().map(function(d) { return this.niceCategory[d]; }.bind(this)))
       }
 
+      d3.select(".legendGroup." + this.measure)
+        .call(this.legendSquares);
+
+      this.svgSquares.selectAll('.label')
+          .attr('class', function(d) { return this.measure + ' legend label ' + this._normalize(d); }.bind(this))
+          .on('mouseover', function(d) { 
+            var selectedClass = d3.event.target.classList;
+            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
+              .style('cursor', 'pointer')
+              .style('opacity', this.opacityLow);
+          }.bind(this))
+          .on('mouseout', function(d) { 
+            var selectedClass = d3.event.target.classList;
+            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
+              .style('opacity', 1);
+          }.bind(this))
+          .on('click', this._clickLegend.bind(this));
+
+      this.svgSquares.selectAll('.swatch')
+          .attr('class', function(d) { return this.measure + ' legend swatch ' + this._normalize(d); }.bind(this))
+          .on('mouseover', function(d) { 
+            var selectedClass = d3.event.target.classList;
+            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
+              .style('cursor', 'pointer')
+              .style('opacity', this.opacityLow);
+          }.bind(this))
+          .on('mouseout', function(d) { 
+            var selectedClass = d3.event.target.classList;
+            d3.selectAll('.' + selectedClass[1] + '.' + selectedClass[3])
+              .style('opacity', 1);
+          }.bind(this))
+          .on('click', this._clickLegend.bind(this));
+      
+      // Hide the axis on small devices
+      if (this.containerWidth < 476) {
+        d3.selectAll('.axis.squares')
+          .style('visibility', 'hidden');
+      } else {
+        d3.selectAll('.axis.squares')
+          .style('visibility', 'visible');
+      }
 
 
     }.bind(this)); // end load data
@@ -619,12 +624,6 @@ var VisSquares = Class.extend({
         .call(this.legendSquares);
 
     }.bind(this))
-
-    // d3.selectAll('.square')
-    //     .attr('x', function(d) { return this.xScale(d.destiny); }.bind(this))
-    //     .attr('y', function(d) { return this.yScale(d.year)}.bind(this))
-    //     .attr('width', this.xScale.rangeBand())
-    //     .attr('height', this.yScale.rangeBand());
 
 
     // MOVE THE LEGEND   

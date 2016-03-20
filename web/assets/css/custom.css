@@ -724,6 +724,7 @@ ul.buttons li {
   height: 1.75em;
   line-height: 1.75em;
   padding: 0;
+  text-decoration: none;
 }
 
 .origin.button.buttonSelected {

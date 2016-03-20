@@ -76,7 +76,7 @@ var VisGeneral = Class.extend({
 
     this.containerWidth = parseInt(d3.select(this.container).style('width'), 10);
     this.width = (this.containerWidth) - this.margin.left - this.margin.right;
-    this.height = (this.containerWidth / 1.2) - this.margin.top - this.margin.bottom;
+    this.height = (this.containerWidth / 1.8) - this.margin.top - this.margin.bottom;
     this.paddingLegend = this.containerWidth > 476 ? this.containerWidth * 0.18 : this.containerWidth * 0.08;
 
     this.legendWidth = parseInt(d3.select('#general_chart_legend').style('width'), 10);
