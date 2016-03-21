@@ -18,6 +18,16 @@ body {
  color: #db7373 !important;
 }
 
+.highlighted a:hover {
+  font-weight: 300;
+  color: #db7373 !important;
+}
+
+.highlighted a {
+    color: #db7373;
+    font-weight: 600;
+}
+
 #application {
   overflow: hidden;
   min-height: 600px;
@@ -253,7 +263,7 @@ body {
 .cargo {
   color: #363949;
   font-weight: 300;
-  padding-bottom: 3em;
+  padding-bottom: 0em;
 }
 
 .cargo a {
@@ -274,7 +284,7 @@ body {
 } 
 
 #clear {
-  padding-top: 4em;
+  padding-top: 1em;
 }
 
 .interviews p {
@@ -891,7 +901,8 @@ ul.buttons li {
 .interviews h2.interview-heading {
   text-transform: none;
   border-bottom: none;
-  font-size: 140%;
+  font-size: 160%;
+  text-align: center;
 }
 
 @media screen and (max-width: 736px) {
@@ -917,9 +928,21 @@ ul.buttons li {
 .interviews p a:hover {
   font-size: bold;
   text-transform: none;
-  background-color: #444;
-  color: #ffffff;
+  color: #444 !important;
+  text-decoration: none;
+  border-bottom: dotted 1px #444;
 }
+
+.interviews p a:hover {
+  opacity: 0.7;
+}
+
+.interview-date {
+  color: #444 !important;
+  text-align: right;
+  font-weight: 300;
+}
+
 
 .select2-container {
   width: 100% !important;
