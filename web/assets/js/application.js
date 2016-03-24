@@ -59,7 +59,7 @@ var AppTable = Class.extend({
 
   originRenderSelect: function() {
     $(".select-origin").select2({
-      placeholder: "Selecciona el país de origen",
+      placeholder: "Elige un país de origen",
       allowClear: true,
       dataType: 'json',
       data: this.originData
@@ -81,7 +81,7 @@ var AppTable = Class.extend({
   },
   sexRenderSelect: function () {
     $(".select-sex").select2({
-      placeholder: "Selecciona el sexo",
+      placeholder: "Un sexo",
       allowClear: true,
       dataType: 'json',
       data: this.sexData
@@ -99,7 +99,7 @@ var AppTable = Class.extend({
   },
   ageRenderSelect: function () {
     $(".select-age").select2({
-      placeholder: "Selecciona la edad",
+      placeholder: "Rango de edad",
       allowClear: true,
       dataType: 'json',
       data: this.ageData
@@ -117,7 +117,7 @@ var AppTable = Class.extend({
   },
   destinyRenderSelect: function () {
     $(".select-destiny").select2({
-      placeholder: "Selecciona el país de destino",
+      placeholder: "País en el que deseas solicitar asilo",
       allowClear: true,
       dataType: 'json',
       data: this.destinyData,
