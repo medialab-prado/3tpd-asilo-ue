@@ -64,6 +64,11 @@ body {
   padding: 0 1em;
 }
 
+#logos h3.major {
+  color: #2e3141;
+  padding: 1em 0 0 0;
+}
+
 .logos-container {
   margin: 0 auto;
 }
