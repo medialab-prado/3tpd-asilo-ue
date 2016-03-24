@@ -28,6 +28,14 @@ body {
     font-weight: 600;
 }
 
+.wrapper.style3.white-bg {
+  background-color: #f6f8f8;
+}
+
+.wrapper.style3.white-bg:before, .wrapper.style3.white-bg:after {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,100 100,0 100,100' style='fill:%23f6f8f8;' /%3E%3C/svg%3E");
+}
+
 #application {
   overflow: hidden;
   min-height: 600px;
@@ -49,6 +57,53 @@ body {
     float: right;
   }
 }
+
+/* TABLE LOGOS */
+
+#logos {
+  padding: 0 1em;
+}
+
+.logos-container {
+  margin: 0 auto;
+}
+
+.logo-cell {
+   text-align: center;
+   vertical-align:middle;
+}
+
+.logo {
+  vertical-align:middle;
+  max-width: 14em;
+}
+
+.logo.cpr {
+  vertical-align:middle;
+  max-width: 7em;
+  text-align: center;
+}
+
+@media screen and (max-width: 736px) {
+  .logo {
+    max-width: 10em;
+  }
+
+  .logo.cpr {
+    max-width: 5em;
+  }
+}
+
+@media screen and (max-width: 325px) {
+  .logo {
+    max-width: 7em;
+  }
+
+  .logo.cpr {
+    max-width: 4em;
+  }
+}
+
 
 .big {
   font-size: 1.2em;
