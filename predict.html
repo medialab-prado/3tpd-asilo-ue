@@ -143,7 +143,7 @@
 			<script type="text/javascript">
 		    var appTable = new AppTable('#application-output');
         appTable.loadData(function(){
-          d3.json('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/select_data.json', function(error, jsonData){
+          d3.json('/web/data/select_data.json', function(error, jsonData){
             if (error) throw error;
 
             var origin = jsonData.origin,

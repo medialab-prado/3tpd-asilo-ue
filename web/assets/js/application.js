@@ -148,7 +148,7 @@ var AppTable = Class.extend({
     this.height = (this.containerWidth) - this.margin.top - this.margin.bottom;
 
     // Load the data
-    d3.csv('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/predict2015_short_esp.csv', function(error, predictData){
+    d3.csv('/web/data/predict2015_short_esp.csv', function(error, predictData){
       if (error) throw error;
 
       this.data = predictData;
@@ -159,7 +159,7 @@ var AppTable = Class.extend({
         d.total = +d.total;
       });
 
-      d3.csv('http://medialab-prado.github.io/3tpd-asilo-ue/web/data/info_adicional.csv', function(error, auxData){
+      d3.csv('/web/data/info_adicional.csv', function(error, auxData){
         if (error) throw error;
 
         this.adicionalData = auxData;
